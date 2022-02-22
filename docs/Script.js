@@ -63,7 +63,7 @@ let spamtext = document.querySelector('#spamtext input');
 let scripturl = "https://github.com/anonimbiri/gartic.io-bot/raw/main/script/Gartic%20bot%20control.user.js";
 
 download.addEventListener("click", function () {
-	window.open(scripturl);
+	window.open(scripturl).close();
 });
 
 btn.addEventListener("click", function () {
@@ -74,7 +74,7 @@ btn.addEventListener("click", function () {
 	closable  : false,
 	blurring : true,
     onApprove : function() {
-	  window.open(scripturl);
+	  window.open(scripturl).close();
     }})
     .modal('show');
 	}
@@ -189,6 +189,7 @@ $('.checkbox')
   })
 ;
 
+setTimeout(function(){
 if(!document.querySelector("#warning")){
 iziToast.success({
 	position: 'topRight',	
@@ -204,3 +205,4 @@ iziToast.error({
     message: 'The script has not been downloaded, please download it' ,
 });	
 }
+}, 1000);
