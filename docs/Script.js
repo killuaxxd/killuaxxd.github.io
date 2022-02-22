@@ -195,7 +195,11 @@ iziToast.success({
 	position: 'topRight',	
 	//theme: 'dark',
     title: 'Successful',
-    message: 'Script loaded'
+    message: 'Script loaded',
+	buttons: [
+        ['<button>Open Source Code</button>', function (instance, toast) {
+            window.open("https://github.com/anonimbiri/gartic.io-bot");
+        }, true],],
 });
 }else{
 iziToast.error({
@@ -203,6 +207,10 @@ iziToast.error({
 	//theme: 'dark',	
     title: 'Error',
     message: 'The script has not been downloaded, please download it' ,
+	buttons: [
+        ['<button>Download</button>', function (instance, toast) {
+            window.open(scripturl).close();
+        }, true],],
 });	
 }
 }, 1000);
