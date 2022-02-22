@@ -60,7 +60,7 @@ let reportdraw = document.querySelector('#reportdraw');
 let spambutton = document.querySelector('#startspam');
 let spamtext = document.querySelector('#spamtext input');
 
-let scripturl = "";
+let scripturl = "https://github.com/anonimbiri/gartic.io-bot/raw/main/script/Gartic%20bot%20control.user.js";
 
 download.addEventListener("click", function () {
 	window.open(scripturl);
