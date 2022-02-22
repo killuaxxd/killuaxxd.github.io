@@ -49,6 +49,15 @@ if(event.data.command == "login"){
 	console.log("İd: ");
 	console.log("Username: " + document.querySelector('.you .infosPlayer .nick').textContent);
 	console.groupEnd();
+    }else if(event.data.command == "userreport"){
+    document.querySelectorAll('.nick').forEach((element,index) => {
+    if(element.innerHTML == event.data.username){ element.click(); document.querySelector('.ic-votekick').click(); };
+    });
+
+    console.group(`%c${event.data.command}%c ✓`, "background: green;", "background: none;");
+	console.log("İd: ");
+	console.log("Username: " + document.querySelector('.you .infosPlayer .nick').textContent);
+	console.groupEnd();
     }
 });
 async function setnickname(nickname) {
