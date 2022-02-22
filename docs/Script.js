@@ -17,7 +17,7 @@ document.body.innerHTML += `
       </div>
       <div class="field" id="botamount">
         <label>Bot Amount</label>
-        <div class="ui large labeled input"><input type="number" value="5" min="1" max="10"></div>
+        <div class="ui large labeled input"><input type="number" value="5" min="1" max="20"></div>
       </div>
     </div>
     <div class="field">
@@ -25,7 +25,11 @@ document.body.innerHTML += `
       <input type="checkbox" tabindex="0" class="hidden">
       <label>Performance Mode</label>
     </div></div>
-    <div class="inline"><button class="ui primary button" id="addbot">Add Bots</button><button class="ui inverted red button" id="clearall">Clear All</button></div>
+    <div class="inline"><button class="ui primary button" id="addbot">Add Bots</button><button class="ui inverted red button" id="clearall">Clear All</button> <a href="https://www.youtube.com/channel/UCgs8Nz3Msrl4GqX3DeOZ6tQ" target="_blank" class="ui 
+right floated inverted button"><i class="youtube icon"></i>YouTube</a>
+
+<a href="https://github.com/anonimbiri/gartic.io-bot" target="_blank" class="ui right floated
+inverted button"><i class="github icon"></i>Open Source Code</a></div> </div>
   </div>
 </div>
 
@@ -47,7 +51,7 @@ document.body.innerHTML += `
   </div>
 </div>
 
-<div class="ui inverted segment" id="tool" style="display:none"><div class="inline"><button class="ui primary button" id="reportdraw">Report Draw</button><label>Spam: </label><div class="ui labeled input" id="spamtext"><input type="text" value="anonimbiri" placeholder="Spam text" maxlength="99" spellcheck="false" data-ms-editor="true"></div><button class="ui primary button" id="startspam">Start Spam</button></div></div></div>
+<div class="ui inverted segment" id="tool" style="display:none"><div class="inline"><button class="ui primary button" id="reportdraw">Report Draw</button><label>Spam: </label><div class="ui labeled input" id="spamtext"><input type="text" value="anonimbiri" placeholder="Spam text" maxlength="99" spellcheck="false" data-ms-editor="true"></div><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i>Start Spam</button></div></div></div>
 `;
 let download = document.querySelector('#download');
 let download2 = document.querySelector('#download2');
@@ -159,7 +163,7 @@ let spam = false;
 spambutton.addEventListener("click", function () {
 	if(spam== false){
 	spam = true;
-	spambutton.textContent = "Stop Spam"
+	spambutton.innerHTML = '<i class="stop icon"></i> Stop Spam'
 	iziToast.success({
 	position: 'topRight',	
 	//theme: 'dark',	
@@ -168,7 +172,7 @@ spambutton.addEventListener("click", function () {
 	}); 
 	}else{
     spam = false
-    spambutton.textContent = "Start Spam"
+    spambutton.innerHTML = '<i class="play icon"></i> Start Spam'
 	iziToast.success({
 	position: 'topRight',	
 	//theme: 'dark',	
