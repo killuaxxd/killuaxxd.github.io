@@ -3,7 +3,6 @@ document.body.innerHTML += `
   <i class="warning icon"></i>
     <div class="ui right floated button" id="download">Download</div>You need to download script for it to work
 </div>
-
 <div class="ui inverted segment">
   <div class="ui inverted form">
     <div class="two fields">
@@ -27,12 +26,10 @@ document.body.innerHTML += `
     </div></div>
     <div class="inline"><button class="ui primary button" id="addbot">Add Bots</button><button class="ui inverted red button" id="clearall">Clear All</button> <a href="https://www.youtube.com/channel/UCgs8Nz3Msrl4GqX3DeOZ6tQ" target="_blank" class="ui 
 right floated inverted button"><i class="youtube icon"></i>YouTube</a>
-
 <a href="https://github.com/anonimbiri/gartic.io-bot" target="_blank" class="ui right floated
 inverted button"><i class="github icon"></i>Open Source Code</a></div> </div>
   </div>
 </div>
-
 <div class="ui tiny modal">
 <div class="ui icon header">
 <i class="yellow exclamation triangle icon"></i>
@@ -50,8 +47,8 @@ inverted button"><i class="github icon"></i>Open Source Code</a></div> </div>
   </div>
   </div>
 </div>
-
-<div class="ui inverted segment" id="tool" style="display:none"><div class="inline"><button class="ui primary button" id="reportdraw">Report Draw</button><label>Spam: </label><div class="ui labeled input" id="spamtext"><input type="text" value="anonimbiri" placeholder="Spam text" maxlength="99" spellcheck="false" data-ms-editor="true"></div><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i>Start Spam</button></div></div></div>
+<div class="ui inverted segment" id="tool" style="display: none;"><div class="ui inverted form ">
+<div class="inline fields"><div class="field"><label>Report:</label><button class="ui primary button" id="reportdraw">Report Draw</button></div></div><div class="inline fields"><div class="field"><label>Spam:</label><div class="ui labeled input" id="spamtext"><input type="text" value="anonimbiri" placeholder="Spam text" maxlength="99" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i> Start Spam</button></div></div><div class="inline fields"><div class="field"><label>Kick:</label><div class="ui labeled input" id="kickplayernick"><input type="text" value="User" placeholder="Username" maxlength="18" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary button" id="kickpalyer">Kick Player</button></div></div></div></div>
 `;
 let download = document.querySelector('#download');
 let download2 = document.querySelector('#download2');
@@ -63,6 +60,8 @@ let amount = document.querySelector('#botamount input');
 let reportdraw = document.querySelector('#reportdraw');
 let spambutton = document.querySelector('#startspam');
 let spamtext = document.querySelector('#spamtext input');
+let kicktext = document.querySelector('#kickplayernick input');
+let kickbutton = document.querySelector('#kickpalyer');
 
 let scripturl = "https://github.com/anonimbiri/gartic.io-bot/raw/main/script/Gartic%20bot%20control.user.js";
 
@@ -183,6 +182,19 @@ spambutton.addEventListener("click", function () {
 document.querySelectorAll('iframe').forEach( item =>
   item.contentWindow.postMessage({'command': 'spam', 'spam': spam,  'text': spamtext.value}, '*')
 )
+});
+
+kickbutton.addEventListener("click", function () {
+	
+document.querySelectorAll('iframe').forEach( item =>
+  item.contentWindow.postMessage({'command': 'userreport', 'username':kicktext.value}, '*')
+)
+	iziToast.success({
+	position: 'topRight',	
+	//theme: 'dark',	
+    title: 'Successful',
+    message: 'the ' + kicktext.value + ' player was kicked',
+	}); 
 });
 
 $('.checkbox')
