@@ -1,2 +1,2 @@
 # gartic.io-bot
-html
+https://anonimbiri.github.io/gartic.io-bot/
