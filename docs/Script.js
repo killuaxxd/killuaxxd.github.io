@@ -19,12 +19,67 @@ document.body.innerHTML += `
         <div class="ui large labeled input"><input type="number" value="5" min="1" max="20"></div>
       </div>
     </div>
+	
+	<div class="field">
+<div class="ui fluid selection profil dropdown" tabindex="0">
+  <input type="hidden" name="user">
+  <i class="dropdown icon" tabindex="0"><div class="menu" tabindex="-1"></div></i>
+  <div class="text"><img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/0.svg">Default</div>
+  <div class="menu transition hidden" tabindex="-1">
+  <div data-value="0" class="item active selected">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/0.svg">Default</div><div data-value="1" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/1.svg">Man 1</div><div data-value="2" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/2.svg">Man 2</div><div data-value="3" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/3.svg">Man 3</div><div data-value="4" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/4.svg">Man 4</div><div data-value="5" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/5.svg">Man 5</div><div data-value="6" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/6.svg">Man 6</div><div data-value="7" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/7.svg">Man 7</div><div data-value="8" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/8.svg">Man 8</div><div data-value="9" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/9.svg">Man 9</div><div data-value="10" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/10.svg">Man 10</div><div data-value="11" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/11.svg">Man 11</div><div data-value="12" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/12.svg">Man 12</div><div data-value="13" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/13.svg">Man 13</div><div data-value="14" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/14.svg">Man 14</div><div data-value="15" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/15.svg">Man 15</div><div data-value="16" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/16.svg">Man 16</div><div data-value="17" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/17.svg">Man 17</div><div data-value="18" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/18.svg">Man 18</div><div data-value="19" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/19.svg">Girl 1</div><div data-value="20" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/20.svg">Girl 2</div><div data-value="21" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/21.svg">Girl 3</div><div data-value="22" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/22.svg">Girl 4</div><div data-value="23" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/23.svg">Girl 5</div><div data-value="24" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/24.svg">Girl 6</div><div data-value="25" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/25.svg">Girl 7</div><div data-value="26" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/26.svg">Girl 8</div><div data-value="27" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/27.svg">Girl 9</div><div data-value="28" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/28.svg">Girl 10</div><div data-value="29" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/29.svg">Girl 11</div><div data-value="30" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/30.svg">Girl 12</div><div data-value="31" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/31.svg">Girl 13</div><div data-value="32" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/32.svg">Girl 14</div><div data-value="33" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/33.svg">Gril 15</div><div data-value="34" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/34.svg">Gril 16</div><div data-value="35" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/35.svg">Gril 17</div><div data-value="36" class="item">
+        <img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/36.svg">Gril 18</div></div>
+  </div>
+  </div>
+	
     <div class="field">
-    <div class="ui checkbox">
+    <div class="ui performance checkbox">
       <input type="checkbox" tabindex="0" class="hidden">
       <label>Performance Mode</label>
     </div></div>
-    <div class="inline"><button class="ui primary button" id="addbot">Add Bots</button><button class="ui inverted red button" id="clearall">Clear All</button> <a href="https://www.youtube.com/channel/UCgs8Nz3Msrl4GqX3DeOZ6tQ" target="_blank" class="ui 
+	<div class="field">
+    <div class="ui proxy checkbox">
+      <input type="checkbox" tabindex="0" class="hidden">
+      <label>Proxy Mode</label>
+    </div></div>
+	
+	
+    <div class="inline"><button class="ui primary button" id="addbot">Add Bots</button><button class="ui inverted red button" id="clearall">Clear All</button> <button class="ui button" id="watchtheroom">Watch The Room<i class="right share square icon"></i></button> <a href="https://www.youtube.com/channel/UCgs8Nz3Msrl4GqX3DeOZ6tQ" target="_blank" class="ui 
 right floated inverted button"><i class="youtube icon"></i>YouTube</a>
 <a href="https://github.com/anonimbiri/gartic.io-bot" target="_blank" class="ui right floated
 inverted button"><i class="github icon"></i>Open Source Code</a></div> </div>
@@ -48,7 +103,15 @@ inverted button"><i class="github icon"></i>Open Source Code</a></div> </div>
   </div>
 </div>
 <div class="ui inverted segment" id="tool" style="display: none;"><div class="ui inverted form ">
-<div class="inline fields"><div class="field"><label>Report:</label><button class="ui primary button" id="reportdraw">Report Draw</button></div></div><div class="inline fields"><div class="field"><label>Spam:</label><div class="ui labeled input" id="spamtext"><input type="text" value="anonimbiri" placeholder="Spam text" maxlength="99" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i> Start Spam</button></div></div><div class="inline fields"><div class="field"><label>Kick:</label><div class="ui labeled input" id="kickplayernick"><input type="text" value="User" placeholder="Username" maxlength="18" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary button" id="kickpalyer">Kick Player</button></div></div></div></div>
+<div class="inline fields"><div class="field"><label>Report:</label><button class="ui primary button" id="reportdraw">Report Draw</button></div></div><div class="inline fields"><label>Spam:</label><div class="field"><div class="ui selection spam dropdown">
+  <input type="hidden" name="gender">
+  <i class="dropdown icon"></i>
+  <div class="text">Chat</div>
+  <div class="menu">
+    <div class="item active selected" data-value="1">Chat</div>
+    <div class="item" data-value="0">Answer</div>
+  </div></div>
+</div><div class="field"><div class="ui labeled input" id="spamtext"><input type="text" value="anonimbiri" placeholder="Spam text" maxlength="99" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i> Start Spam</button></div></div><div class="inline fields"><div class="field"><label>Kick:</label><div class="ui labeled input" id="kickplayernick"><input type="text" value="User" placeholder="Username" maxlength="18" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary button" id="kickpalyer">Kick Player</button></div></div></div></div>
 `;
 let download = document.querySelector('#download');
 let download2 = document.querySelector('#download2');
@@ -56,6 +119,7 @@ let btn = document.querySelector('#addbot');
 let btn2 = document.querySelector('#clearall');
 let url = document.querySelector('#roomcode input'); 
 let amount = document.querySelector('#botamount input');
+let watchtheroom = document.querySelector('#watchtheroom'); 
 
 let reportdraw = document.querySelector('#reportdraw');
 let spambutton = document.querySelector('#startspam');
@@ -89,8 +153,8 @@ btn.addEventListener("click", function () {
     for (let i = 0; i < amount.value; i++) {
 	var iframe = document.createElement("iframe");
 	iframe.setAttribute('id', i);
-	iframe.setAttribute('src', 'https://gartic.io/' + url.value);
-	iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts');
+	if(proxymode == false){iframe.setAttribute('src', 'https://gartic.io/' + url.value);}else{iframe.setAttribute('src', 'https://www.croxyproxy.com/');}
+	//iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts');
 	//iframe.style.visibility = 'hidden';
 	if(i == amount.value -1){ iframe.setAttribute('onload', 'loaded();');}
 	div.appendChild(iframe);
@@ -111,7 +175,7 @@ btn2.addEventListener("click", function () {
 	
 	document.querySelector("#tool").style.display = 'none';
 	spam = false
-    spambutton.textContent = "Start Spam"
+    spambutton.innerHTML = '<i class="play icon"></i> Start Spam'
 	iziToast.success({
 	position: 'topRight',	
 	//theme: 'dark',	
@@ -128,14 +192,33 @@ btn2.addEventListener("click", function () {
 }
 
 });
+watchtheroom.addEventListener("click", function () {
+	if(url.value != ""){
+    window.open("https://gartic.io/" + url.value + "/viewer");
+	}else{
+	iziToast.error({
+	position: 'topRight',	
+	//theme: 'dark',	
+    title: 'Error',
+    message: "You didn't give me a code to monitor the room" ,
+});
+	}
+});
+	
 url.onchange = function(){ url.value = url.value.replace("https://gartic.io/",""); };
 
 var performancemode = false;
+var proxymode = false;
+var profilepicture = 0;
 
 function loaded() {
+	if(proxymode == false){
 document.querySelectorAll('iframe').forEach( item =>
-  item.contentWindow.postMessage({'command': 'login', 'username':document.querySelector('#botname div input').value, 'performancemode':performancemode }, '*')
-)
+  item.contentWindow.postMessage({'command': 'login', 'username':document.querySelector('#botname div input').value, 'profilepicture':profilepicture, 'performancemode':performancemode }, '*')
+	)}else{
+	document.querySelectorAll('iframe').forEach( item =>
+  item.contentWindow.postMessage({'command': 'loginproxy','url': 'https://gartic.io/' + url.value, 'username':document.querySelector('#botname div input').value, 'profilepicture':profilepicture, 'performancemode':performancemode }, '*'))
+}
 document.querySelector("#tool").style.display = 'block';
 	btn.setAttribute("class", "ui primary button");
 	iziToast.success({
@@ -159,6 +242,7 @@ iziToast.success({
 });
 
 let spam = false;
+var spamid = 1;
 spambutton.addEventListener("click", function () {
 	if(spam== false){
 	spam = true;
@@ -180,7 +264,7 @@ spambutton.addEventListener("click", function () {
 	}); 
 	}
 document.querySelectorAll('iframe').forEach( item =>
-  item.contentWindow.postMessage({'command': 'spam', 'spam': spam,  'text': spamtext.value}, '*')
+  item.contentWindow.postMessage({'command': 'spam', 'spam': spam, 'spamid': spamid,  'text': spamtext.value}, '*')
 )
 });
 
@@ -197,11 +281,34 @@ document.querySelectorAll('iframe').forEach( item =>
 	}); 
 });
 
-$('.checkbox')
+$('.performance.checkbox')
   .checkbox({
     // check all children
     onChecked: function() { performancemode = true; },
 	onUnchecked: function() {  performancemode = false; }
+  })
+;
+$('.proxy.checkbox')
+  .checkbox({
+    // check all children
+    onChecked: function() { proxymode = true; },
+	onUnchecked: function() {  proxymode = false; }
+  })
+;
+$('.profil.dropdown')
+  .dropdown({
+    clearable: false,
+    onChange: function(value, text, $selectedItem) {
+	profilepicture = value;
+    }
+  })
+;
+$('.spam.dropdown')
+  .dropdown({
+    clearable: false,
+    onChange: function(value, text, $selectedItem) {
+	spamid = value;
+    }
   })
 ;
 
