@@ -79,7 +79,7 @@ document.body.innerHTML += `
     </div></div>
 	
 	
-    <div class="inline"><button class="ui primary button" id="addbot">Add Bots</button><button class="ui inverted red button" id="clearall">Clear All</button> <button class="ui button" id="watchtheroom">Watch The Room<i class="right share square icon"></i></button> <a href="https://www.youtube.com/channel/UCgs8Nz3Msrl4GqX3DeOZ6tQ" target="_blank" class="ui 
+    <div class="inline"><button class="ui primary button" id="addbot">Add Bots</button><button class="ui inverted red button" id="clearall">Clear All</button> <button class="ui button" id="watchtheroom">Watch The Room<i class="right external alternate icon"></i></button> <a href="https://www.youtube.com/channel/UCgs8Nz3Msrl4GqX3DeOZ6tQ" target="_blank" class="ui 
 right floated inverted button"><i class="youtube icon"></i>YouTube</a>
 <a href="https://github.com/anonimbiri/gartic.io-bot" target="_blank" class="ui right floated
 inverted button"><i class="github icon"></i>Open Source Code</a></div> </div>
