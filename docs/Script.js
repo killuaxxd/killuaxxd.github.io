@@ -1,7 +1,7 @@
 document.body.innerHTML += `
 <div class="ui segment inverted clearing bottom attached" id="warning">
   <i class="warning icon"></i>
-    <div class="ui right floated button" id="download">Download</div>You need to download script for it to work
+    <div class="ui right floated button" id="download">Download</div> <div class="ui right floated button" id="tutorial">Tutorial</div>You need to download script for it to work
 </div>
 <div class="ui inverted segment">
   <div class="ui inverted form">
@@ -112,9 +112,21 @@ inverted button"><i class="github icon"></i>Open Source Code</a></div> </div>
     <div class="item" data-value="0">Answer</div>
   </div></div>
 </div><div class="field"><div class="ui labeled input" id="spamtext"><input type="text" value="anonimbiri" placeholder="Spam text" maxlength="99" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i> Start Spam</button></div></div><div class="inline fields"><div class="field"><label>Kick:</label><div class="ui labeled input" id="kickplayernick"><input type="text" value="User" placeholder="Username" maxlength="18" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary button" id="kickpalyer">Kick Player</button></div></div></div></div>
+
+<div class="ui basic modal">
+  <div class="content">
+    <div class="ui embed"></div>
+  </div>
+  <div class="actions">
+     <div class="ui cancel inverted button">No Thanks</div>
+    <div class="ui approve inverted button">
+      <i class="download icon"></i>Download</div>
+  </div>
+</div>
 `;
 let download = document.querySelector('#download');
 let download2 = document.querySelector('#download2');
+let tutorial = document.querySelector('#tutorial');
 let btn = document.querySelector('#addbot');
 let btn2 = document.querySelector('#clearall');
 let url = document.querySelector('#roomcode input'); 
@@ -131,6 +143,23 @@ let scripturl = "https://github.com/anonimbiri/gartic.io-bot/raw/main/script/Gar
 
 download.addEventListener("click", function () {
 	window.open(scripturl).close();
+});
+tutorial.addEventListener("click", function () {
+$('.ui.basic.modal')
+  .modal({
+	closable  : false,
+	blurring : true,
+    onApprove : function() {
+	  window.open(scripturl).close();
+    }})
+  .modal('show')
+;
+	
+$('.ui.embed').embed({
+  source      : 'youtube',
+  id          : 'O6Xo21L0ybE',
+  placeholder : '/images/bear-waving.jpg'
+});
 });
 
 btn.addEventListener("click", function () {
@@ -240,6 +269,8 @@ iziToast.success({
     message: 'Drawing Reported',
 	}); 
 });
+
+//basic modal
 
 let spam = false;
 var spamid = 1;
