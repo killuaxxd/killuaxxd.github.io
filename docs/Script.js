@@ -21,6 +21,7 @@ document.body.innerHTML += `
     </div>
 	
 	<div class="field">
+	<label>Bot Image</label>
 <div class="ui fluid selection profil dropdown" tabindex="0">
   <input type="hidden" name="user">
   <i class="dropdown icon" tabindex="0"><div class="menu" tabindex="-1"></div></i>
