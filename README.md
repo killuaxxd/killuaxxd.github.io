@@ -1,5 +1,5 @@
 # gartic.io-bot
-https://anonimbiri.github.io/gartic.io-bot/
+[Bot Site](https://anonimbiri.github.io/gartic.io-bot/)
 
 
 
