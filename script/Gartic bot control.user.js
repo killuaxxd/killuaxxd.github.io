@@ -23,10 +23,16 @@
 let PerformanceMode = false;
 let bot = false;
 
+GM_registerMenuCommand("Open Bot Site", openbotsite, "S");
+
+function openbotsite() {
+    window.open('https://anonimbiri.github.io/gartic.io-bot/','_self');
+}
+
 GM_registerMenuCommand("Open Source Code", opensourcecode, "C");
 
 function opensourcecode() {
-    window.open("https://github.com/anonimbiri/gartic.io-bot");
+    window.open("https://github.com/anonimbiri/gartic.io-bot",'_self');
 }
 
 setInterval(function() {  if(window.location.pathname != "/"){if(document.querySelector('.ic-yes')){document.querySelector('.ic-yes').click();}} if(PerformanceMode == true){if(document.querySelector('#canvas')){document.querySelector('#canvas').remove();document.querySelectorAll(".history").forEach(e => e.remove());}} if(bot == true){if(document.querySelector(".ic-drawG")){document.querySelectorAll('.ic-drawG')[0].click();}if(document.querySelector("#hint button")){document.querySelectorAll('#hint div button')[1].click(); document.querySelector('.buttons .btYellowBig.smallButton.ic-yes').click();}} if(document.querySelector('#warning')){document.querySelector('#warning').remove();} }, 0);
