@@ -7,7 +7,9 @@ https://anonimbiri.github.io/gartic.io-bot/
 # Installation
 ## Requirements 
 | Tampermonkey  | [Download](https://www.tampermonkey.net) |
-| Script  | [Download](https://github.com/anonimbiri/gartic.io-bot/raw/main/script/Gartic%20bot%20control.user.js) |
+| ----------- | ------- |
+
+| Script        | [Download](https://github.com/anonimbiri/gartic.io-bot/raw/main/script/Gartic%20bot%20control.user.js) |
 | ----------- | ------- |
 
 ## Installation Guide
