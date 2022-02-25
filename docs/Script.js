@@ -183,9 +183,8 @@ btn.addEventListener("click", function () {
     for (let i = 0; i < amount.value; i++) {
 	var iframe = document.createElement("iframe");
 	iframe.setAttribute('id', i);
-	if(proxymode == false){iframe.setAttribute('src', 'https://gartic.io/' + url.value);}else{iframe.setAttribute('src', 'https://www.croxyproxy.com/');}
-	//iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts');
-	//iframe.style.visibility = 'hidden';
+	if(proxymode == false){iframe.setAttribute('src', 'https://gartic.io/' + url.value);}else{iframe.setAttribute('src', 'https://www.proxysite.com');}
+	if(performancemode == true) {iframe.style.display = 'none';}
 	if(i == amount.value -1){ iframe.setAttribute('onload', 'loaded();');}
 	div.appendChild(iframe);
     }
@@ -299,6 +298,22 @@ document.querySelectorAll('iframe').forEach( item =>
   item.contentWindow.postMessage({'command': 'spam', 'spam': spam, 'spamid': spamid,  'text': spamtext.value}, '*')
 )
 });
+
+let s_id = 1;
+setInterval(function() {  if(spam == true){ 
+	if(s_id == 1){document.querySelectorAll('iframe').forEach( item =>
+  item.contentWindow.postMessage({'command': 'spam', 'spam': spam, 'spamid': spamid,  'text': spamtext.value}, '*')
+); s_id = 2; }
+	else if(s_id == 2){document.querySelectorAll('iframe').forEach( item =>
+  item.contentWindow.postMessage({'command': 'spam', 'spam': spam, 'spamid': spamid,  'text': spamtext.value + "឵"}, '*')
+); s_id = 3;}
+	else if(s_id == 3){document.querySelectorAll('iframe').forEach( item =>
+  item.contentWindow.postMessage({'command': 'spam', 'spam': spam, 'spamid': spamid,  'text': "឵" + spamtext.value}, '*')
+); s_id = 4;}
+	else if(s_id == 4){document.querySelectorAll('iframe').forEach( item =>
+  item.contentWindow.postMessage({'command': 'spam', 'spam': spam, 'spamid': spamid,  'text': "github.com/anonimbiri"}, '*')
+); s_id = 1;} } 
+}, 3000);
 
 kickbutton.addEventListener("click", function () {
 	
