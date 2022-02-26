@@ -158,8 +158,8 @@ $('.ui.basic.modal')
 	
 $('.ui.embed').embed({
   source      : 'youtube',
-  id          : 'O6Xo21L0ybE',
-  placeholder : '/images/bear-waving.jpg'
+  id          : 'bsvsLNbgQno',
+  placeholder : 'https://i.ytimg.com/vi/bsvsLNbgQno/maxresdefault.jpg'
 });
 });
 
@@ -383,4 +383,4 @@ iziToast.error({
         }, true],],
 });	
 }
-}, 1000);
+}, 2000);
