@@ -4,7 +4,7 @@
 // @version      0.1
 // @updateURL    https://github.com/anonimbiri/gartic.io-bot/raw/main/script/Gartic%20bot%20control.user.js
 // @downloadURL  https://github.com/anonimbiri/gartic.io-bot/raw/main/script/Gartic%20bot%20control.user.js
-// @description  try to take over the world!
+// @description  Gartic bot control
 // @author       Anonim Biri
 // @supportURL   https://github.com/anonimbiri/gartic.io-bot/issues/new
 // @match        https://gartic.io/*
