@@ -1,7 +1,9 @@
 # gartic.io-bot
-[Bot Site](https://anonimbiri.github.io/gartic.io-bot/)
+[Bot Site](https://anonimbiri.github.io/gartic.io-bot/v2)
 
 
+
+## The following operations are only for 1v, they are not necessary for 2v.
 
 -----------------------
 # Installation
