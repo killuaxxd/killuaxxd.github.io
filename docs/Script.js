@@ -83,7 +83,8 @@ document.body.innerHTML += `
     <div class="inline"><button class="ui primary button" id="addbot">Add Bots</button><button class="ui inverted red button" id="clearall">Clear All</button> <button class="ui right labeled icon button" id="watchtheroom">Watch The Room<i class="external link icon"></i></button> <a href="https://www.youtube.com/channel/UCgs8Nz3Msrl4GqX3DeOZ6tQ" target="_blank" class="ui 
 right floated inverted button"><i class="youtube icon"></i>YouTube</a>
 <a href="https://github.com/anonimbiri/gartic.io-bot" target="_blank" class="ui right floated
-inverted button"><i class="github icon"></i>Open Source Code</a></div> </div>
+inverted button"><i class="github icon"></i>Open Source Code</a><a href="https://anonimbiri.github.io/gartic.io-bot/v2/" class="ui right floated
+inverted button"><i class="fire icon"></i>V2 (New Version)</a></div> </div>
   </div>
 </div>
 <div class="ui tiny modal">
