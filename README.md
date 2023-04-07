@@ -3,7 +3,8 @@
 
 
 
-## The following operations are only for 1v, they are not necessary for 2v.
+
+> **Note** The following operations are only for 1v, they are not necessary for 2v.
 
 -----------------------
 # Installation
