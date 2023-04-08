@@ -288,12 +288,12 @@ btn.addEventListener("click", function () {
 		socket.vote++;
               if (socket.vote >= 3) {
                 socket.send(`42[24,${playerId}]`);
-                //socket.close();
               }
               console.log(`WebSocket ${i} ${playerCode} - ${data[1]} bizi atmaya çalıştı.  ${socket.vote}/3`);
               break;
             }
           }
+	  }
         });
 
         socket.addEventListener('close', (event) => {
