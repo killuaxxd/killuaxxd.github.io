@@ -352,7 +352,7 @@ watchtheroom.addEventListener("click", function () {
   }
 });
 
-url.onchange = function () { url.value = url.value.replace("https://gartic.io/", ""); };
+url.onchange = function () { url.value = url.value.replace("https://gartic.io/", "").replace("/viewer", ""); };
 
 var performancemode = false;
 var proxymode = false;
