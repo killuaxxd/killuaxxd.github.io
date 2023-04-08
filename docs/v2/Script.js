@@ -258,15 +258,8 @@ btn.addEventListener("click", function () {
               })
               .modal('show');
           } else if (event.data === '41') {
-            if (url.value == "") {
-              socket.send(`42[1,{"v":20000,"nick":"${modifiedName}","avatar":${profilepicture},"idioma":${serverlang}}]`);
-              console.log(`WebSocket ${i} sunucuya katılma isteği gönderildi`);
-            } else {
-              socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${profilepicture},"sala":"${url.value.slice(-4)}"}]`);
-              console.log(`WebSocket ${i} ${url.value.slice(-4)} kodlu özel sunucuya katılma isteği gönderildi`);
-            }
+            socket.close();
           }
-
           if (!event.data.includes('[')) return;
           const data = JSON.parse(event.data.replace(/^\d+/g, ''));
           switch (data[0]) {
