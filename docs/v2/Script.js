@@ -231,6 +231,7 @@ btn.addEventListener("click", function () {
         socketList.push(socket);
 
         socket.playerName = modifiedName;
+	socket.vote = 0;
 
         socket.addEventListener('open', (event) => {
           console.log(`WebSocket ${i} bağlandı`);
