@@ -292,9 +292,11 @@ btn.addEventListener("click", function () {
               const playerId = socket.playerId;
               const playerCode = socket.playerCode;
               if (data[2] == playerCode) {
+		socket.vote++;
+              if (socket.vote >= 3) {
                 socket.send(`42[24,${playerId}]`);
                 //socket.close();
-                console.log(`WebSocket ${i} ${playerCode} - ${data[1]} bizi atmaya çalıştı.`);
+                console.log(`WebSocket ${i} ${playerCode} - ${data[1]} bizi atmaya çalıştı.  ${socket.vote}/3`);
               }
               break;
             }
