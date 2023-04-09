@@ -283,6 +283,21 @@ btn.addEventListener("click", function () {
               updateUserList(data[5]);
               break;
             }
+	    case 23: {
+              const playerList = document.getElementById('playerlist');
+              const existingItem = playerList.querySelector(`.item[data-player-id="${data["turno"]}"]`);
+  
+              if (existingItem) {
+		 existingItem.remove();
+              } else {
+		 const itemDiv = document.createElement('div');
+		 itemDiv.classList.add('item');
+		 itemDiv.setAttribute('data-player-id', data["turno"]);
+		 playerList.appendChild(itemDiv);
+              }
+              console.log(`WebSocket ${i} ${data["nick"]} adında yeni biri katıldı yada çıktı.`);
+              break;
+            }
             case 16: {
               const playerId = socket.playerId;
               socket.send(`42[25,${playerId}]`);
@@ -397,6 +412,7 @@ function updateUserList(players) {
 
     const itemDiv = document.createElement('div');
     itemDiv.classList.add('item');
+    itemDiv.setAttribute('data-player-id', player.turno);
 
     const rightContentDiv = document.createElement('div');
     rightContentDiv.classList.add('right', 'floated', 'content');
