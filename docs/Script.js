@@ -235,19 +235,26 @@ watchtheroom.addEventListener("click", function () {
 	}
 });
 	
-url.onchange = function(){ url.value = url.value.replace("https://gartic.io/",""); };
+url.onchange = function(){ url.value = url.value.replace("https://gartic.io/","").replace("/viewer", ""); };
 
 var performancemode = false;
 var proxymode = false;
 var profilepicture = 0;
 
 function loaded() {
+	let name = document.querySelector('#botname div input').value;
+	const regex = /\b[aA]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aA]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aA][^\w\s]*){2,}|\b[ᴬaA][ˡlL1Ii][ᴸlL1Ii]?[ᴬaA][ℍhH](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[aA][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*\b/gi;
+  
+        if (regex.test(name)) {
+            document.querySelector('#botname div input').value = "anonimbiri";
+            name = "anonimbiri";
+        }
 	if(proxymode == false){
 document.querySelectorAll('iframe').forEach( item =>
-  item.contentWindow.postMessage({'command': 'login', 'username':document.querySelector('#botname div input').value, 'profilepicture':profilepicture, 'performancemode':performancemode }, '*')
+  item.contentWindow.postMessage({'command': 'login', 'username':name, 'profilepicture':profilepicture, 'performancemode':performancemode }, '*')
 	)}else{
 	document.querySelectorAll('iframe').forEach( item =>
-  item.contentWindow.postMessage({'command': 'loginproxy','url': 'https://gartic.io/' + url.value, 'username':document.querySelector('#botname div input').value, 'profilepicture':profilepicture, 'performancemode':performancemode }, '*'))
+  item.contentWindow.postMessage({'command': 'loginproxy','url': 'https://gartic.io/' + url.value, 'username':name, 'profilepicture':profilepicture, 'performancemode':performancemode }, '*'))
 }
 document.querySelector("#tool").style.display = 'block';
 	btn.setAttribute("class", "ui primary button");
