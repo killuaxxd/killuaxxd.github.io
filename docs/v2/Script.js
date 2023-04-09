@@ -288,9 +288,11 @@ btn.addEventListener("click", function () {
               const existingItem = playerList.querySelector(`.item[data-player-id="${data[1].turno}"]`);
   
               if (existingItem) {
+		 if (data[1].id) return;
 		 existingItem.remove();
 		 console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri ayrıldı.`);
               } else {
+		 if (!data[1].id) return;
 		 const itemDiv = document.createElement('div');
 		 itemDiv.classList.add('item');
 		 itemDiv.setAttribute('data-player-id', data[1].turno);
