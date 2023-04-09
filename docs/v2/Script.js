@@ -293,7 +293,40 @@ btn.addEventListener("click", function () {
 		 const itemDiv = document.createElement('div');
 		 itemDiv.classList.add('item');
 		 itemDiv.setAttribute('data-player-id', data.turno);
+
+		 const rightContentDiv = document.createElement('div');
+		 rightContentDiv.classList.add('right', 'floated', 'content');
+
+		 const kickButton = document.createElement('div');
+		 kickButton.classList.add('ui', 'red', 'button');
+		 kickButton.textContent = 'Kick Player';
+
+		 rightContentDiv.appendChild(kickButton);
+
+		 const avatarImg = document.createElement('img');
+		 avatarImg.classList.add('ui', 'avatar', 'image');
+		 if (data.foto) {
+		 avatarImg.src = data.foto;
+		 } else {
+		 avatarImg.src = `https://gartic.io/static/images/avatar/svg/${data.avatar}.svg`;
+		 }
+		 const contentDiv = document.createElement('div');
+		 contentDiv.classList.add('content');
+		 contentDiv.textContent = data.nick;
+
+		 itemDiv.appendChild(rightContentDiv);
+		 itemDiv.appendChild(avatarImg);
+		 itemDiv.appendChild(contentDiv);
+
 		 playerList.appendChild(itemDiv);
+
+		 kickButton.addEventListener('click', function (event) {
+		 socketList.forEach((socket) => {
+		 if (socket.readyState === WebSocket.OPEN) {
+		 socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+          console.log(`WebSocket ${socket.playerId} playerId ile ${player.id} player odadan atmak için oy kullanıldı`);
+        }
+      });
               }
               console.log(`WebSocket ${i} ${data.nick} adında yeni biri katıldı yada çıktı.`);
               break;
