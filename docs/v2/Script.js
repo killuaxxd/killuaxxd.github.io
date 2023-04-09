@@ -321,13 +321,22 @@ btn.addEventListener("click", function () {
 		 playerList.appendChild(itemDiv);
 
 		 kickButton.addEventListener('click', function (event) {
-		 socketList.forEach((socket) => {
-		 if (socket.readyState === WebSocket.OPEN) {
-		 socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-          console.log(`WebSocket ${socket.playerId} playerId ile ${player.id} player odadan atmak için oy kullanıldı`);
-        }
-      });
-              }
+		    socketList.forEach((socket) => {
+		    if (socket.readyState === WebSocket.OPEN) {
+		    socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+		    console.log(`WebSocket ${socket.playerId} playerId ile ${player.id} player odadan atmak için oy kullanıldı`);
+		    }
+		    });
+
+		    console.log(player);
+		    iziToast.success({
+		    position: 'topRight',
+		    //theme: 'dark',	
+		    title: 'Successful',
+		    message: 'the ' + player.nick + ' player was kicked',
+		    });
+		 });
+		 }
               console.log(`WebSocket ${i} ${data.nick} adında yeni biri katıldı yada çıktı.`);
               break;
             }
