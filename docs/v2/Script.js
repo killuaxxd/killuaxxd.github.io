@@ -285,17 +285,17 @@ btn.addEventListener("click", function () {
             }
 	    case 23: {
               const playerList = document.getElementById('playerlist');
-              const existingItem = playerList.querySelector(`.item[data-player-id="${data["turno"]}"]`);
+              const existingItem = playerList.querySelector(`.item[data-player-id="${data.turno}"]`);
   
               if (existingItem) {
 		 existingItem.remove();
               } else {
 		 const itemDiv = document.createElement('div');
 		 itemDiv.classList.add('item');
-		 itemDiv.setAttribute('data-player-id', data["turno"]);
+		 itemDiv.setAttribute('data-player-id', data.turno);
 		 playerList.appendChild(itemDiv);
               }
-              console.log(`WebSocket ${i} ${data["nick"]} adında yeni biri katıldı yada çıktı.`);
+              console.log(`WebSocket ${i} ${data.nick} adında yeni biri katıldı yada çıktı.`);
               break;
             }
             case 16: {
