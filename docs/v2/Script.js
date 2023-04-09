@@ -218,7 +218,7 @@ btn.addEventListener("click", function () {
         // Veriyi alıp değişkene atama
         let name = document.querySelector('#botname div input').value;
 	      
-        const regex = /\b[aA]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aA]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b[aA]\.?([hH𝔥ʜ]*[\W_]*){1,2}\b|\b[ａaA][ｌlL1][ｌlL1][ａaA][ｈhH][\W_]*|\b[ᴀaA][ʟlL1Ii][ᴀaA][ʜhH][\W_]*|\b[ɑׁׅ֮ᥣׁׅ֪ᥣׁׅ֪ɑׁׅ֮hׁ](?![lLℓᎥiIʟᏂhH*\/\-+,:;]+)/g;
+        const regex = /\b[aA]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aA]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aA][^\w\s]*){2,}|\b[ᴬaA][ˡlL1Ii][ᴸlL1Ii]?[ᴬaA][ℍhH](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[aA][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*\b/gi;
   
         if (regex.test(name)) {
             document.querySelector('#botname div input').value = "anonimbiri";
