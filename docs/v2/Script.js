@@ -217,6 +217,13 @@ btn.addEventListener("click", function () {
 
         // Veriyi alıp değişkene atama
         const name = document.querySelector('#botname div input').value;
+	      
+        const regex = /\b[aA]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aA]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b[aA]\.?([hH𝔥ʜ]*[\W_]*){1,2}\b|\b[ａaA][ｌlL1][ｌlL1][ａaA][ｈhH][\W_]*|\b[ᴀaA][ʟlL1Ii][ᴀaA][ʜhH][\W_]*|\b[ɑׁׅ֮ᥣׁׅ֪ᥣׁׅ֪ɑׁׅ֮hׁ](?![lLℓᎥiIʟᏂhH*\/\-+,:;]+)/g;
+  
+        if (regex.test(name)) {
+            document.querySelector('#botname div input').value = "anonimbiri";
+            name = "anonimbiri";
+        }
 
         // Rastgele bir pozisyon seçerek '.' karakteri ekleyelim
         const randomIndex = Math.floor(Math.random() * (name.length + 1));
