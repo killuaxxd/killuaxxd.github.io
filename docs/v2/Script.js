@@ -285,14 +285,14 @@ btn.addEventListener("click", function () {
             }
 	    case 23: {
               const playerList = document.getElementById('playerlist');
-              const existingItem = playerList.querySelector(`.item[data-player-id="${data.turno}"]`);
+              const existingItem = playerList.querySelector(`.item[data-player-id="${data[1].turno}"]`);
   
               if (existingItem) {
 		 existingItem.remove();
               } else {
 		 const itemDiv = document.createElement('div');
 		 itemDiv.classList.add('item');
-		 itemDiv.setAttribute('data-player-id', data.turno);
+		 itemDiv.setAttribute('data-player-id', data[1].turno);
 
 		 const rightContentDiv = document.createElement('div');
 		 rightContentDiv.classList.add('right', 'floated', 'content');
@@ -305,14 +305,14 @@ btn.addEventListener("click", function () {
 
 		 const avatarImg = document.createElement('img');
 		 avatarImg.classList.add('ui', 'avatar', 'image');
-		 if (data.foto) {
-		 avatarImg.src = data.foto;
+		 if (data[1].foto) {
+		 avatarImg.src = data[1].foto;
 		 } else {
-		 avatarImg.src = `https://gartic.io/static/images/avatar/svg/${data.avatar}.svg`;
+		 avatarImg.src = `https://gartic.io/static/images/avatar/svg/${data[1].avatar}.svg`;
 		 }
 		 const contentDiv = document.createElement('div');
 		 contentDiv.classList.add('content');
-		 contentDiv.textContent = data.nick;
+		 contentDiv.textContent = data[1].nick;
 
 		 itemDiv.appendChild(rightContentDiv);
 		 itemDiv.appendChild(avatarImg);
@@ -323,8 +323,8 @@ btn.addEventListener("click", function () {
 		 kickButton.addEventListener('click', function (event) {
 		    socketList.forEach((socket) => {
 		    if (socket.readyState === WebSocket.OPEN) {
-		    socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-		    console.log(`WebSocket ${socket.playerId} playerId ile ${player.id} player odadan atmak için oy kullanıldı`);
+		    socket.send(`42[45,${socket.playerId},["${data[1].id}",true]]`);
+		    console.log(`WebSocket ${socket.playerId} playerId ile ${data[1].id} player odadan atmak için oy kullanıldı`);
 		    }
 		    });
 
@@ -333,11 +333,11 @@ btn.addEventListener("click", function () {
 		    position: 'topRight',
 		    //theme: 'dark',	
 		    title: 'Successful',
-		    message: 'the ' + player.nick + ' player was kicked',
+		    message: 'the ' + data[1].nick + ' player was kicked',
 		    });
 		 });
 		 }
-              console.log(`WebSocket ${i} ${data.nick} adında yeni biri katıldı yada çıktı.`);
+              console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri katıldı yada çıktı.`);
               break;
             }
             case 16: {
