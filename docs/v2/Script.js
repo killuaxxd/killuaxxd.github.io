@@ -289,6 +289,7 @@ btn.addEventListener("click", function () {
   
               if (existingItem) {
 		 existingItem.remove();
+		 console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri ayrıldı.`);
               } else {
 		 const itemDiv = document.createElement('div');
 		 itemDiv.classList.add('item');
@@ -336,8 +337,8 @@ btn.addEventListener("click", function () {
 		    message: 'the ' + data[1].nick + ' player was kicked',
 		    });
 		 });
+                 console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri katıldı.`);
 		 }
-              console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri katıldı yada çıktı.`);
               break;
             }
             case 16: {
