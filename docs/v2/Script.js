@@ -528,7 +528,8 @@ reportdraw.addEventListener("click", function () {
 
 kickall.addEventListener("click", function () {
   socketList.forEach((socket) => {
-   socket.players.forEach((player) => {
+   const players = socket.players
+   players.forEach((player) => {
     if (socket.readyState === WebSocket.OPEN) {
       socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
     }
