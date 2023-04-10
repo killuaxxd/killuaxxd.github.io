@@ -131,7 +131,7 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
   </div>
 </div>
 <div class="ui inverted segment" id="tool" style="display: none;"><div class="ui inverted form ">
-<div class="inline fields"><label>Report:</label><div class="field"><button class="ui primary button" id="reportdraw">Report Draw</button></div><div class="field"><button class="ui red button" id="kickall">Kick All Players</button></div></div><div class="inline fields"><label>Spam:</label><div class="field"><div class="ui selection spam dropdown">
+<div class="inline fields"><label>Reports:</label><div class="field"><button class="ui primary button" id="reportdraw">Report Draw</button></div><div class="field"><button class="ui red button" id="kickall">Kick All Players</button></div></div><div class="inline fields"><label>Spam:</label><div class="field"><div class="ui selection spam dropdown">
   <input type="hidden" name="gender">
   <i class="dropdown icon"></i>
   <div class="text">Chat</div>
@@ -532,7 +532,8 @@ kickall.addEventListener("click", function () {
     if (socket.readyState === WebSocket.OPEN) {
       socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
     }
-  }, () => {
+  }
+}, () => {
     iziToast.success({
       position: 'topRight',
       //theme: 'dark',	
