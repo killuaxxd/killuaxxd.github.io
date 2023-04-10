@@ -243,6 +243,9 @@ btn.addEventListener("click", function () {
 
         socket.addEventListener('open', (event) => {
           console.log(`WebSocket ${i} bağlandı`);
+          document.cookie.split(";").forEach(function(c) { 
+             document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+          });
         });
 
         socket.addEventListener('message', (event) => {
