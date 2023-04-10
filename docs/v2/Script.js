@@ -532,7 +532,7 @@ kickall.addEventListener("click", function () {
     if (socket.readyState === WebSocket.OPEN) {
       socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
     }
-  }
+  });
 }, () => {
     iziToast.success({
       position: 'topRight',
