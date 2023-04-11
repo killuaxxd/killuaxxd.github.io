@@ -295,10 +295,10 @@ btn.addEventListener("click", function () {
               //console.log(`WebSocket ${i} ${playerId} gönderildi`);
               socket.send(`42[11,"${playerId}","github.com/anonimbiri"]`);
               updateUserList(data[5]);
-              iziToast.success({
+              iziToast.info({
                 position: 'topRight',
                 //theme: 'dark',
-                title: 'Successful',
+                title: 'Joined',
                 message: `WebSocket ${i} Joined the Server.`
               });
               break;
@@ -377,6 +377,12 @@ btn.addEventListener("click", function () {
                 if (socket.vote >= 3) {
                   socket.send(`42[24,${playerId}]`);
                 }
+                iziToast.warning({
+                  position: 'topRight',
+                  //theme: 'dark',
+                  title: 'Warning',
+                  message: `A Bot Voted for Throwing a WebSocket ${i}: ${socket.vote}/3`
+                });
                 //console.log(`WebSocket ${i} ${playerCode} - ${data[1]} bizi atmaya çalıştı.  ${socket.vote}/3`);
               }
               break;
@@ -384,15 +390,25 @@ btn.addEventListener("click", function () {
           }
         });
 
-        socket.addEventListener('close', (event) => {
+        socket.onerror = function(error) {
+          //console.log(`WebSocket ${i} bağlantısı sorunlu kapandı`);
+          iziToast.error({
+            position: 'topRight',
+            //theme: 'dark',	
+            title: 'Error',
+            message: `WebSocket ${i} Connection has Been Closed due to an issue.`,
+          });
+        };
+
+         socket.onclose = function(event) {
           //console.log(`WebSocket ${i} bağlantısı kapandı`);
           iziToast.error({
             position: 'topRight',
             //theme: 'dark',	
             title: 'Error',
-            message: `Connection to Server WebSocket ${i} Has Been Lost.`,
+            message: `Connection to Server WebSocket ${i} has Been Lost.`,
           });
-        });
+        };
 
       }
     })
@@ -409,10 +425,14 @@ btn.addEventListener("click", function () {
 });
 btn2.addEventListener("click", function () {
   if (socketList) {
-
-    socketList.forEach(socket => {
-      socket.close();
+    socketList.forEach(function (socket) {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.onerror = null;
+        socket.onclose = null;
+        socket.close();
+      }
     });
+
     document.querySelector("#tool").style.display = 'none';
     socketList = [];
 
