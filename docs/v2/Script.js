@@ -166,17 +166,6 @@ let kickall = document.querySelector('#kickall');
 let spambutton = document.querySelector('#startspam');
 let spamtext = document.querySelector('#spamtext input');
 
-function getRandomUserAgent() {
-  const prefixes = ['Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/'];
-  const suffixes = [' Chrome/89.0.4389.82 Safari/537.36', ' Firefox/86.0'];
-
-  const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-  const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
-  const middle = Math.floor(Math.random() * 1000);
-
-  return prefix + middle + suffix;
-}
-
 let socketList = [];
 
 btn.addEventListener("click", function () {
@@ -221,11 +210,6 @@ btn.addEventListener("click", function () {
         } else {
           var socket = new WebSocket('wss://server06.gartic.io/socket.io/?EIO=3&transport=websocket');
         }*/
-
-        const userAgent = getRandomUserAgent();
-
-        console.log(serverid);
-        console.log(userAgent);
 
         // Veriyi alıp değişkene atama
         let name = params.get('name');
