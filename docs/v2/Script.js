@@ -469,8 +469,8 @@ url.onchange = function () { url.value = url.value.replace("https://gartic.io/",
 
 var performancemode = false;
 var proxymode = false;
-var profilepicture = 0;
-var serverlang = 2;
+var profilepicture = params.get('image') || 0;
+var serverlang = params.get('lang') || 2;
 
 function loaded() {
   if (proxymode == false) {
