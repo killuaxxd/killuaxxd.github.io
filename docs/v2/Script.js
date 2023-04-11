@@ -1,18 +1,19 @@
+const params = new URLSearchParams(window.location.search);
 document.body.innerHTML += `
 <div class="ui inverted segment">
   <div class="ui inverted form">
     <div class="two fields">
 	<div class="field" id="botname">
         <label>Bot Name</label>
-        <div class="ui large labeled input"><input type="text" value="anonimbiri" placeholder="Nickname" maxlength="17" spellcheck="false" data-ms-editor="true"></div>
+        <div class="ui large labeled input"><input type="text" value="${params.get('name') || "anonimbiri"}" placeholder="Nickname" maxlength="17" spellcheck="false" data-ms-editor="true"></div>
       </div>
       <div class="field">
         <label>Room Code</label>
-        <div class="ui large labeled input" id="roomcode"><div class="ui label">https://gartic.io/ </div><input type="text" placeholder="Code"></div>
+        <div class="ui large labeled input" id="roomcode"><div class="ui label">https://gartic.io/ </div><input type="text" value="${params.get('code') || ""}" placeholder="Code"></div>
       </div>
       <div class="field" id="botamount">
         <label>Bot Amount</label>
-        <div class="ui large labeled input"><input type="number" value="5" min="1" max="20"></div>
+        <div class="ui large labeled input"><input type="number" value="${params.get('amount') || "5"}" min="1" max="20"></div>
       </div>
     </div>
 	
@@ -150,6 +151,8 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
   </div>
 </div>
 `;
+$('.profil.dropdown').dropdown('set selected', params.get('image') || 0);
+$('search.dropdown').dropdown('set selected', params.get('lang') || 2);
 
 let btn = document.querySelector('#addbot');
 let btn2 = document.querySelector('#clearall');
@@ -177,8 +180,15 @@ function getRandomUserAgent() {
 let socketList = [];
 
 btn.addEventListener("click", function () {
+  params.set('name', document.querySelector('#botname div input').value);
+  params.set('code', url.value);
+  params.set('amount', amount.value);
+  params.set('image', profilepicture);
+  params.set('lang', serverlang);
+  const newUrl = `${window.location.pathname}?${params.toString()}`;
+  window.history.pushState({}, '', newUrl);
   btn.setAttribute("class", "ui primary disabled loading button");
-  fetch(url.value ? `https://gartic.io/server?check=1&room=${url.value}` : `https://gartic.io/server?check=1&lang=${serverlang}`)
+  fetch(url.value ? `https://gartic.io/server?check=1&room=${params.get('code')}` : `https://gartic.io/server?check=1&lang=${params.get('lang')}`)
     .then(x => x.text())
     .then(data => {
       /*if (data == "x") {
@@ -188,7 +198,7 @@ btn.addEventListener("click", function () {
       }*/
 
 
-      for (let i = 0; i < amount.value; i++) {
+      for (let i = 0; i < params.get('amount'); i++) {
         /*if (proxymode) {
           var socket = new WebSocket('wss://server04.gartic.io/socket.io/?EIO=3&transport=websocket', {
             // Proxy server settings
@@ -217,13 +227,13 @@ btn.addEventListener("click", function () {
         console.log(userAgent);
 
         // Veriyi alıp değişkene atama
-        let name = document.querySelector('#botname div input').value;
-	      
+        let name = params.get('name');
+
         const regex = /\b[aA]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aA]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aA][^\w\s]*){2,}|\b[ᴬaA][ˡlL1Ii][ᴸlL1Ii]?[ᴬaA][ℍhH](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[aA][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*\b/gi;
-  
+
         if (regex.test(name)) {
-            document.querySelector('#botname div input').value = "anonimbiri";
-            name = "anonimbiri";
+          document.querySelector('#botname div input').value = "anonimbiri";
+          name = "anonimbiri";
         }
 
         // Rastgele bir pozisyon seçerek '.' karakteri ekleyelim
@@ -239,12 +249,12 @@ btn.addEventListener("click", function () {
         socketList.push(socket);
 
         socket.playerName = modifiedName;
-	socket.vote = 0;
+        socket.vote = 0;
 
         socket.addEventListener('open', (event) => {
-          console.log(`WebSocket ${i} bağlandı`);
-          document.cookie.split(";").forEach(function(c) { 
-             document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+          //console.log(`WebSocket ${i} bağlandı`);
+          document.cookie.split(";").forEach(function (c) {
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
           });
         });
 
@@ -253,11 +263,11 @@ btn.addEventListener("click", function () {
 
           if (event.data === '40') {
             if (url.value == "") {
-              socket.send(`42[1,{"v":20000,"nick":"${modifiedName}","avatar":${profilepicture},"idioma":${serverlang}}]`);
-              console.log(`WebSocket ${i} sunucuya katılma isteği gönderildi`);
+              socket.send(`42[1,{"v":20000,"nick":"${modifiedName}","avatar":${params.get('image')},"idioma":${params.get('lang')}}]`);
+              //console.log(`WebSocket ${i} sunucuya katılma isteği gönderildi`);
             } else {
-              socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${profilepicture},"sala":"${url.value.slice(-4)}"}]`);
-              console.log(`WebSocket ${i} ${url.value.slice(-4)} kodlu özel sunucuya katılma isteği gönderildi`);
+              socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${params.get('image')},"sala":"${params.get('code').slice(-4)}"}]`);
+              //console.log(`WebSocket ${i} ${url.value.slice(-4)} kodlu özel sunucuya katılma isteği gönderildi`);
             }
           } else if (event.data === '42[6,4]') {
             $('.tiny.modal')
@@ -282,75 +292,75 @@ btn.addEventListener("click", function () {
               socket.playerCode = playerCode; // playerCode'yi soket nesnesine kaydet
               socket.players = data[5]; // players'i soket nesnesine kaydet
               socket.send(`42[46,${playerId}]`);
-              console.log(`WebSocket ${i} ${playerId} gönderildi`);
+              //console.log(`WebSocket ${i} ${playerId} gönderildi`);
               socket.send(`42[11,"${playerId}","github.com/anonimbiri"]`);
               updateUserList(data[5]);
               iziToast.success({
-              position: 'topRight',
-              //theme: 'dark',
-              title: 'Successful',
-              message: `WebSocket ${i} Joined the Server.`
+                position: 'topRight',
+                //theme: 'dark',
+                title: 'Successful',
+                message: `WebSocket ${i} Joined the Server.`
               });
               break;
             }
-	    case 23: {
+            case 23: {
               const playerList = document.getElementById('playerlist');
               const existingItem = playerList.querySelector(`.item[data-player-id="${data[1].turno}"]`);
-  
+
               if (existingItem) {
-		 if (data[1].id) return;
-		 existingItem.remove();
-		 console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri ayrıldı.`);
+                if (data[1].id) return;
+                existingItem.remove();
+                //console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri ayrıldı.`);
               } else {
-		 if (!data[1].id) return;
-		 const itemDiv = document.createElement('div');
-		 itemDiv.classList.add('item');
-		 itemDiv.setAttribute('data-player-id', data[1].turno);
+                if (!data[1].id) return;
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('item');
+                itemDiv.setAttribute('data-player-id', data[1].turno);
 
-		 const rightContentDiv = document.createElement('div');
-		 rightContentDiv.classList.add('right', 'floated', 'content');
+                const rightContentDiv = document.createElement('div');
+                rightContentDiv.classList.add('right', 'floated', 'content');
 
-		 const kickButton = document.createElement('div');
-		 kickButton.classList.add('ui', 'red', 'button');
-		 kickButton.textContent = 'Kick Player';
+                const kickButton = document.createElement('div');
+                kickButton.classList.add('ui', 'red', 'button');
+                kickButton.textContent = 'Kick Player';
 
-		 rightContentDiv.appendChild(kickButton);
+                rightContentDiv.appendChild(kickButton);
 
-		 const avatarImg = document.createElement('img');
-		 avatarImg.classList.add('ui', 'avatar', 'image');
-		 if (data[1].foto) {
-		 avatarImg.src = data[1].foto;
-		 } else {
-		 avatarImg.src = `https://gartic.io/static/images/avatar/svg/${data[1].avatar}.svg`;
-		 }
-		 const contentDiv = document.createElement('div');
-		 contentDiv.classList.add('content');
-		 contentDiv.textContent = data[1].nick;
+                const avatarImg = document.createElement('img');
+                avatarImg.classList.add('ui', 'avatar', 'image');
+                if (data[1].foto) {
+                  avatarImg.src = data[1].foto;
+                } else {
+                  avatarImg.src = `https://gartic.io/static/images/avatar/svg/${data[1].avatar}.svg`;
+                }
+                const contentDiv = document.createElement('div');
+                contentDiv.classList.add('content');
+                contentDiv.textContent = data[1].nick;
 
-		 itemDiv.appendChild(rightContentDiv);
-		 itemDiv.appendChild(avatarImg);
-		 itemDiv.appendChild(contentDiv);
+                itemDiv.appendChild(rightContentDiv);
+                itemDiv.appendChild(avatarImg);
+                itemDiv.appendChild(contentDiv);
 
-		 playerList.appendChild(itemDiv);
+                playerList.appendChild(itemDiv);
 
-		 kickButton.addEventListener('click', function (event) {
-		    socketList.forEach((socket) => {
-		    if (socket.readyState === WebSocket.OPEN) {
-		    socket.send(`42[45,${socket.playerId},["${data[1].id}",true]]`);
-		    console.log(`WebSocket ${socket.playerId} playerId ile ${data[1].id} player odadan atmak için oy kullanıldı`);
-		    }
-		    });
+                kickButton.addEventListener('click', function (event) {
+                  socketList.forEach((socket) => {
+                    if (socket.readyState === WebSocket.OPEN) {
+                      socket.send(`42[45,${socket.playerId},["${data[1].id}",true]]`);
+                      //console.log(`WebSocket ${socket.playerId} playerId ile ${data[1].id} player odadan atmak için oy kullanıldı`);
+                    }
+                  });
 
-		    console.log(player);
-		    iziToast.success({
-		    position: 'topRight',
-		    //theme: 'dark',	
-		    title: 'Successful',
-		    message: 'the ' + data[1].nick + ' player was kicked',
-		    });
-		 });
-                 console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri katıldı.`);
-		 }
+                  console.log(player);
+                  iziToast.success({
+                    position: 'topRight',
+                    //theme: 'dark',	
+                    title: 'Successful',
+                    message: 'the ' + data[1].nick + ' player was kicked',
+                  });
+                });
+                //console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri katıldı.`);
+              }
               break;
             }
             case 16: {
@@ -363,19 +373,25 @@ btn.addEventListener("click", function () {
               const playerId = socket.playerId;
               const playerCode = socket.playerCode;
               if (data[2] == playerCode) {
-		socket.vote++;
-              if (socket.vote >= 3) {
-                socket.send(`42[24,${playerId}]`);
+                socket.vote++;
+                if (socket.vote >= 3) {
+                  socket.send(`42[24,${playerId}]`);
+                }
+                //console.log(`WebSocket ${i} ${playerCode} - ${data[1]} bizi atmaya çalıştı.  ${socket.vote}/3`);
               }
-              console.log(`WebSocket ${i} ${playerCode} - ${data[1]} bizi atmaya çalıştı.  ${socket.vote}/3`);
-	      }
               break;
             }
-	  }
+          }
         });
 
         socket.addEventListener('close', (event) => {
-          console.log(`WebSocket ${i} bağlantısı kapandı`);
+          //console.log(`WebSocket ${i} bağlantısı kapandı`);
+          iziToast.error({
+            position: 'topRight',
+            //theme: 'dark',	
+            title: 'Error',
+            message: `Connection to Server WebSocket ${i} Has Been Lost.`,
+          });
         });
 
       }
@@ -496,7 +512,7 @@ function updateUserList(players) {
       socketList.forEach((socket) => {
         if (socket.readyState === WebSocket.OPEN) {
           socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-          console.log(`WebSocket ${socket.playerId} playerId ile ${player.id} player odadan atmak için oy kullanıldı`);
+          //console.log(`WebSocket ${socket.playerId} playerId ile ${player.id} player odadan atmak için oy kullanıldı`);
         }
       });
 
@@ -517,7 +533,7 @@ reportdraw.addEventListener("click", function () {
   socketList.forEach((socket) => {
     if (socket.readyState === WebSocket.OPEN) {
       socket.send(`42[35,${socket.playerId}]`);
-      console.log(`WebSocket ${socket.playerId} playerId ile resim rapor edildi`);
+      //console.log(`WebSocket ${socket.playerId} playerId ile resim rapor edildi`);
     }
   }, () => {
     iziToast.success({
@@ -531,13 +547,13 @@ reportdraw.addEventListener("click", function () {
 
 kickall.addEventListener("click", function () {
   socketList.forEach((socket) => {
-   const players = socket.players
-   players.forEach((player) => {
-    if (socket.readyState === WebSocket.OPEN) {
-      socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-    }
-  });
-}, () => {
+    const players = socket.players
+    players.forEach((player) => {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+      }
+    });
+  }, () => {
     iziToast.success({
       position: 'topRight',
       //theme: 'dark',	
@@ -590,12 +606,13 @@ $('.proxy.checkbox')
 $('.profil.dropdown')
   .dropdown({
     clearable: false,
+    defaultValue: '5',
     onChange: function (value, text, $selectedItem) {
       profilepicture = value;
     }
   })
   ;
-  $('.search.dropdown')
+$('.search.dropdown')
   .dropdown({
     clearable: false,
     onChange: function (value, text, $selectedItem) {
