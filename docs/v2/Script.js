@@ -225,9 +225,6 @@ btn.addEventListener("click", function () {
         const randomIndex = Math.floor(Math.random() * (name.length + 1));
         const modifiedName = name.slice(0, randomIndex) + '឵' + name.slice(randomIndex);
 
-        // Sonuç olarak, değiştirilmiş isim console'a yazdırılıyor
-        console.log(modifiedName);
-
 
         const socket = new WebSocket(`wss:${data.split(":")[1]}/socket.io/?EIO=3&transport=websocket`, null);
 
