@@ -1,4 +1,4 @@
-const params = new URLSearchParams(window.location.search);
+let params = new URLSearchParams(window.location.search);
 document.body.innerHTML += `
 <div class="ui inverted segment">
   <div class="ui inverted form">
@@ -143,7 +143,7 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
 </div><div class="field">
 <label>Speed (ms):</label><div class="ui labeled input"><input type="number" value="3000" min="0" max="1000000" id="spamms"></div>
 
-</div><div class="field"><div class="ui labeled input" id="spamtext"><input type="text" value="anonimbiri" placeholder="Spam text" maxlength="99" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i> Start Spam</button></div></div></div>
+</div><div class="field"><div class="ui labeled input" id="spamtext"><input type="text" value="anonimbiri" placeholder="Spam text" maxlength="1000" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i> Start Spam</button></div></div></div>
 <div id="playerlist" class="ui massive inverted relaxed divided list">
 
   
@@ -180,6 +180,7 @@ function getRandomUserAgent() {
 let socketList = [];
 
 btn.addEventListener("click", function () {
+  params = new URLSearchParams(window.location.search);
   params.set('name', document.querySelector('#botname div input').value);
   params.set('code', url.value);
   params.set('amount', amount.value);
