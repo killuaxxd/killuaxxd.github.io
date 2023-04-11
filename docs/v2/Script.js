@@ -285,6 +285,12 @@ btn.addEventListener("click", function () {
               console.log(`WebSocket ${i} ${playerId} gönderildi`);
               socket.send(`42[11,"${playerId}","github.com/anonimbiri"]`);
               updateUserList(data[5]);
+              iziToast.success({
+              position: 'topRight',
+              //theme: 'dark',
+              title: 'Successful',
+              message: `WebSocket ${i} Joined the Server.`
+              });
               break;
             }
 	    case 23: {
@@ -441,12 +447,6 @@ function loaded() {
   }
   document.querySelector("#tool").style.display = 'block';
   btn.setAttribute("class", "ui primary button");
-  iziToast.success({
-    position: 'topRight',
-    //theme: 'dark',
-    title: 'Successful',
-    message: 'Joining the Server'
-  });
 }
 
 function updateUserList(players) {
