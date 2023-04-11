@@ -152,7 +152,7 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
 </div>
 `;
 $('.profil.dropdown').dropdown('set selected', params.get('image') || 0);
-$('search.dropdown').dropdown('set selected', params.get('lang') || 2);
+$('.search.dropdown').dropdown('set selected', params.get('lang') || 2);
 
 let btn = document.querySelector('#addbot');
 let btn2 = document.querySelector('#clearall');
@@ -637,7 +637,6 @@ $('.search.dropdown')
     clearable: false,
     onChange: function (value, text, $selectedItem) {
       serverlang = value;
-      console.log(serverlang);
     }
   })
   ;
