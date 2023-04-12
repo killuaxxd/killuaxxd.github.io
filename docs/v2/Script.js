@@ -141,9 +141,16 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
     <div class="item" data-value="13">Answer</div>
   </div></div>
 </div><div class="field">
-<label>Speed (ms):</label><div class="ui labeled input"><input type="number" value="3000" min="0" max="1000000" id="spamms"></div>
+<label>Speed (ms):</label><div class="ui labeled input"><input type="number" value="${params.get('spam-ms') || "3000"}" min="0" max="1000000" id="spamms"></div>
 
-</div><div class="field"><div class="ui labeled input" id="spamtext"><input type="text" value="anonimbiri" placeholder="Spam text" maxlength="1000" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i> Start Spam</button></div></div></div>
+</div><div class="field"><div class="ui labeled input" id="spamtext"><input type="text" value="${params.get('spam-text') || "anonimbiri"}" placeholder="Spam text" maxlength="1000" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i> Start Spam</button></div></div>
+<div class="inline field">
+<label>Automations:</label><div class="ui kick-the-joiner checkbox">
+<input type="checkbox" tabindex="0" class="hidden" >
+<label>Kick The Joiner</label>
+</div></div>
+</div>
+
 <div id="playerlist" class="ui massive inverted relaxed divided list">
 
   
@@ -153,6 +160,12 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
 `;
 $('.profil.dropdown').dropdown('set selected', params.get('image') || 0);
 $('.search.dropdown').dropdown('set selected', params.get('lang') || 2);
+var kickTheJoiner = params.get('kick-the-joiner') || false;
+
+if (kickTheJoiner) {
+  $('.kick-the-joiner.checkbox').checkbox('check');
+}
+
 
 let btn = document.querySelector('#addbot');
 let btn2 = document.querySelector('#clearall');
@@ -164,7 +177,6 @@ let watchtheroom = document.querySelector('#watchtheroom');
 let reportdraw = document.querySelector('#reportdraw');
 let kickall = document.querySelector('#kickall');
 let spambutton = document.querySelector('#startspam');
-let spamtext = document.querySelector('#spamtext input');
 
 let socketList = [];
 
@@ -342,6 +354,20 @@ btn.addEventListener("click", function () {
                   });
                 });
                 //console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri katıldı.`);
+
+                var kickTheJoiner = params.get('kick-the-joiner') || false;
+
+                if (kickTheJoiner) {
+                  let found = socketList.some((s) => {
+                    if (s.playerCode === data[1].id) return true;
+                  });
+
+                  if (found === false){
+                    console.log(`WebSocket ${i} ${socket.playerCode} ${data[1].id}`);
+                    socket.send(`42[45,${socket.playerId},["${data[1].id}",true]]`);
+                  }
+                }
+
               }
               break;
             }
@@ -372,24 +398,24 @@ btn.addEventListener("click", function () {
           }
         });
 
-        socket.onerror = function(error) {
-          //console.log(`WebSocket ${i} bağlantısı sorunlu kapandı`);
-          iziToast.error({
+        socket.onerror = function (error) {
+          console.error(`WebSocket ${i} Connection has Been Closed due to an issue.`);
+          /*iziToast.error({
             position: 'topRight',
             //theme: 'dark',	
             title: 'Error',
             message: `WebSocket ${i} Connection has Been Closed due to an issue.`,
-          });
+          });*/
         };
 
-         socket.onclose = function(event) {
-          //console.log(`WebSocket ${i} bağlantısı kapandı`);
-          iziToast.error({
+        socket.onclose = function (event) {
+          console.error(`Connection to Server WebSocket ${i} has Been Lost.`);
+          /*iziToast.error({
             position: 'topRight',
             //theme: 'dark',	
             title: 'Error',
             message: `Connection to Server WebSocket ${i} has Been Lost.`,
-          });
+          });*/
         };
 
       }
@@ -409,9 +435,9 @@ btn2.addEventListener("click", function () {
   if (socketList) {
     socketList.forEach(function (socket) {
       if (socket.readyState === WebSocket.OPEN) {
+        socket.close();
         socket.onerror = null;
         socket.onclose = null;
-        socket.close();
       }
     });
 
@@ -552,6 +578,7 @@ kickall.addEventListener("click", function () {
     const players = socket.players
     players.forEach((player) => {
       if (socket.readyState === WebSocket.OPEN) {
+        if (socket.playerCode === player.id) return;
         socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
       }
     });
@@ -571,8 +598,14 @@ let spam = false;
 var spamType = 11;
 spambutton.addEventListener("click", function () {
   if (spam == false) {
+    startSpamIntervalId()
     spam = true;
     spambutton.innerHTML = '<i class="stop icon"></i> Stop Spam'
+    params = new URLSearchParams(window.location.search);
+    params.set('spam-text', document.querySelector('#spamtext input').value);
+    params.set('spam-ms', document.querySelector('#spamms').value);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, '', newUrl);
     iziToast.success({
       position: 'topRight',
       //theme: 'dark',	
@@ -580,6 +613,7 @@ spambutton.addEventListener("click", function () {
       message: 'Spam Started',
     });
   } else {
+    clearInterval(spamIntervalId);
     spam = false;
     spambutton.innerHTML = '<i class="play icon"></i> Start Spam'
     iziToast.success({
@@ -605,6 +639,24 @@ $('.proxy.checkbox')
     onUnchecked: function () { proxymode = false; }
   })
   ;
+$('.kick-the-joiner.checkbox')
+  .checkbox({
+    // check all children
+    onChecked: function () {
+      params = new URLSearchParams(window.location.search);
+      params.set('kick-the-joiner', true);
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+    },
+    onUnchecked: function () {
+      params = new URLSearchParams(window.location.search);
+      params.delete('kick-the-joiner');
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+    }
+  })
+  ;
+
 $('.profil.dropdown')
   .dropdown({
     clearable: false,
@@ -640,26 +692,29 @@ setInterval(function () {
   });
 }, 5000);
 
-spamIntervalId = setInterval(function () {
-  if (!spam) return;
-  console.log(spamType);
+let spamIntervalId;
 
-  socketList.forEach((socket) => {
-    if (socket.readyState === WebSocket.OPEN) {
-      const randomIndex = Math.floor(Math.random() * (spamtext.value.length + 1));
-      let modifiedMessage;
+function startSpamIntervalId() {
+  spamIntervalId = setInterval(function () {
 
-      if (Math.random() < 0.1) {
-        modifiedMessage = "github.com/anonimbiri";
-      } else {
-        modifiedMessage = spamtext.value.slice(0, randomIndex) + '឵' + spamtext.value.slice(randomIndex);
+    socketList.forEach((socket) => {
+      if (socket.readyState === WebSocket.OPEN) {
+        let spamtext = params.get('spam-text');
+        const randomIndex = Math.floor(Math.random() * (spamtext.length + 1));
+        let modifiedMessage;
+
+        if (Math.random() < 0.1) {
+          modifiedMessage = "github.com/anonimbiri";
+        } else {
+          modifiedMessage = spamtext.slice(0, randomIndex) + '឵' + spamtext.slice(randomIndex);
+        }
+        socket.send(`42[${spamType},"${socket.playerId}","${modifiedMessage}"]`);
+        //console.log(`WebSocket ${socket.playerId} playerId'li kulanıcı için ${modifiedMessage} mesajı atıldı`);
       }
-      socket.send(`42[${spamType},"${socket.playerId}","${modifiedMessage}"]`);
-      //console.log(`WebSocket ${socket.playerId} playerId'li kulanıcı için ${modifiedMessage} mesajı atıldı`);
-    }
-  });
+    });
 
-}, document.querySelector('#spamms').value);
+  }, params.get('spam-ms'));
+}
 
 const isDevToolsOpened = () => {
   const widthThreshold = window.outerWidth - window.innerWidth > 160
