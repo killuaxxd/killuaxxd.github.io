@@ -185,7 +185,7 @@ if (params.has('proxy') && params.get('proxy') !== 'false') {
   $('#botamount .labeled.input').removeClass('disabled');
 }
 
-if (params.get('code') !== "") {
+if (params.get('code') && params.get('code') !== "") {
   $('.ui.search.dropdown').addClass('disabled');
 } else {
   $('.ui.search.dropdown').removeClass('disabled');
