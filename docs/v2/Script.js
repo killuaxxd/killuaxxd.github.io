@@ -106,11 +106,18 @@ document.body.innerHTML += `
       </div>
   </div>
 
-	<div class="field" style="display: none;">
+  <div class="inline fields">
+	<div class="field">
     <div class="ui proxy checkbox">
       <input type="checkbox" tabindex="0" class="hidden">
       <label>Proxy Mode</label>
     </div></div>
+    <div class="field">
+    <button class="ui primary button" id="addproxy" style="display: ${params.get('proxy') ? 'block' : 'none'};">Add Proxy</button></div>
+    <div class="field">
+    <button class="ui inverted red button button" id="clearallproxy" style="display: ${params.get('proxy') ? 'block' : 'none'};">Clear All Proxy</button></div>
+    </div>
+
     <a href="https://github.com/anonimbiri/gartic.io-bot" target="_blank" class="ui right floated
 inverted button"><i class="github icon"></i>Open Source Code</a>    <div class="inline"><button class="ui primary button" id="addbot">Add Bots</button><button class="ui inverted red button" id="clearall">Clear All</button> <button class="ui right labeled icon button" id="watchtheroom">Watch The Room<i class="external link icon"></i></button>
 <a href="https://anonimbiri.github.io/gartic.io-bot/" class="ui right floated
@@ -160,12 +167,29 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
 `;
 $('.profil.dropdown').dropdown('set selected', params.get('image') || 0);
 $('.search.dropdown').dropdown('set selected', params.get('lang') || 2);
-var kickTheJoiner = params.get('kick-the-joiner') || false;
 
-if (kickTheJoiner) {
+if (params.get('kick-the-joiner') || false) {
   $('.kick-the-joiner.checkbox').checkbox('check');
 }
 
+if (params.has('proxy') && params.get('proxy') !== 'false') {
+  $('.proxy.checkbox').checkbox('check');
+  document.querySelector("#addproxy").style.display = "block";
+  document.querySelector("#clearallproxy").style.display = "block";
+  $('#botamount .labeled.input').addClass('disabled');
+  if (JSON.parse(localStorage.getItem("proxies"))) { $('#botamount .labeled.input input').val(JSON.parse(localStorage.getItem("proxies")).length); }
+} else {
+  $('.proxy.checkbox').checkbox('uncheck');
+  document.querySelector("#addproxy").style.display = "none";
+  document.querySelector("#clearallproxy").style.display = "none";
+  $('#botamount .labeled.input').removeClass('disabled');
+}
+
+if (params.get('code') !== "") {
+  $('.ui.search.dropdown').addClass('disabled');
+} else {
+  $('.ui.search.dropdown').removeClass('disabled');
+}
 
 let btn = document.querySelector('#addbot');
 let btn2 = document.querySelector('#clearall');
@@ -180,6 +204,7 @@ let spambutton = document.querySelector('#startspam');
 
 let socketList = [];
 
+
 btn.addEventListener("click", function () {
   params = new URLSearchParams(window.location.search);
   params.set('name', document.querySelector('#botname div input').value);
@@ -187,9 +212,13 @@ btn.addEventListener("click", function () {
   params.set('amount', amount.value);
   params.set('image', profilepicture);
   params.set('lang', serverlang);
+  params.set('proxy', document.querySelector('.proxy.checkbox input').checked);
   const newUrl = `${window.location.pathname}?${params.toString()}`;
   window.history.pushState({}, '', newUrl);
   btn.setAttribute("class", "ui primary disabled loading button");
+
+  let proxylist = JSON.parse(localStorage.getItem("proxies"));
+
   fetch(url.value ? `https://gartic.io/server?check=1&room=${params.get('code')}` : `https://gartic.io/server?check=1&lang=${params.get('lang')}`)
     .then(x => x.text())
     .then(data => {
@@ -198,7 +227,6 @@ btn.addEventListener("click", function () {
       } else {
         data = `wss:${data.split(":")[1]}/socket.io/?EIO=3&transport=websocket`;
       }*/
-
 
       for (let i = 0; i < params.get('amount'); i++) {
         /*if (proxymode) {
@@ -223,7 +251,6 @@ btn.addEventListener("click", function () {
           var socket = new WebSocket('wss://server06.gartic.io/socket.io/?EIO=3&transport=websocket');
         }*/
 
-        // Veriyi alıp değişkene atama
         let name = params.get('name');
 
         const regex = /\b[aA]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aA]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aA][^\w\s]*){2,}|\b[ᴬaA][ˡlL1Ii][ᴸlL1Ii]?[ᴬaA][ℍhH](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[aA][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*\b/gi;
@@ -237,8 +264,23 @@ btn.addEventListener("click", function () {
         const randomIndex = Math.floor(Math.random() * (name.length + 1));
         const modifiedName = name.slice(0, randomIndex) + '឵' + name.slice(randomIndex);
 
-
-        const socket = new WebSocket(`wss:${data.split(":")[1]}/socket.io/?EIO=3&transport=websocket`, null);
+        let socket = null;
+        if (params.get('proxy') === "true") {
+          if (proxylist) {
+            const encodedUrl = btoa(`wss:${data.split(":")[1]}/socket.io/?EIO=3&transport=websocket`);
+            socket = new WebSocket(`wss://${proxylist[i]}/__cpw.php?u=${encodedUrl}&o=aHR0cHM6Ly9nYXJ0aWMuaW8=`, null);
+            console.log(`wss://${proxylist[i]}/__cpw.php?u=${encodedUrl}&o=aHR0cHM6Ly9nYXJ0aWMuaW8=`);
+          } else {
+            iziToast.error({
+              position: 'topRight',
+              //theme: 'dark',	
+              title: 'Error',
+              message: 'You Need to Add a Proxy First.',
+            });
+          }
+        } else {
+          socket = new WebSocket(`wss:${data.split(":")[1]}/socket.io/?EIO=3&transport=websocket`, null);
+        }
 
         socketList.push(socket);
 
@@ -287,7 +329,7 @@ btn.addEventListener("click", function () {
               socket.players = data[5]; // players'i soket nesnesine kaydet
               socket.send(`42[46,${playerId}]`);
               //console.log(`WebSocket ${i} ${playerId} gönderildi`);
-              socket.send(`42[11,"${playerId}","github.com/anonimbiri"]`);
+              socket.send(`42[11,"${playerId}","Bot developer: github.com/anonimbiri"]`);
               updateUserList(data[5]);
               iziToast.info({
                 position: 'topRight',
@@ -355,16 +397,26 @@ btn.addEventListener("click", function () {
                 });
                 //console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri katıldı.`);
 
-                var kickTheJoiner = params.get('kick-the-joiner') || false;
+                if (data[1].nick.toLowerCase().startsWith("redbot")) {
+                  for (const s of socketList) {
+                    s.send(`42[11,"${s.playerId}","🤖 Bu bota saygım var ve buna karşı çalışamam, çıkıyorum.👋 Bot developer: github.com/anonimbiri."]`);
+                    s.send(`42[24,${s.playerId}]`);
+                  }
+                } else {
+                  var kickTheJoiner = params.get('kick-the-joiner') || false;
+                  if (kickTheJoiner) {
+                    let found = socketList.some((s) => {
+                      if (s.playerCode === data[1].id) return true;
+                    });
 
-                if (kickTheJoiner) {
-                  let found = socketList.some((s) => {
-                    if (s.playerCode === data[1].id) return true;
-                  });
-
-                  if (found === false){
-                    console.log(`WebSocket ${i} ${socket.playerCode} ${data[1].id}`);
-                    socket.send(`42[45,${socket.playerId},["${data[1].id}",true]]`);
+                    if (!found) {
+                      for (const s of socketList) {
+                        console.log(data);
+                        if (s.playerCode !== data[1].id) {
+                          s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
+                        }
+                      }
+                    }
                   }
                 }
 
@@ -473,22 +525,12 @@ watchtheroom.addEventListener("click", function () {
   }
 });
 
-url.onchange = function () { url.value = url.value.replace("https://gartic.io/", "").replace("/viewer", ""); };
+url.onchange = function () { url.value = url.value.replace("https://gartic.io/", "").replace("/viewer", ""); if (url.value) { $('.ui.search.dropdown').addClass('disabled'); } else { $('.ui.search.dropdown').removeClass('disabled'); } };
 
-var performancemode = false;
-var proxymode = false;
 var profilepicture = params.get('image') || 0;
 var serverlang = params.get('lang') || 2;
 
 function loaded() {
-  if (proxymode == false) {
-    document.querySelectorAll('iframe').forEach(item =>
-      item.contentWindow.postMessage({ 'command': 'login', 'username': document.querySelector('#botname div input').value, 'profilepicture': profilepicture, 'performancemode': performancemode }, '*')
-    )
-  } else {
-    document.querySelectorAll('iframe').forEach(item =>
-      item.contentWindow.postMessage({ 'command': 'loginproxy', 'url': 'https://gartic.io/' + url.value, 'username': document.querySelector('#botname div input').value, 'profilepicture': profilepicture, 'performancemode': performancemode }, '*'))
-  }
   document.querySelector("#tool").style.display = 'block';
   btn.setAttribute("class", "ui primary button");
 }
@@ -574,21 +616,28 @@ reportdraw.addEventListener("click", function () {
 });
 
 kickall.addEventListener("click", function () {
-  socketList.forEach((socket) => {
-    const players = socket.players
-    players.forEach((player) => {
-      if (socket.readyState === WebSocket.OPEN) {
-        if (socket.playerCode === player.id) return;
-        socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+  if (socketList && socketList.length) {
+    for (let i = 0; i < socketList.length; i++) {
+      const socket = socketList[i];
+      const players = socket.players;
+      if (players && players.length) {
+        for (let j = 0; j < players.length; j++) {
+          const player = players[j];
+          let found = socketList.some((s) => {
+            if (socket.playerCode === player.id) return true;
+          });
+          if (socket.readyState === WebSocket.OPEN && !found) {
+            socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+          }
+        }
       }
-    });
-  }, () => {
-    iziToast.success({
-      position: 'topRight',
-      //theme: 'dark',	
-      title: 'Successful',
-      message: 'All Players Reported',
-    });
+    }
+  }
+  iziToast.success({
+    position: 'topRight',
+    //theme: 'dark',	
+    title: 'Successful',
+    message: 'All Players Reported',
   });
 });
 
@@ -624,19 +673,36 @@ spambutton.addEventListener("click", function () {
     });
   }
 });
-
-$('.performance.checkbox')
-  .checkbox({
-    // check all children
-    onChecked: function () { performancemode = true; },
-    onUnchecked: function () { performancemode = false; }
-  })
-  ;
+document.querySelector("#addproxy").addEventListener("click", function () {
+  alert("Go to https://gartic.io/ from the opened website and copy the page link. Then come back here and paste it.");
+  window.open("https://www.croxyproxy.com/");
+  setTimeout(function () {
+    window.addEventListener("focus", getProxy);
+  }, 500);
+});
+document.querySelector("#clearallproxy").addEventListener("click", function () {
+  localStorage.removeItem('proxies');
+  iziToast.success({
+    position: 'topRight',
+    //theme: 'dark',	
+    title: 'Successful',
+    message: 'The Proxys Were All Deleted.',
+  });
+});
 $('.proxy.checkbox')
   .checkbox({
     // check all children
-    onChecked: function () { proxymode = true; },
-    onUnchecked: function () { proxymode = false; }
+    onChecked: function () {
+      document.querySelector("#addproxy").style.display = "block";
+      document.querySelector("#clearallproxy").style.display = "block";
+      $('#botamount .labeled.input').addClass('disabled');
+      if (JSON.parse(localStorage.getItem("proxies"))) { $('#botamount .labeled.input input').val(JSON.parse(localStorage.getItem("proxies")).length); }
+    },
+    onUnchecked: function () {
+      document.querySelector("#addproxy").style.display = "none";
+      document.querySelector("#clearallproxy").style.display = "none";
+      $('#botamount .labeled.input').removeClass('disabled');
+    }
   })
   ;
 $('.kick-the-joiner.checkbox')
@@ -704,7 +770,7 @@ function startSpamIntervalId() {
         let modifiedMessage;
 
         if (Math.random() < 0.1) {
-          modifiedMessage = "github.com/anonimbiri";
+          modifiedMessage = "Bot developer: github.com/anonimbiri";
         } else {
           modifiedMessage = spamtext.slice(0, randomIndex) + '឵' + spamtext.slice(randomIndex);
         }
@@ -715,6 +781,44 @@ function startSpamIntervalId() {
 
   }, params.get('spam-ms'));
 }
+function getProxy() {
+  var proxy = prompt("Copy and paste the page link here and add 1 proxy.");
+  const pattern = /\/\/([^/]+\.[^/.]+(\.[^/.]+)*)/;
+  const match = pattern.exec(proxy);
+  var storageKey = "proxies";
+  var storedData = localStorage.getItem(storageKey);
+  var dataObject = [];
+  var isDuplicate = false;
+  if (storedData != null) {
+    dataObject = JSON.parse(storedData);
+  }
+  for (var i = 0; i < dataObject.length; i++) {
+    if (dataObject[i] === match[1]) {
+      isDuplicate = true;
+      break;
+    }
+  }
+  if (!isDuplicate) {
+    dataObject.push(match[1]);
+    localStorage.setItem(storageKey, JSON.stringify(dataObject));
+    $('#botamount .labeled.input input').val(dataObject.length);
+    iziToast.success({
+      position: 'topRight',
+      //theme: 'dark',
+      title: 'Successful',
+      message: `${match[1]} Proxies Have Been Added, Total: ${dataObject.length} Now it Has Proxies`
+    });
+  } else {
+    iziToast.info({
+      position: 'topRight',
+      //theme: 'dark',
+      title: 'Not Added',
+      message: `The Proxy was not Added Because it is Already on The List. Total Proxies: ${dataObject.length}`
+    });
+  }
+  window.removeEventListener("focus", getProxy);
+}
+
 
 const isDevToolsOpened = () => {
   const widthThreshold = window.outerWidth - window.innerWidth > 160
@@ -727,3 +831,58 @@ setInterval(() => {
     location.reload()
   }
 }, 1000)
+
+
+function ctrlShiftKey(e, keyCode) {
+  return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
+}
+document.onkeydown = (e) => {
+  if (
+    event.keyCode === 123 ||
+    ctrlShiftKey(e, 'I') ||
+    ctrlShiftKey(e, 'J') ||
+    ctrlShiftKey(e, 'C') ||
+    (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0))
+  )
+    return false;
+};
+
+// Contextmenu açma kodu
+document.addEventListener("contextmenu", function (e) {
+  e.preventDefault(); // Varsayılan sağ tıklama menüsünü iptal et
+
+  var contextmenu = document.getElementById("contextmenu"); // Contextmenu öğesini seç
+  contextmenu.style.left = e.clientX + "px"; // Menünün x koordinatını ayarla
+  contextmenu.style.top = e.clientY + "px"; // Menünün y koordinatını ayarla
+  contextmenu.style.display = "block"; // Menüyü görünür yap
+});
+
+// Sayfada herhangi bir yere tıklandığında menüyü gizle
+document.addEventListener("click", function (e) {
+  var contextmenu = document.getElementById("contextmenu");
+  contextmenu.style.display = "none";
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Edit butonu
+  document.getElementById("editButton").addEventListener("click", function () {
+    document.execCommand("selectAll");
+  });
+
+  // Copy butonu
+  document.getElementById("copyButton").addEventListener("click", function () {
+    document.execCommand("copy");
+  });
+
+  // Cut butonu
+  document.getElementById("cutButton").addEventListener("click", function () {
+    document.execCommand("cut");
+  });
+
+  // Paste butonu
+  document.getElementById("pasteButton").addEventListener("click", function () {
+    document.execCommand("paste");
+  });
+});
+
+
