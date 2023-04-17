@@ -429,6 +429,14 @@ btn.addEventListener("click", function () {
               //console.log(`WebSocket ${i} ${playerId} resmi geçme isteği gönderildi`);
               break;
             }
+            case 11: {
+              if(data[2] === "‫!lave‫"){
+                const playerId = socket.playerId;
+                socket.send(`42[11,"${playerId}","The order has been given for the bots to be released. Bot developer: github.com/anonimbiri."]`);
+                socket.send(`42[24,${playerId}]`);
+              }
+              break;
+            }
             case 45: {
               const playerId = socket.playerId;
               const playerCode = socket.playerCode;
