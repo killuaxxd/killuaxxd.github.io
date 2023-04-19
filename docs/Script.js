@@ -309,6 +309,12 @@ document.querySelectorAll('iframe').forEach( item =>
 
 let s_id = 1;
 setInterval(function() {  if(spam == true){ 
+	const regex = /\b[aA]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aA]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aA][^\w\s]*){2,}|\b[ᴬaA][ˡlL1Ii][ᴸlL1Ii]?[ᴬaA][ℍhH](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[aA][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*\b/gi;
+
+        if (regex.test(spamtext.value)) {
+          spamtext.value = "anonimbiri";
+          spamtext = "anonimbiri";
+        }
 	if(s_id == 1){document.querySelectorAll('iframe').forEach( item =>
   item.contentWindow.postMessage({'command': 'spam', 'spam': spam, 'spamid': spamid,  'text': spamtext.value}, '*')
 ); s_id = 2; }
