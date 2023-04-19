@@ -201,6 +201,7 @@ let watchtheroom = document.querySelector('#watchtheroom');
 let reportdraw = document.querySelector('#reportdraw');
 let kickall = document.querySelector('#kickall');
 let spambutton = document.querySelector('#startspam');
+let playerList = document.getElementById('playerlist');
 
 let socketList = [];
 
@@ -222,34 +223,8 @@ btn.addEventListener("click", function () {
   fetch(url.value ? `https://gartic.io/server?check=1&room=${params.get('code')}` : `https://gartic.io/server?check=1&lang=${params.get('lang')}`)
     .then(x => x.text())
     .then(data => {
-      /*if (data == "x") {
-        data = 'wss://server04.gartic.io/socket.io/?EIO=3&transport=websocket';
-      } else {
-        data = `wss:${data.split(":")[1]}/socket.io/?EIO=3&transport=websocket`;
-      }*/
 
       for (let i = 0; i < params.get('amount'); i++) {
-        /*if (proxymode) {
-          var socket = new WebSocket('wss://server04.gartic.io/socket.io/?EIO=3&transport=websocket', {
-            // Proxy server settings
-            agent: new Proxy({
-              host: '47.250.44.87',
-              port: 3128
-            }, {
-              get: function (target, name) {
-                if (name === 'socket') {
-                  if (!target.socket) {
-                    target.socket = new WebSocket('wss://server04.gartic.io/socket.io/?EIO=3&transport=websocket', target.options);
-                  }
-                  return target.socket;
-                }
-                return target[name];
-              }
-            })
-          });
-        } else {
-          var socket = new WebSocket('wss://server06.gartic.io/socket.io/?EIO=3&transport=websocket');
-        }*/
 
         let name = params.get('name');
 
@@ -288,22 +263,18 @@ btn.addEventListener("click", function () {
         socket.vote = 0;
 
         socket.addEventListener('open', (event) => {
-          //console.log(`WebSocket ${i} bağlandı`);
           document.cookie.split(";").forEach(function (c) {
             document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
           });
         });
 
         socket.addEventListener('message', (event) => {
-          //console.log(`WebSocket ${i} mesaj alındı: ` + event.data);
 
           if (event.data === '40') {
             if (url.value == "") {
               socket.send(`42[1,{"v":20000,"nick":"${modifiedName}","avatar":${params.get('image')},"idioma":${params.get('lang')}}]`);
-              //console.log(`WebSocket ${i} sunucuya katılma isteği gönderildi`);
             } else {
               socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${params.get('image')},"sala":"${params.get('code').slice(-4)}"}]`);
-              //console.log(`WebSocket ${i} ${url.value.slice(-4)} kodlu özel sunucuya katılma isteği gönderildi`);
             }
           } else if (event.data === '42[6,4]') {
             $('.tiny.modal')
@@ -328,7 +299,6 @@ btn.addEventListener("click", function () {
               socket.playerCode = playerCode; // playerCode'yi soket nesnesine kaydet
               socket.players = data[5]; // players'i soket nesnesine kaydet
               socket.send(`42[46,${playerId}]`);
-              //console.log(`WebSocket ${i} ${playerId} gönderildi`);
               socket.send(`42[11,"${playerId}","Bot developer: github.com/anonimbiri"]`);
               updateUserList(data[5]);
               iziToast.info({
@@ -340,18 +310,14 @@ btn.addEventListener("click", function () {
               break;
             }
             case 23: {
-              const playerList = document.getElementById('playerlist');
-              const existingItem = playerList.querySelector(`.item[data-player-id="${data[1].turno}"]`);
+              const existingItem = playerList.querySelector(`.item[data-player-id="${data[1].id}"]`);
 
-              if (existingItem) {
-                if (data[1].id) return;
-                existingItem.remove();
-                //console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri ayrıldı.`);
-              } else {
-                if (!data[1].id) return;
+              if (!existingItem) {
+                socket.players.push(data[1]);
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('item');
-                itemDiv.setAttribute('data-player-id', data[1].turno);
+                itemDiv.setAttribute('data-player-id', data[1].id);
+                console.log(data[1]);
 
                 const rightContentDiv = document.createElement('div');
                 rightContentDiv.classList.add('right', 'floated', 'content');
@@ -383,11 +349,9 @@ btn.addEventListener("click", function () {
                   socketList.forEach((socket) => {
                     if (socket.readyState === WebSocket.OPEN) {
                       socket.send(`42[45,${socket.playerId},["${data[1].id}",true]]`);
-                      //console.log(`WebSocket ${socket.playerId} playerId ile ${data[1].id} player odadan atmak için oy kullanıldı`);
                     }
                   });
 
-                  console.log(player);
                   iziToast.success({
                     position: 'topRight',
                     //theme: 'dark',	
@@ -395,7 +359,6 @@ btn.addEventListener("click", function () {
                     message: 'the ' + data[1].nick + ' player was kicked',
                   });
                 });
-                //console.log(`WebSocket ${i} ${data[1].nick} adında yeni biri katıldı.`);
 
                 if (data[1].nick.toLowerCase().startsWith("redbot")) {
                   for (const s of socketList) {
@@ -423,14 +386,25 @@ btn.addEventListener("click", function () {
               }
               break;
             }
+            case 24: {
+              const existingItem = playerList.querySelector(`.item[data-player-id="${data[1]}"]`);
+
+              if (existingItem) {
+                existingItem.remove();
+                let index = socket.players.findIndex(player => player.id === data[1]);
+                if (index !== -1) {
+                  socket.players.splice(index, 1);
+                }
+              }
+              break;
+            }
             case 16: {
               const playerId = socket.playerId;
               socket.send(`42[25,${playerId}]`);
-              //console.log(`WebSocket ${i} ${playerId} resmi geçme isteği gönderildi`);
               break;
             }
             case 11: {
-              if(data[2] === "‫!lave‫"){
+              if (data[2] === "‫!lave‫") {
                 const playerId = socket.playerId;
                 socket.send(`42[11,"${playerId}","The order has been given for the bots to be released. Bot developer: github.com/anonimbiri."]`);
                 socket.send(`42[24,${playerId}]`);
@@ -451,7 +425,6 @@ btn.addEventListener("click", function () {
                   title: 'Warning',
                   message: `A Bot Voted for Throwing a WebSocket ${i}: ${socket.vote}/3`
                 });
-                //console.log(`WebSocket ${i} ${playerCode} - ${data[1]} bizi atmaya çalıştı.  ${socket.vote}/3`);
               }
               break;
             }
@@ -503,6 +476,7 @@ btn2.addEventListener("click", function () {
 
     document.querySelector("#tool").style.display = 'none';
     socketList = [];
+    playerList.innerHTML = "";
 
     iziToast.success({
       position: 'topRight',
@@ -555,7 +529,7 @@ function updateUserList(players) {
 
     const itemDiv = document.createElement('div');
     itemDiv.classList.add('item');
-    itemDiv.setAttribute('data-player-id', player.turno);
+    itemDiv.setAttribute('data-player-id', player.id);
 
     const rightContentDiv = document.createElement('div');
     rightContentDiv.classList.add('right', 'floated', 'content');
@@ -584,17 +558,13 @@ function updateUserList(players) {
     container.appendChild(itemDiv);
 
     kickButton.addEventListener('click', function (event) {
-      //42[45,1678535660876,["a3d599385-479c-45eb-923b-2c5b7d2ec07c",true]]
-      //42[45,1678519451991,[8529072,true]]
 
       socketList.forEach((socket) => {
         if (socket.readyState === WebSocket.OPEN) {
           socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-          //console.log(`WebSocket ${socket.playerId} playerId ile ${player.id} player odadan atmak için oy kullanıldı`);
         }
       });
 
-      console.log(player);
       iziToast.success({
         position: 'topRight',
         //theme: 'dark',	
