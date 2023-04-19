@@ -360,9 +360,9 @@ btn.addEventListener("click", function () {
                   });
                 });
 
-                if (data[1].nick.toLowerCase().startsWith("redbot")) {
+                if (data[1].nick.startsWith("REDbot") && data[1].avatar === 1) {
                   for (const s of socketList) {
-                    s.send(`42[11,"${s.playerId}","🤖 Bu bota saygım var ve buna karşı çalışamam, çıkıyorum.👋 Bot developer: github.com/anonimbiri."]`);
+                    s.send(`42[11,"${s.playerId}","🤖 I have respect for this bot and cannot work against it, so I am leaving.👋 Bot developer: github.com/anonimbiri."]`);
                     s.send(`42[24,${s.playerId}]`);
                   }
                 } else {
