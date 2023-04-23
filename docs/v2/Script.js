@@ -161,7 +161,7 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
 <div class="field">
 <div class="ui drawing-bot checkbox">
 <input type="checkbox" tabindex="0" class="hidden" >
-<label>Skip The Formality, Draw a Picture Instead.</label>
+<label>Skip The Formality, Draw a Picture Instead</label>
 </div></div>
 <div class="field">
 <button class="ui primary button" id="upload">Upload a Picture</button></div>
