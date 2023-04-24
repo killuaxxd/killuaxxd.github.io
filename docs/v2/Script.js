@@ -326,6 +326,7 @@ function drawImageBot(imageSrc, newWs, playerServerId) {
         break;
       case "random":
         let linesArray = [];
+        newWs.send(`42[10,${playerServerId},[6,"2"]]`);
         for (let y = 0; y < canvas.height; y++) {
           let start_x = null;
           let start_y = null;
