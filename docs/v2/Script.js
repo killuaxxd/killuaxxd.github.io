@@ -163,6 +163,18 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
 <input type="checkbox" tabindex="0" class="hidden" >
 <label>Skip The Formality, Draw a Picture Instead</label>
 </div></div>
+
+<div class="field"><label>Drawing Type:</label><div class="ui selection drawing-type dropdown">
+  <input type="hidden" name="gender">
+  <i class="dropdown icon"></i>
+  <div class="text">Horizontal</div>
+  <div class="menu">
+    <div class="item active selected" data-value="horizontal">Horizontal</div>
+    <div class="item" data-value="vertical">Vertical</div>
+    <div class="item" data-value="random">Random</div>
+  </div></div>
+</div>
+
 <div class="field">
 <button class="ui primary button" id="upload">Upload a Picture</button></div>
 </div>
@@ -176,6 +188,8 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
 `;
 $('.profil.dropdown').dropdown('set selected', params.get('image') || 0);
 $('.search.dropdown').dropdown('set selected', params.get('lang') || 2);
+$('.drawing-type.dropdown').dropdown('set selected', params.get('drawing-mode') || "horizontal");
+
 
 if (params.get('kick-the-joiner') || false) {
   $('.kick-the-joiner.checkbox').checkbox('check');
@@ -253,30 +267,104 @@ function drawImageBot(imageSrc, newWs, playerServerId) {
     ctx.drawImage(image, x, y, w, h);
     var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     var data = imageData.data;
-    for (var y = 0; y < canvas.height; y++) {
-      var start_x = null;
-      var start_y = null;
-      var current_color = null;
-      for (var x = 0; x < canvas.width; x++) {
-        var index = (y * canvas.width + x) * 4;
-        var r = data[index];
-        var g = data[index + 1];
-        var b = data[index + 2];
-        var color = rgbToHex(r, g, b);
-        if (color !== current_color) {
+
+    switch (params.get('drawing-mode')) {
+      case "horizontal":
+      default:
+        for (var y = 0; y < canvas.height; y++) {
+          let start_x = null;
+          let start_y = null;
+          let current_color = null;
+          for (var x = 0; x < canvas.width; x++) {
+            let index = (y * canvas.width + x) * 4;
+            let r = data[index];
+            let g = data[index + 1];
+            let b = data[index + 2];
+            let color = rgbToHex(r, g, b);
+            if (color !== current_color) {
+              if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
+                newWs.send(`42[10,${playerServerId},[5,"${current_color}"]]`);
+                newWs.send(`42[10,${playerServerId},[2,${start_x},${start_y},${x},${y}]]`);
+              }
+              start_x = x;
+              start_y = y;
+              current_color = color;
+            }
+          }
           if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
             newWs.send(`42[10,${playerServerId},[5,"${current_color}"]]`);
-            newWs.send(`42[10,${playerServerId},[2,${start_x},${start_y},${x},${y}]]`);
+            newWs.send(`42[10,${playerServerId},[2,${start_x},${start_y},${canvas.width},${y}]]`);
           }
-          start_x = x;
-          start_y = y;
-          current_color = color;
         }
-      }
-      if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
-        newWs.send(`42[10,${playerServerId},[5,"${current_color}"]]`);
-        newWs.send(`42[10,${playerServerId},[2,${start_x},${start_y},${canvas.width},${y}]]`);
-      }
+        break;
+      case "vertical":
+        for (var x = 0; x < canvas.width; x++) {
+          let start_x = null;
+          let start_y = null;
+          let current_color = null;
+          for (let y = 0; y < canvas.height; y++) {
+            let index = (y * canvas.width + x) * 4;
+            let r = data[index];
+            let g = data[index + 1];
+            let b = data[index + 2];
+            let color = rgbToHex(r, g, b);
+            if (color !== current_color) {
+              if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
+                newWs.send(`42[10,${playerServerId},[5,"${current_color}"]]`);
+                newWs.send(`42[10,${playerServerId},[2,${start_x},${start_y},${x},${y}]]`);
+              }
+              start_x = x;
+              start_y = y;
+              current_color = color;
+            }
+          }
+          if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
+            newWs.send(`42[10,${playerServerId},[5,"${current_color}"]]`);
+            newWs.send(`42[10,${playerServerId},[2,${start_x},${start_y},${canvas.width},${y}]]`);
+          }
+        }
+        break;
+      case "random":
+        let linesArray = [];
+        for (let y = 0; y < canvas.height; y++) {
+          let start_x = null;
+          let start_y = null;
+          let current_color = null;
+          for (let x = 0; x < canvas.width; x++) {
+            let index = (y * canvas.width + x) * 4;
+            let r = data[index];
+            let g = data[index + 1];
+            let b = data[index + 2];
+            let color = rgbToHex(r, g, b);
+            if (color !== current_color) {
+              if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
+                linesArray.push({ start_x: start_x, start_y: start_y, end_x: x, end_y: y, color: current_color });
+              }
+              start_x = x;
+              start_y = y;
+              current_color = color;
+            }
+          }
+          if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
+            linesArray.push({ start_x: start_x, start_y: start_y, end_x: canvas.width, end_y: y, color: current_color });
+          }
+        }
+
+        for (let i = linesArray.length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          [linesArray[i], linesArray[j]] = [linesArray[j], linesArray[i]];
+        }
+
+        let drawnLines = [];
+        for (let i = 0; i < linesArray.length; i++) {
+          let line = linesArray[i];
+          if (!drawnLines.some(drawnLine => drawnLine.start_x === line.start_x && drawnLine.start_y === line.start_y && drawnLine.end_x === line.end_x && drawnLine.end_y === line.end_y)) {
+            newWs.send(`42[10,${playerServerId},[5,"${line.color}"]]`);
+            newWs.send(`42[10,${playerServerId},[2,${line.start_x},${line.start_y},${line.end_x},${line.end_y}]]`);
+            drawnLines.push(line);
+          }
+        }
+        break;
     }
   };
 }
@@ -493,7 +581,7 @@ btn.addEventListener("click", function () {
               if (drawingBot === "true") {
                 if (!image_url) return socket.send(`42[25,${playerId}]`);
                 socket.send(`42[34,${playerId},${Math.round(Math.random())}]`);
-                drawImageBot(image_url, socket, playerId);
+                drawImageBot(image_url, socket, playerId, "random");
               } else {
                 socket.send(`42[25,${playerId}]`);
               }
@@ -814,7 +902,18 @@ $('.drawing-bot.checkbox')
     }
   })
   ;
-
+$('.drawing-type.dropdown')
+  .dropdown({
+    clearable: false,
+    defaultValue: 'horizontal',
+    onChange: function (value, text, $selectedItem) {
+      params = new URLSearchParams(window.location.search);
+      params.set('drawing-mode', value);
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+    }
+  })
+  ;
 $('.profil.dropdown')
   .dropdown({
     clearable: false,
