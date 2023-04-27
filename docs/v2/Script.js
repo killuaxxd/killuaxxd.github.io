@@ -151,6 +151,21 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
 <label>Speed (ms):</label><div class="ui labeled input"><input type="number" value="${params.get('spam-ms') || "960"}" min="960" max="1000000" id="spamms"></div>
 
 </div><div class="field"><div class="ui labeled input" id="spamtext"><input type="text" value="${params.get('spam-text') || "anonimbiri"}" placeholder="Spam text" maxlength="1000" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i> Start Spam</button></div></div>
+
+<div class="inline fields"><label>Messaging:</label><div class="field"><div class="ui selection messaging dropdown">
+  <input type="hidden" name="gender">
+  <i class="dropdown icon"></i>
+  <div class="text">Chat</div>
+  <div class="menu">
+    <div class="item active selected" data-value="11">Chat</div>
+    <div class="item" data-value="13">Answer</div>
+  </div></div>
+</div>
+
+<div class="field"><div class="ui labeled input" id="messagetext"><input type="text" value="${params.get('message-text') || "anonimbiri"}" placeholder="Message text" maxlength="1000" spellcheck="false" data-ms-editor="true"></div></div><div class="field">
+<button class="ui primary button" id="send">Send Message</button></div>
+</div>
+
 <div class="inline fields">
 <label>Automations:</label><div class="ui kick-the-joiner checkbox">
 <input type="checkbox" tabindex="0" class="hidden" >
@@ -271,7 +286,7 @@ function drawImageBot(imageSrc, newWs, playerServerId) {
     switch (params.get('drawing-mode')) {
       case "horizontal":
       default:
-        for (var y = 0; y < canvas.height; y++) {
+        /*for (var y = 0; y < canvas.height; y++) {
           let start_x = null;
           let start_y = null;
           let current_color = null;
@@ -294,8 +309,101 @@ function drawImageBot(imageSrc, newWs, playerServerId) {
           if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
             newWs.send(`42[10,${playerServerId},[5,"${current_color}"]]`);
             newWs.send(`42[10,${playerServerId},[2,${start_x},${start_y},${canvas.width},${y}]]`);
+          }*/
+
+        /* let lines = {};
+ 
+         for (var y = 0; y < canvas.height; y++) {
+           let start_x = null;
+           let start_y = null;
+           let current_color = null;
+ 
+           for (var x = 0; x < canvas.width; x++) {
+             let index = (y * canvas.width + x) * 4;
+             let r = data[index];
+             let g = data[index + 1];
+             let b = data[index + 2];
+             let color = rgbToHex(r, g, b);
+ 
+             if (color !== current_color) {
+               if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
+                 let line = [start_x, start_y, x, y];
+                 if (!lines[current_color]) {
+                   lines[current_color] = [];
+                 }
+                 lines[current_color].push(line);
+               }
+               start_x = x;
+               start_y = y;
+               current_color = color;
+             }
+           }
+ 
+           if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
+             let line = [start_x, start_y, canvas.width, y];
+             if (!lines[current_color]) {
+               lines[current_color] = [];
+             }
+             lines[current_color].push(line);
+           }
+         }
+ 
+         let colors = Object.keys(lines);
+         let i = 0;
+ 
+         function sendMessage() {
+           if (i >= colors.length) {
+             clearInterval(intervalId);
+             return;
+           }
+           let color = colors[i];
+           newWs.send(`42[10,${playerServerId},[5,"${color}"]]`);
+           newWs.send(`42[10,${playerServerId},[1,6,${lines[color]}]]`);
+           i++;
+         }
+ 
+         let intervalId = setInterval(sendMessage, 500);*/
+
+        let chunks = { color: [], line: [] };
+        for (let x = 0; x < canvas.width; x++) {
+          let start_x = null;
+          let start_y = null;
+          let current_color = null;
+          for (let y = 0; y < canvas.height; y++) {
+            let index = (y * canvas.width + x) * 4;
+            let r = data[index];
+            let g = data[index + 1];
+            let b = data[index + 2];
+            let color = rgbToHex(r, g, b);
+            if (color !== current_color) {
+              if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
+                chunks.color.push(`42[10,${playerServerId},[5,"${current_color}"]]`);
+                chunks.line.push(`42[10,${playerServerId},[1,6,${start_x},${start_y},${x},${y}]]`);
+              }
+              start_x = x;
+              start_y = y;
+              current_color = color;
+            }
+          }
+          if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
+            chunks.color.push(`42[10,${playerServerId},[5,"${current_color}"]]`);
+            chunks.line.push(`42[10,${playerServerId},[1,6,${start_x},${start_y},${canvas.width},${y}]]`);
           }
         }
+
+        let i = 0;
+        let interval = setInterval(() => {
+          if (i >= chunks.length) {
+            clearInterval(interval);
+          } else {
+            newWs.send(chunks.color[i]);
+            newWs.send(chunks.line[i]);
+            i = i + 5;
+          }
+        }, 300);
+
+
+
         break;
       case "vertical":
         for (var x = 0; x < canvas.width; x++) {
@@ -311,7 +419,7 @@ function drawImageBot(imageSrc, newWs, playerServerId) {
             if (color !== current_color) {
               if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
                 newWs.send(`42[10,${playerServerId},[5,"${current_color}"]]`);
-                newWs.send(`42[10,${playerServerId},[2,${start_x},${start_y},${x},${y}]]`);
+                newWs.send(`42[10,${playerServerId},[1,6,${start_x},${start_y},${x},${y}]]`);
               }
               start_x = x;
               start_y = y;
@@ -320,7 +428,7 @@ function drawImageBot(imageSrc, newWs, playerServerId) {
           }
           if (start_x !== null && start_y !== null && current_color !== "xFFFFFF") {
             newWs.send(`42[10,${playerServerId},[5,"${current_color}"]]`);
-            newWs.send(`42[10,${playerServerId},[2,${start_x},${start_y},${canvas.width},${y}]]`);
+            newWs.send(`42[10,${playerServerId},[1,6,${start_x},${start_y},${canvas.width},${y}]]`);
           }
         }
         break;
@@ -808,6 +916,7 @@ kickall.addEventListener("click", function () {
 
 let spam = false;
 var spamType = 11;
+var messageType = 11;
 spambutton.addEventListener("click", function () {
   if (spam == false) {
     startSpamIntervalId()
@@ -940,6 +1049,14 @@ $('.spam.dropdown')
     }
   })
   ;
+$('.messaging.dropdown')
+  .dropdown({
+    clearable: false,
+    onChange: function (value, text, $selectedItem) {
+      messageType = value;
+    }
+  })
+  ;
 
 setInterval(function () {
   socketList.forEach((socket) => {
@@ -949,6 +1066,37 @@ setInterval(function () {
     }
   });
 }, 5000);
+
+document.querySelector("#send").addEventListener("click", function () {
+  params = new URLSearchParams(window.location.search);
+  params.set('message-text', document.querySelector('#messagetext input').value);
+  const newUrl = `${window.location.pathname}?${params.toString()}`;
+  window.history.pushState({}, '', newUrl);
+
+  let messagetext = params.get('message-text');
+  const regex = /\b[aA]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aA]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aA][^\w\s]*){2,}|\b[ᴬaA][ˡlL1Ii][ᴸlL1Ii]?[ᴬaA][ℍhH](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[aA][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*\b/gi;
+
+  if (regex.test(messagetext)) {
+    document.querySelector('#messagetext input').value = "anonimbiri";
+    messagetext = "anonimbiri";
+  }
+
+  switch (messageType) {
+    case "11":
+    default:
+      const randomIndex = Math.floor(Math.random() * socketList.length);
+      socketList[randomIndex].send(`42[${messageType},"${socketList[randomIndex].playerId}","${messagetext}"]`);
+      break;
+    case "13":
+      socketList.forEach((socket) => {
+        if (socket.readyState === WebSocket.OPEN) {
+          socket.send(`42[${messageType},"${socket.playerId}","${messagetext}"]`);
+        }
+      });
+      break;
+  }
+
+});
 
 let spamIntervalId;
 
