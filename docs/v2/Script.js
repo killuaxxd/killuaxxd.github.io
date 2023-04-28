@@ -139,7 +139,7 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
   </div>
 </div>
 <div class="ui inverted segment" id="tool" style="display: none;"><div class="ui inverted form ">
-<div class="inline fields"><label>Reports:</label><div class="field"><button class="ui primary button" id="reportdraw">Report Draw</button></div><div class="field"><button class="ui red button" id="kickall">Kick All Players</button></div></div><div class="inline fields"><label>Spam:</label><div class="field"><div class="ui selection spam dropdown">
+<div class="inline fields"><label>Reports:</label><div class="field"><button class="ui primary button" id="reportdraw">Report Draw</button></div><div class="field"><button class="ui red button" id="kickall">Kick All Players (Fixed)</button></div></div><div class="inline fields"><label>Spam:</label><div class="field"><div class="ui selection spam dropdown">
   <input type="hidden" name="gender">
   <i class="dropdown icon"></i>
   <div class="text">Chat</div>
@@ -547,6 +547,7 @@ btn.addEventListener("click", function () {
 
         socket.playerName = modifiedName;
         socket.vote = 0;
+        socket.isRoom = false;
 
         socket.addEventListener('open', (event) => {
           document.cookie.split(";").forEach(function (c) {
@@ -584,6 +585,7 @@ btn.addEventListener("click", function () {
               socket.playerId = playerId; // playerId'yi soket nesnesine kaydet
               socket.playerCode = playerCode; // playerCode'yi soket nesnesine kaydet
               socket.players = data[5]; // players'i soket nesnesine kaydet
+              socket.isRoom = true;
               socket.send(`42[46,${playerId}]`);
               socket.send(`42[11,"${playerId}","Bot developer: github.com/anonimbiri"]`);
               updateUserList(data[5]);
@@ -726,6 +728,7 @@ btn.addEventListener("click", function () {
 
         socket.onerror = function (error) {
           console.error(`WebSocket ${i} Connection has Been Closed due to an issue.`);
+          socket.isRoom = false;
           /*iziToast.error({
             position: 'topRight',
             //theme: 'dark',	
@@ -736,6 +739,7 @@ btn.addEventListener("click", function () {
 
         socket.onclose = function (event) {
           console.error(`Connection to Server WebSocket ${i} has Been Lost.`);
+          socket.isRoom = false;
           /*iziToast.error({
             position: 'topRight',
             //theme: 'dark',	
@@ -892,15 +896,15 @@ kickall.addEventListener("click", function () {
       const socket = socketList[i];
       const players = socket.players;
       if (players && players.length) {
-        for (let j = 0; j < players.length; j++) {
+        let j = 0;
+        const IntervalId = setInterval(() => {
           const player = players[j];
-          let found = socketList.some((s) => {
-            if (socket.playerCode === player.id) return true;
-          });
-          if (socket.readyState === WebSocket.OPEN && !found) {
-            socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-          }
-        }
+          let found = socketList.some((s) => s.playerCode !== player.id && s.readyState === WebSocket.OPEN);
+          if (!found) return;
+          socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+          j++;
+          if (j >= players.length) clearInterval(IntervalId);
+        }, 1000);
       }
     }
   }
@@ -1081,14 +1085,16 @@ document.querySelector("#send").addEventListener("click", function () {
     messagetext = "anonimbiri";
   }
 
+  let openSockets = socketList.filter(socket => socket.readyState === WebSocket.OPEN && socket.isRoom);
+
   switch (messageType) {
     case "11":
     default:
-      const randomIndex = Math.floor(Math.random() * socketList.length);
-      socketList[randomIndex].send(`42[${messageType},"${socketList[randomIndex].playerId}","${messagetext}"]`);
+      const randomIndex = Math.floor(Math.random() * openSockets.length);
+      openSockets[randomIndex].send(`42[${messageType},"${openSockets[randomIndex].playerId}","${messagetext}"]`);
       break;
     case "13":
-      socketList.forEach((socket) => {
+      openSockets.forEach((socket) => {
         if (socket.readyState === WebSocket.OPEN) {
           socket.send(`42[${messageType},"${socket.playerId}","${messagetext}"]`);
         }
