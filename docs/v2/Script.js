@@ -655,19 +655,16 @@ btn.addEventListener("click", function () {
                 } else {
                   var kickTheJoiner = params.get('kick-the-joiner') || false;
                   if (kickTheJoiner) {
-                    let found = socketList.some((s) => {
-                      if (s.playerCode === data[1].id) return true;
-                    });
-
-                    if (!found) {
-                      for (const s of socketList) {
-                        console.log(data);
-                        if (s.playerCode !== data[1].id) {
-                          s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
-                        }
+                    let found = socketList.every((s) => s.playerCode !== data[1].id);
+                    if (!found) return;
+                    for (const s of socketList) {
+                      console.log(data);
+                      if (s.playerCode !== data[1].id) {
+                        s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
                       }
                     }
                   }
+
                 }
 
               }
@@ -899,7 +896,7 @@ kickall.addEventListener("click", function () {
         let j = 0;
         const IntervalId = setInterval(() => {
           const player = players[j];
-          let found = socketList.some((s) => s.playerCode !== player.id && s.readyState === WebSocket.OPEN);
+          let found = socketList.every((s) => s.playerCode !== player.id && s.readyState === WebSocket.OPEN);
           if (!found) return;
           socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
           j++;
