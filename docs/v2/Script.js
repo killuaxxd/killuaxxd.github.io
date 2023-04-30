@@ -823,7 +823,7 @@ function updateRomList() {
         card.classList.add("card");
 
         const imageDiv = document.createElement("div");
-        imageDiv.classList.add("image");
+        imageDiv.classList.add("ui", "fluid", "image");
 
         const image = document.createElement("img");
         image.setAttribute("src", `https://gartic.io/static/images/subjects/${item.subject}.svg?v=1`);
