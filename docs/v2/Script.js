@@ -9,7 +9,10 @@ document.body.innerHTML += `
       </div>
       <div class="field">
         <label>Room Code</label>
-        <div class="ui large labeled input" id="roomcode"><div class="ui label">https://gartic.io/ </div><input type="text" value="${params.get('code') || ""}" placeholder="Code"></div>
+        <div class="ui large action labeled input" id="roomcode"><div class="ui label">https://gartic.io/ </div><input type="text" value="${params.get('code') || ""}" placeholder="Code"><button id="search" class="ui pink right labeled icon button" data-inverted="" data-tooltip="Take a Look at The Rooms" data-position="bottom center">
+        <i class="search icon"></i>
+        Rooms
+      </button></div>
       </div>
       <div class="field" id="botamount">
         <label>Bot Amount</label>
@@ -69,7 +72,7 @@ document.body.innerHTML += `
 
   <div class="field">
         <label>Server Lang</label>
-        <div class="ui fluid search selection dropdown">
+        <div class="ui fluid search join selection dropdown">
   <input type="hidden" name="country">
   <i class="dropdown icon"></i>
   <div class="text"><i class="gb flag"></i>English</div>
@@ -200,9 +203,112 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
 
   </div>
 </div>
+<div class="ui search modal">
+<i class="close icon"></i>
+  <div class="header">Rooms</div>
+  <div class="ui inverted segment"> 
+  <div class="ui inverted secondary pointing menu">
+  <a class="item">
+  <div class="ui inverted left icon input">
+  <input id="search-imput" type="text" placeholder="Search...">
+  <i class="search icon"></i>
+</div>
+</a>
+<a class="item">
+  <div class="ui floating dropdown labeled search room icon button">
+  <i class="world icon"></i>
+  <span class="text"><i class="gb flag"></i>English</span>
+  <div class="menu">
+  <div class="item" data-value="23"><i class="az flag"></i>Azərbaycanca</div>
+  <div class="item" data-value="45"><i class="id flag"></i>Bahasa Indonesia</div>
+  <div class="item" data-value="11"><i class="cz flag"></i>Čeština</div>
+  <div class="item" data-value="14"><i class="de flag"></i>Deutsch</div>
+  <div class="item" data-value="2"><i class="gb flag"></i>English</div>
+  <div class="item" data-value="3"><i class="es flag"></i>Español</div>
+  <div class="item" data-value="4"><i class="fr flag"></i>Français</div>
+  <div class="item" data-value="6"><i class="it flag"></i>Italiano</div>
+  <div class="item" data-value="44"><i class="hu flag"></i>Magyar</div>
+  <div class="item" data-value="18"><i class="nl flag"></i>Nederlands</div>
+  <div class="item" data-value="10"><i class="pl flag"></i>Polski</div>
+  <div class="item" data-value="1"><i class="pt flag"></i>Português</div>
+  <div class="item" data-value="58"><i class="ro flag"></i>Română</div>
+  <div class="item" data-value="22"><i class="sk flag"></i>Slovenčina</div>
+  <div class="item" data-value="13"><i class="vn flag"></i>Tiếng Việt</div>
+  <div class="item" data-value="8"><i class="tr flag"></i>Türkçe</div>
+  <div class="item" data-value="21"><i class="bg flag"></i>български език</div>
+  <div class="item" data-value="7"><i class="ru flag"></i>Русский</div>
+  <div class="item" data-value="40"><i class="il flag"></i>עברית</div>
+  <div class="item" data-value="19"><i class="sa flag"></i>العربية</div>
+  <div class="item" data-value="34"><i class="ir flag"></i>فارسی</div>
+  <div class="item" data-value="12"><i class="th flag"></i>ภาษาไทย</div>
+  <div class="item" data-value="16"><i class="cn flag"></i>中文 (简化字)</div>
+  <div class="item" data-value="9"><i class="tw flag"></i>中文 (臺灣)</div>
+  <div class="item" data-value="17"><i class="hk flag"></i>中文 (香港)</div>
+  <div class="item" data-value="20"><i class="kr flag"></i>한국어</div>
+  <div class="item" data-value="15"><i class="jp flag"></i>日本語</div>
+  </div>
+</div>
+</a>
+<a class="item">
+  <div class="ui floating dropdown labeled profil search game icon button">
+  <i class="gamepad icon"></i>
+  <span class="text">All</span>
+  <div class="menu">
+  <div class="item" data-value="">All</div>
+  <div class="item" data-value="30"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/30.svg?v=1">Others / Generic</div>
+  <div class="item" data-value="1"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/1.svg?v=1">General</div>
+<div class="item" data-value="28"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/28.svg?v=1">Animes</div>
+<div class="item" data-value="2"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/2.svg?v=1">Animals</div>
+<div class="item" data-value="3"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/3.svg?v=1">Objects</div>
+<div class="item" data-value="4"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/4.svg?v=1">Foods</div>
+<div class="item" data-value="5"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/5.svg?v=1">Verbs</div>
+<div class="item" data-value="6"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/6.svg?v=1">Jobs</div>
+<div class="item" data-value="7"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/7.svg?v=1">Pokemon</div>
+<div class="item" data-value="8"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/8.svg?v=1">Movies</div>
+<div class="item" data-value="9"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/9.svg?v=1">Cartoons</div>
+<div class="item" data-value="10"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/10.svg?v=1">Songs</div>
+<div class="item" data-value="11"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/11.svg?v=1">LoL</div>
+<div class="item" data-value="12"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/12.svg?v=1">Games</div>
+<div class="item" data-value="13"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/13.svg?v=1">Celebrities</div>
+<div class="item" data-value="14"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/14.svg?v=1">Marvel / DC</div>
+<div class="item" data-value="15"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/15.svg?v=1">TV Series</div>
+<div class="item" data-value="16"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/16.svg?v=1">Flags</div>
+<div class="item" data-value="17"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/17.svg?v=1">Football</div>
+<div class="item" data-value="18"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/18.svg?v=1">Harry Potter</div>
+<div class="item" data-value="19"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/19.svg?v=1">Clash Royale</div>
+<div class="item" data-value="20"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/20.svg?v=1">Lord of Rings</div>
+<div class="item" data-value="21"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/21.svg?v=1">Game of Thrones</div>
+<div class="item" data-value="22"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/22.svg?v=1">Dragon Ball</div>
+<div class="item" data-value="23"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/23.svg?v=1">Dota</div>
+<div class="item" data-value="24"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/24.svg?v=1">Youtubers</div>
+<div class="item" data-value="25"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/25.svg?v=1">Streamers</div>
+<div class="item" data-value="26"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/26.svg?v=1">Logos</div>
+<div class="item" data-value="27"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/27.svg?v=1">Bands</div>
+<div class="item" data-value="29"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/29.svg?v=1">Sports</div>
+<div class="item" data-value="30"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/30.svg?v=1">Others / Generic</div>
+<div class="item" data-value="31"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/31.svg?v=1">Minecraft</div>
+<div class="item" data-value="32"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/32.svg?v=1">Fortnite</div>
+<div class="item" data-value="33"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/33.svg?v=1">FNAF</div>
+<div class="item" data-value="34"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/34.svg?v=1">Star Wars</div>
+<div class="item" data-value="35"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/35.svg?v=1">Naruto</div>
+<div class="item" data-value="36"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/36.svg?v=1">The Sims</div>
+<div class="item" data-value="37"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/37.svg?v=1">Halloween</div>
+<div class="item" data-value="38"><img class="ui avatar image" src="https://gartic.io/static/images/subjects/38.svg?v=1">Crazy Theme</div>
+  </div>
+</div>
+</a>
+</div>
+</div>
+
+  <div class="scrolling content">
+    <div class="ui link four inverted segment cards">
+
+    </div>
+  </div>
+</div>
 `;
 $('.profil.dropdown').dropdown('set selected', params.get('image') || 0);
-$('.search.dropdown').dropdown('set selected', params.get('lang') || 2);
+$('.search.join.dropdown').dropdown('set selected', params.get('lang') || 2);
 $('.drawing-type.dropdown').dropdown('set selected', params.get('drawing-mode') || "horizontal");
 
 
@@ -228,9 +334,9 @@ if (params.has('proxy') && params.get('proxy') !== 'false') {
 }
 
 if (params.get('code') && params.get('code') !== "") {
-  $('.ui.search.dropdown').addClass('disabled');
+  $('.ui.search.join.dropdown').addClass('disabled');
 } else {
-  $('.ui.search.dropdown').removeClass('disabled');
+  $('.ui.search.join.dropdown').removeClass('disabled');
 }
 
 let btn = document.querySelector('#addbot');
@@ -489,8 +595,304 @@ function rgbToHex(r, g, b) {
   return `x${hexR.toString(16).padStart(2, '0').toUpperCase()}${hexG.toString(16).padStart(2, '0').toUpperCase()}${hexB.toString(16).padStart(2, '0').toUpperCase()}`;
 }
 
+let subjects = {
+  0: "Others / Generic",
+  1: "General",
+  28: "Animes",
+  2: "Animals",
+  3: "Objects",
+  4: "Foods",
+  5: "Verbs",
+  6: "Jobs",
+  7: "Pokemon",
+  8: "Movies",
+  9: "Cartoons",
+  10: "Songs",
+  11: "LoL",
+  12: "Games",
+  13: "Celebrities",
+  14: "Marvel / DC",
+  15: "TV Series",
+  16: "Flags",
+  17: "Football",
+  18: "Harry Potter",
+  19: "Clash Royale",
+  20: "Lord of Rings",
+  21: "Game of Thrones",
+  22: "Dragon Ball",
+  23: "Dota",
+  24: "Youtubers",
+  25: "Streamers",
+  26: "Logos",
+  27: "Bands",
+  29: "Sports",
+  30: "Others / Generic",
+  31: "Minecraft",
+  32: "Fortnite",
+  33: "FNAF",
+  34: "Star Wars",
+  35: "Naruto",
+  36: "The Sims",
+  37: "Halloween",
+  38: "Crazy Theme"
+}
 
+document.querySelector("#search").addEventListener("click", function () {
+  updateRomList();
+  $('.ui.search.modal')
+    .modal('setting', 'closable', false)
+    .modal('show')
+    ;
+});
 
+document.querySelector("#search-imput").onchange = function () {
+  updateRomList();
+}
+
+function updateRomList() {
+  document.querySelector(".ui.link.cards").innerHTML = `
+  <div class="ui card">
+    <div class="image">
+      <div class="ui placeholder">
+        <div class="square image"></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="ui placeholder">
+        <div class="header">
+        <div class="medium line"></div>
+          <div class="very short line"></div>
+        </div>
+      </div>
+    </div>
+    <div class="extra content">
+    <div class="ui placeholder">
+    <span class="right floated"><div class="very short line"></div></span>
+    <span><div class="very short line"></div></span>
+    </div>
+    </div>
+  </div>  <div class="ui card">
+  <div class="image">
+    <div class="ui placeholder">
+      <div class="square image"></div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="ui placeholder">
+      <div class="header">
+      <div class="medium line"></div>
+        <div class="very short line"></div>
+      </div>
+    </div>
+  </div>
+  <div class="extra content">
+  <div class="ui placeholder">
+  <span class="right floated"><div class="very short line"></div></span>
+  <span><div class="very short line"></div></span>
+  </div>
+  </div>
+</div>  <div class="ui card">
+<div class="image">
+  <div class="ui placeholder">
+    <div class="square image"></div>
+  </div>
+</div>
+<div class="content">
+  <div class="ui placeholder">
+    <div class="header">
+    <div class="medium line"></div>
+      <div class="very short line"></div>
+    </div>
+  </div>
+</div>
+<div class="extra content">
+<div class="ui placeholder">
+<span class="right floated"><div class="very short line"></div></span>
+<span><div class="very short line"></div></span>
+</div>
+</div>
+</div>  <div class="ui card">
+<div class="image">
+  <div class="ui placeholder">
+    <div class="square image"></div>
+  </div>
+</div>
+<div class="content">
+  <div class="ui placeholder">
+    <div class="header">
+    <div class="medium line"></div>
+      <div class="very short line"></div>
+    </div>
+  </div>
+</div>
+<div class="extra content">
+<div class="ui placeholder">
+<span class="right floated"><div class="very short line"></div></span>
+<span><div class="very short line"></div></span>
+</div>
+</div>
+</div>
+  <div class="ui card">
+    <div class="image">
+      <div class="ui placeholder">
+        <div class="square image"></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="ui placeholder">
+        <div class="header">
+        <div class="medium line"></div>
+          <div class="very short line"></div>
+        </div>
+      </div>
+    </div>
+    <div class="extra content">
+    <div class="ui placeholder">
+    <span class="right floated"><div class="very short line"></div></span>
+    <span><div class="very short line"></div></span>
+    </div>
+    </div>
+  </div>  <div class="ui card">
+  <div class="image">
+    <div class="ui placeholder">
+      <div class="square image"></div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="ui placeholder">
+      <div class="header">
+      <div class="medium line"></div>
+        <div class="very short line"></div>
+      </div>
+    </div>
+  </div>
+  <div class="extra content">
+  <div class="ui placeholder">
+  <span class="right floated"><div class="very short line"></div></span>
+  <span><div class="very short line"></div></span>
+  </div>
+  </div>
+</div>  <div class="ui card">
+<div class="image">
+  <div class="ui placeholder">
+    <div class="square image"></div>
+  </div>
+</div>
+<div class="content">
+  <div class="ui placeholder">
+    <div class="header">
+    <div class="medium line"></div>
+      <div class="very short line"></div>
+    </div>
+  </div>
+</div>
+<div class="extra content">
+<div class="ui placeholder">
+<span class="right floated"><div class="very short line"></div></span>
+<span><div class="very short line"></div></span>
+</div>
+</div>
+</div>  <div class="ui card">
+<div class="image">
+  <div class="ui placeholder">
+    <div class="square image"></div>
+  </div>
+</div>
+<div class="content">
+  <div class="ui placeholder">
+    <div class="header">
+    <div class="medium line"></div>
+      <div class="very short line"></div>
+    </div>
+  </div>
+</div>
+<div class="extra content">
+<div class="ui placeholder">
+<span class="right floated"><div class="very short line"></div></span>
+<span><div class="very short line"></div></span>
+</div>
+</div>
+</div>`;
+
+  fetch(roomsubject ? `https://gartic.io/req/list?search=${document.querySelector("#search-imput").value || ""}&language[]=${roomlang}&subject[]=${roomsubject}` : `https://gartic.io/req/list?search=${document.querySelector("#search-imput").value || ""}&language[]=${roomlang}`)
+    .then(response => response.json())
+    .then(data => {
+      document.querySelector(".ui.link.cards").innerHTML = ``;
+      data.forEach(item => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        const imageDiv = document.createElement("div");
+        imageDiv.classList.add("image");
+
+        const image = document.createElement("img");
+        image.setAttribute("src", `https://gartic.io/static/images/subjects/${item.subject}.svg?v=1`);
+
+        imageDiv.appendChild(image);
+
+        if (item.official) {
+          const div = document.createElement('div');
+          div.classList.add('ui', 'pink', 'ribbon', 'label');
+
+          const icon = document.createElement('i');
+          icon.classList.add('check', 'circle', 'icon');
+
+          div.textContent = 'Official';
+          card.classList.add("pink");
+
+          div.insertBefore(icon, div.firstChild);
+          imageDiv.appendChild(div);
+        }
+
+        const content = document.createElement("div");
+        content.classList.add("content");
+
+        const header = document.createElement("div");
+        header.classList.add("header");
+        header.innerText = subjects[item.subject];
+
+        const meta = document.createElement("div");
+        meta.classList.add("meta");
+
+        const subtitle = document.createElement("a");
+        subtitle.innerText = item.id;
+
+        meta.appendChild(subtitle);
+
+        content.appendChild(header);
+        content.appendChild(meta);
+
+        const extraContent = document.createElement("div");
+        extraContent.classList.add("extra", "content");
+
+        const joinSpan = document.createElement("span");
+        joinSpan.classList.add("right", "floated");
+        joinSpan.innerText = `Rating: ${item.rating}`;
+
+        const friendsSpan = document.createElement("span");
+        const userIcon = document.createElement("i");
+        userIcon.classList.add("user", "icon");
+        friendsSpan.appendChild(userIcon);
+        friendsSpan.appendChild(document.createTextNode(`${item.quant} / ${item.max}`));
+
+        extraContent.appendChild(joinSpan);
+        extraContent.appendChild(friendsSpan);
+
+        card.addEventListener("click", function () {
+          url.value = item.code;
+          $('.ui.search.modal')
+            .modal('hide')
+            ;
+        });
+
+        card.appendChild(imageDiv);
+        card.appendChild(content);
+        card.appendChild(extraContent);
+        document.querySelector(".ui.link.cards").appendChild(card)
+      });
+    })
+    .catch(error => console.error(error));
+};
 
 btn.addEventListener("click", function () {
   params = new URLSearchParams(window.location.search);
@@ -805,6 +1207,8 @@ url.onchange = function () { url.value = url.value.replace("https://gartic.io/",
 
 var profilepicture = params.get('image') || 0;
 var serverlang = params.get('lang') || 2;
+var roomlang = 2;
+var roomsubject = "";
 
 function loaded() {
   document.querySelector("#tool").style.display = 'block';
@@ -1034,11 +1438,29 @@ $('.profil.dropdown')
     }
   })
   ;
-$('.search.dropdown')
+$('.search.join.dropdown')
   .dropdown({
     clearable: false,
     onChange: function (value, text, $selectedItem) {
       serverlang = value;
+    }
+  })
+  ;
+$('.search.room.dropdown')
+  .dropdown({
+    clearable: false,
+    onChange: function (value, text, $selectedItem) {
+      roomlang = value;
+      updateRomList()
+    }
+  })
+  ;
+$('.search.game.dropdown')
+  .dropdown({
+    clearable: false,
+    onChange: function (value, text, $selectedItem) {
+      roomsubject = value;
+      updateRomList()
     }
   })
   ;
