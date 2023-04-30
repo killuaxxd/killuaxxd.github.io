@@ -1551,7 +1551,7 @@ function startSpamIntervalId() {
       }
     });
 
-  }, params.get('spam-ms'));
+  }, params.get('spam-ms') || 960);
 }
 function getProxy() {
   var proxy = prompt("Copy and paste the page link here and add 1 proxy.");
