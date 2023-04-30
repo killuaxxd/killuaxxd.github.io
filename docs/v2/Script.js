@@ -867,7 +867,7 @@ function updateRomList() {
 
         const joinSpan = document.createElement("span");
         joinSpan.classList.add("right", "floated");
-        joinSpan.innerText = `Rating: ${item.rating}`;
+        joinSpan.innerText = `Rating: ${item.rating || 0}`;
 
         const friendsSpan = document.createElement("span");
         const userIcon = document.createElement("i");
