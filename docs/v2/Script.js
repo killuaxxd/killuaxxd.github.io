@@ -24,7 +24,7 @@ document.body.innerHTML += `
 
 	<div class="field">
 	<label>Bot Image</label>
-<div class="ui fluid selection profil dropdown" tabindex="0">
+<div class="ui fluid selection profil bot-image dropdown" tabindex="0">
   <input type="hidden" name="user">
   <i class="dropdown icon" tabindex="0"><div class="menu" tabindex="-1"></div></i>
   <div class="text"><img class="ui avatar image" src="https://gartic.io/static/images/avatar/svg/0.svg">Default</div>
@@ -307,7 +307,7 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
   </div>
 </div>
 `;
-$('.profil.dropdown').dropdown('set selected', params.get('image') || 0);
+$('.profil.bot-image.dropdown').dropdown('set selected', params.get('image') || 0);
 $('.search.join.dropdown').dropdown('set selected', params.get('lang') || 2);
 $('.drawing-type.dropdown').dropdown('set selected', params.get('drawing-mode') || "horizontal");
 
@@ -1458,6 +1458,7 @@ $('.search.room.dropdown')
 $('.search.game.dropdown')
   .dropdown({
     clearable: false,
+    defaultValue: '',
     onChange: function (value, text, $selectedItem) {
       roomsubject = value;
       updateRomList()
