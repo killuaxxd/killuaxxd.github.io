@@ -1192,7 +1192,7 @@ btn2.addEventListener("click", function () {
 });
 watchtheroom.addEventListener("click", function () {
   if (url.value != "") {
-    window.open("https://gartic.io/" + url.value + "/viewer");
+    window.open(`https://gartic.io/${url.value}/viewer`, 'viewer');
   } else {
     iziToast.error({
       position: 'topRight',
@@ -1352,7 +1352,7 @@ spambutton.addEventListener("click", function () {
 });
 document.querySelector("#addproxy").addEventListener("click", function () {
   alert("Go to https://gartic.io/ from the opened website and copy the page link. Then come back here and paste it.");
-  window.open("https://www.croxyproxy.com/");
+  window.open('https://www.croxyproxy.com/', 'croxyproxy');
   setTimeout(function () {
     window.addEventListener("focus", getProxy);
   }, 500);
