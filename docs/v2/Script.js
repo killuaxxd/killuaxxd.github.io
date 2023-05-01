@@ -127,12 +127,12 @@ inverted button"><i class="github icon"></i>Open Source Code</a>    <div class="
 inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
   </div>
 </div>
-<div class="ui tiny modal">
+<div class="ui tiny connection problem modal">
 <div class="ui icon header">
 <i class="yellow exclamation triangle icon"></i>
  Failed to Connect to Server</div>
   <div class="content">
-    <p>The room is full, you may have been banned or kicked out wait a bit and try again later</p>
+    <p>Failed to connect to the server. You may have sent too many requests or attempted to add too many bots. Additionally, you may have disconnected from the room. You can try again by opening a VPN connection.</p>
   </div>
   <div class="actions">
     <div class="ui black cancel button">
@@ -141,6 +141,22 @@ inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
   </div>
   </div>
 </div>
+
+<div class="ui tiny full room modal">
+<div class="ui icon header">
+<i class="yellow exclamation triangle icon"></i>
+The room is full.</div>
+  <div class="content">
+    <p>The room is full. Some bots could not enter.</p>
+  </div>
+  <div class="actions">
+    <div class="ui black cancel button">
+      OK
+    </div>
+  </div>
+  </div>
+</div>
+
 <div class="ui inverted segment" id="tool" style="display: none;"><div class="ui inverted form ">
 <div class="inline fields"><label>Reports:</label><div class="field"><button class="ui primary button" id="reportdraw">Report Draw</button></div><div class="field"><button class="ui red button" id="kickall">Kick All Players (Fixed)</button></div></div><div class="inline fields"><label>Spam:</label><div class="field"><div class="ui selection spam dropdown">
   <input type="hidden" name="gender">
@@ -966,10 +982,15 @@ btn.addEventListener("click", function () {
               socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${params.get('image')},"sala":"${params.get('code').slice(-4)}"}]`);
             }
           } else if (event.data === '42[6,4]') {
-            $('.tiny.modal')
+            $('.tiny.connection.problem.modal')
               .modal({
                 closable: false,
-                blurring: true,
+              })
+              .modal('show');
+          } else if (event.data === '42[6,3]') {
+            $('.tiny.full.room.modal')
+              .modal({
+                closable: false,
                 onApprove: function () {
                   window.open(scripturl).close();
                 }
