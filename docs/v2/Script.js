@@ -1025,6 +1025,8 @@ btn.addEventListener("click", function () {
 
               if (!existingItem) {
                 socket.players.push(data[1]);
+                let found = socketList.every((s) => s.playerCode !== data[1].id);
+                if (!found) return;
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('item');
                 itemDiv.setAttribute('data-player-id', data[1].id);
