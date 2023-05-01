@@ -1619,15 +1619,22 @@ document.onkeydown = (e) => {
     return false;
 };
 
-// Contextmenu açma kodu
-document.addEventListener("contextmenu", function (e) {
-  e.preventDefault(); // Varsayılan sağ tıklama menüsünü iptal et
+let currentInput = null;
 
-  var contextmenu = document.getElementById("contextmenu"); // Contextmenu öğesini seç
-  contextmenu.style.left = e.clientX + "px"; // Menünün x koordinatını ayarla
-  contextmenu.style.top = e.clientY + "px"; // Menünün y koordinatını ayarla
-  contextmenu.style.display = "block"; // Menüyü görünür yap
+document.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+  var contextmenu = document.getElementById("contextmenu");
+  contextmenu.style.left = e.clientX + "px";
+  contextmenu.style.top = e.clientY + "px";
+  contextmenu.style.display = "block";
+
+  if (e.target.tagName === 'INPUT') {
+    currentInput = e.target;
+  } else {
+    currentInput = null;
+  }
 });
+
 
 // Sayfada herhangi bir yere tıklandığında menüyü gizle
 document.addEventListener("click", function (e) {
@@ -1638,23 +1645,48 @@ document.addEventListener("click", function (e) {
 document.addEventListener("DOMContentLoaded", function () {
   // Edit butonu
   document.getElementById("editButton").addEventListener("click", function () {
-    document.execCommand("selectAll");
+    if (currentInput) {
+      currentInput.select();
+    }
   });
 
   // Copy butonu
-  document.getElementById("copyButton").addEventListener("click", function () {
-    document.execCommand("copy");
+  document.getElementById("copyButton").addEventListener("click", async function () {
+    if (currentInput) {
+      try {
+        await navigator.clipboard.writeText(currentInput.value);
+        console.log('Metin panoya kopyalandı!');
+      } catch (err) {
+        console.error('Metni kopyalarken hata oluştu:', err);
+      }
+    }
   });
 
   // Cut butonu
-  document.getElementById("cutButton").addEventListener("click", function () {
-    document.execCommand("cut");
+  document.getElementById("cutButton").addEventListener("click", async function () {
+    if (currentInput) {
+      try {
+        await navigator.clipboard.writeText(currentInput.value);
+        currentInput.value = '';
+        console.log('Metin panoya kopyalandı ve input alanı temizlendi!');
+      } catch (err) {
+        console.error('Metni keserken hata oluştu:', err);
+      }
+    }
   });
 
   // Paste butonu
-  document.getElementById("pasteButton").addEventListener("click", function () {
-    document.execCommand("paste");
+  document.getElementById("pasteButton").addEventListener("click", async function () {
+    if (currentInput) {
+      try {
+        const text = await navigator.clipboard.readText();
+        currentInput.value = text;
+      } catch (err) {
+        console.error('Metni okurken hata oluştu:', err);
+      }
+    }
   });
+
 });
 
 
