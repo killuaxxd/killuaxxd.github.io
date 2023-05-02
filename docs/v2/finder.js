@@ -63,7 +63,7 @@ document.body.innerHTML += `<div class="ui inverted segment">
     <div class="ui floating name dropdown labeled icon button">
     <i class="world icon"></i>
     <input type="hidden" name="country">
-    <div class="text"></i>Full Username</div>
+    <div class="text"></i>Unknown</div>
     <div class="menu">
     <div class="item" data-value="unknown">Unknown</div>
     <div class="item" data-value="full">Full Username</div>
@@ -139,7 +139,7 @@ document.body.innerHTML += `<div class="ui inverted segment">
 
 $('.search.profil.dropdown').dropdown('set selected', params.get('profil') || "unknown");
 $('.search.lang.dropdown').dropdown('set selected', params.get('lang') || 2);
-$('.search.name.dropdown').dropdown('set selected', params.get('name-type') || "full");
+$('.search.name.dropdown').dropdown('set selected', params.get('name-type') || "unknown");
 
 $('.profil.dropdown')
     .dropdown({
