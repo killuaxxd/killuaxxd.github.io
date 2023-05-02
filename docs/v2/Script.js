@@ -1375,8 +1375,9 @@ spambutton.addEventListener("click", function () {
 });
 document.querySelector("#addproxy").addEventListener("click", function () {
   alert("Go to https://gartic.io/ from the opened website and copy the page link. Then come back here and paste it.");
+  window.open('https://www.croxyproxy.com/', 'croxyproxy');
 
-  // Yeni bir pencere açar
+  /*// Yeni bir pencere açar
   var win = window.open('bank', 'croxyproxy');
 
   // HTML formu oluşturur
@@ -1391,7 +1392,7 @@ document.querySelector("#addproxy").addEventListener("click", function () {
   form.appendChild(hiddenField);
 
   win.document.body.appendChild(form);
-  form.submit();
+  form.submit();*/
 
   setTimeout(function () {
     window.addEventListener("focus", getProxy);
