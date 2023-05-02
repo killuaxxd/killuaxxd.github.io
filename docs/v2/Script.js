@@ -654,7 +654,7 @@ let subjects = {
 }
 
 document.querySelector("#search").addEventListener("click", function () {
-  updateRomList();
+  updateRoomList();
   $('.ui.search.modal')
     .modal('setting', 'closable', false)
     .modal('show')
@@ -662,10 +662,10 @@ document.querySelector("#search").addEventListener("click", function () {
 });
 
 document.querySelector("#search-imput").onchange = function () {
-  updateRomList();
+  updateRoomList();
 }
 
-function updateRomList() {
+function updateRoomList() {
   document.querySelector(".ui.link.cards").innerHTML = `
   <div class="ui card">
     <div class="image">
@@ -1492,7 +1492,7 @@ $('.search.room.dropdown')
     clearable: false,
     onChange: function (value, text, $selectedItem) {
       roomlang = value;
-      updateRomList()
+      updateRoomList()
     }
   })
   ;
@@ -1502,7 +1502,7 @@ $('.search.game.dropdown')
     defaultValue: '',
     onChange: function (value, text, $selectedItem) {
       roomsubject = value;
-      updateRomList()
+      updateRoomList()
     }
   })
   ;
