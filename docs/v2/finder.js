@@ -316,6 +316,17 @@ function updatePlayerList() {
 
     }
 
+    if (filteredPlayers.length === 0) {
+        document.querySelector("#list").innerHTML = `
+        <h2 class="ui center aligned icon header">
+      <i class="user icon"></i>
+      <div class="content">
+       User Not Found
+      </div>
+    </h2>
+    `;
+    }
+
     filteredPlayers.forEach(item => {
         const card = document.createElement("div");
         card.classList.add("card");
