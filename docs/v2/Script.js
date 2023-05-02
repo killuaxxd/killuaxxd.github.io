@@ -1044,6 +1044,7 @@ btn.addEventListener("click", function () {
 
                 const avatarImg = document.createElement('img');
                 avatarImg.classList.add('ui', 'avatar', 'image');
+                avatarImg.setAttribute("data-name", data[1].nick);
                 if (data[1].foto) {
                   avatarImg.src = data[1].foto;
                 } else {
@@ -1265,6 +1266,7 @@ function updateUserList(players) {
 
     const avatarImg = document.createElement('img');
     avatarImg.classList.add('ui', 'avatar', 'image');
+    avatarImg.setAttribute("data-name", player.nick);
     if (player.foto) {
       avatarImg.src = player.foto;
     } else {
@@ -1665,84 +1667,84 @@ document.onkeydown = (e) => {
 let currentTagTarget = null;
 
 document.addEventListener("contextmenu", function (e) {
-    e.preventDefault();
-    var contextmenu = document.getElementById("contextmenu");
-    contextmenu.style.display = "block";
-    contextmenu.style.left = e.pageX + "px"; // X koordinatı sayfa konumuna göre ayarlanıyor
-    contextmenu.style.top = e.pageY + "px"; // Y koordinatı sayfa konumuna göre ayarlanıyor
+  e.preventDefault();
+  var contextmenu = document.getElementById("contextmenu");
+  contextmenu.style.display = "block";
+  contextmenu.style.left = e.pageX + "px"; // X koordinatı sayfa konumuna göre ayarlanıyor
+  contextmenu.style.top = e.pageY + "px"; // Y koordinatı sayfa konumuna göre ayarlanıyor
 
-    if (e.target.tagName) {
-        currentTagTarget = e.target;
-    } else {
-        currentTagTarget = null;
-    }
+  if (e.target.tagName) {
+    currentTagTarget = e.target;
+  } else {
+    currentTagTarget = null;
+  }
 });
 
 
 
 // Sayfada herhangi bir yere tıklandığında menüyü gizle
 document.addEventListener("click", function (e) {
-    var contextmenu = document.getElementById("contextmenu");
-    contextmenu.style.display = "none";
+  var contextmenu = document.getElementById("contextmenu");
+  contextmenu.style.display = "none";
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Edit butonu
-    document.getElementById("editButton").addEventListener("click", function () {
-        if (currentTagTarget.tagName === 'INPUT') {
-            currentTagTarget.select();
-        }
-    });
+  // Edit butonu
+  document.getElementById("editButton").addEventListener("click", function () {
+    if (currentTagTarget.tagName === 'INPUT') {
+      currentTagTarget.select();
+    }
+  });
 
-    // Copy butonu
-    document.getElementById("copyButton").addEventListener("click", async function () {
-        if (currentTagTarget.tagName === 'INPUT') {
-            try {
-                await navigator.clipboard.writeText(currentTagTarget.value);
-                console.log('Metin panoya kopyalandı!');
-            } catch (err) {
-                console.error('Metni kopyalarken hata oluştu:', err);
-            }
-        }
-    });
+  // Copy butonu
+  document.getElementById("copyButton").addEventListener("click", async function () {
+    if (currentTagTarget.tagName === 'INPUT') {
+      try {
+        await navigator.clipboard.writeText(currentTagTarget.value);
+        console.log('Metin panoya kopyalandı!');
+      } catch (err) {
+        console.error('Metni kopyalarken hata oluştu:', err);
+      }
+    }
+  });
 
-    // Cut butonu
-    document.getElementById("cutButton").addEventListener("click", async function () {
-        if (currentTagTarget.tagName === 'INPUT') {
-            try {
-                await navigator.clipboard.writeText(currentTagTarget.value);
-                currentTagTarget.value = '';
-                console.log('Metin panoya kopyalandı ve input alanı temizlendi!');
-            } catch (err) {
-                console.error('Metni keserken hata oluştu:', err);
-            }
-        }
-    });
+  // Cut butonu
+  document.getElementById("cutButton").addEventListener("click", async function () {
+    if (currentTagTarget.tagName === 'INPUT') {
+      try {
+        await navigator.clipboard.writeText(currentTagTarget.value);
+        currentTagTarget.value = '';
+        console.log('Metin panoya kopyalandı ve input alanı temizlendi!');
+      } catch (err) {
+        console.error('Metni keserken hata oluştu:', err);
+      }
+    }
+  });
 
-    // Paste butonu
-    document.getElementById("pasteButton").addEventListener("click", async function () {
-        if (currentTagTarget.tagName === 'INPUT') {
-            try {
-                const text = await navigator.clipboard.readText();
-                currentTagTarget.value = text;
-            } catch (err) {
-                console.error('Metni okurken hata oluştu:', err);
-            }
-        }
-    });
+  // Paste butonu
+  document.getElementById("pasteButton").addEventListener("click", async function () {
+    if (currentTagTarget.tagName === 'INPUT') {
+      try {
+        const text = await navigator.clipboard.readText();
+        currentTagTarget.value = text;
+      } catch (err) {
+        console.error('Metni okurken hata oluştu:', err);
+      }
+    }
+  });
 
-    // Resim kayedetme butonu
-    document.getElementById("saveImageButton").addEventListener("click", async function () {
-        if (currentTagTarget.tagName === 'IMG') {
-            try {
-                var filename = currentTagTarget.getAttribute('data-name') + '-anonimbiri.jpg';
-                fetch(currentTagTarget.src)
-                    .then(function (t) { return t.blob().then((b) => { var a = document.createElement("a"); a.href = URL.createObjectURL(b); a.setAttribute("download", filename); a.click(); }) });
-            } catch (err) {
-                console.error('Resmi kayıt ederken hata oluştu:', err);
-            }
-        }
-    });
+  // Resim kayedetme butonu
+  document.getElementById("saveImageButton").addEventListener("click", async function () {
+    if (currentTagTarget.tagName === 'IMG') {
+      try {
+        var filename = currentTagTarget.getAttribute('data-name') + '-anonimbiri.jpg';
+        fetch(currentTagTarget.src)
+          .then(function (t) { return t.blob().then((b) => { var a = document.createElement("a"); a.href = URL.createObjectURL(b); a.setAttribute("download", filename); a.click(); }) });
+      } catch (err) {
+        console.error('Resmi kayıt ederken hata oluştu:', err);
+      }
+    }
+  });
 
 });
 
