@@ -139,7 +139,7 @@ document.body.innerHTML += `<div class="ui inverted segment">
 
 $('.search.profil.dropdown').dropdown('set selected', params.get('profil') || "unknown");
 $('.search.lang.dropdown').dropdown('set selected', params.get('lang') || 2);
-$('.search.name.dropdown').dropdown('set selected', params.get('name-type') || "unknown");
+$('.name.dropdown').dropdown('set selected', params.get('name-type') || "unknown");
 
 $('.profil.dropdown')
     .dropdown({
