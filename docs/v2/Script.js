@@ -938,7 +938,7 @@ btn.addEventListener("click", function () {
           document.querySelector('#botname div input').value = "anonimbiri";
           name = "anonimbiri";
         }
-        
+
         // Rastgele bir pozisyon seçerek '.' karakteri ekleyelim
         const randomIndex = Math.floor(Math.random() * (name.length + 1));
         const modifiedName = name.slice(0, randomIndex) + '឵' + name.slice(randomIndex);
@@ -1375,7 +1375,24 @@ spambutton.addEventListener("click", function () {
 });
 document.querySelector("#addproxy").addEventListener("click", function () {
   alert("Go to https://gartic.io/ from the opened website and copy the page link. Then come back here and paste it.");
-  window.open('https://www.croxyproxy.com/', 'croxyproxy');
+
+  // Yeni bir pencere açar
+  var win = window.open('bank', 'croxyproxy');
+
+  // HTML formu oluşturur
+  var form = win.document.createElement("form");
+  form.setAttribute("method", "post");
+  form.setAttribute("action", `https://www.stackfront.xyz/servers`);
+
+  var hiddenField = win.document.createElement("input");
+  hiddenField.setAttribute("type", "hidden");
+  hiddenField.setAttribute("name", "url");
+  hiddenField.setAttribute("value", "https://gartic.io/");
+  form.appendChild(hiddenField);
+
+  win.document.body.appendChild(form);
+  form.submit();
+
   setTimeout(function () {
     window.addEventListener("focus", getProxy);
   }, 500);
