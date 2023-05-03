@@ -188,17 +188,35 @@ The room is full.</div>
 </div>
 
 <div class="inline fields">
-<label>Automations:</label><div class="ui kick-the-joiner checkbox">
+<label>Automations:</label><div class="field"><div class="ui kick-the-joiner checkbox">
 <input type="checkbox" tabindex="0" class="hidden" >
 <label>Kick The Joiner</label>
 </div></div>
+
+<div class="field">
+<label>Username Target:</label>
+<div class="ui target right labeled left icon input">
+  <i class="tags icon"></i>
+  <input type="text" placeholder="Enter Username">
+  <a class="ui tag label">
+    Add User
+  </a>
+</div>
+</div>
+
+<div class="field" id="targets">
+
+</div>
+</div>
+
 <div class="inline fields">
 <label>Drawing Bot:</label>
 <div class="field">
 <div class="ui drawing-bot checkbox">
 <input type="checkbox" tabindex="0" class="hidden" >
 <label>Skip The Formality, Draw a Picture Instead</label>
-</div></div>
+</div>
+</div>
 
 <div class="field"><label>Drawing Type:</label><div class="ui selection drawing-type dropdown">
   <input type="hidden" name="gender">
@@ -612,6 +630,91 @@ function rgbToHex(r, g, b) {
   const hexB = Math.round(b / step) * step;
   return `x${hexR.toString(16).padStart(2, '0').toUpperCase()}${hexG.toString(16).padStart(2, '0').toUpperCase()}${hexB.toString(16).padStart(2, '0').toUpperCase()}`;
 }
+
+function createLabels() {
+  let targets = [];
+  const targetParams = new URLSearchParams(window.location.search).get('targets');
+  if (targetParams) {
+    targets = targetParams.split(',');
+  }
+
+  const targetsDiv = document.querySelector("#targets");
+  targets.forEach((target) => {
+    const label = document.createElement("div");
+    const icon = document.createElement("i");
+    label.classList.add("ui", "image", "label");
+    icon.classList.add("delete", "icon");
+    icon.addEventListener("click", function () {
+      const index = targets.indexOf(target);
+      if (index !== -1) targets.splice(index, 1);
+      const params = new URLSearchParams(window.location.search);
+      params.set('targets', targets);
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+      label.remove();
+    });
+    label.textContent = target;
+    label.appendChild(icon);
+    targetsDiv.appendChild(label);
+  });
+
+  document.querySelector(".ui.tag.label").addEventListener("click", function () {
+    const inputVal = document.querySelector('.target input').value;
+
+    if (targets.includes(inputVal)) { // hedef zaten varsa
+      iziToast.info({
+        position: 'topRight',
+        //theme: 'dark',
+        title: 'Not Added',
+        message: `${inputVal} is Already in The List!`
+      });
+      return;
+    }
+
+    if (!inputVal) {
+      iziToast.info({
+        position: 'topRight',
+        //theme: 'dark',
+        title: 'Not Added',
+        message: `You Cannot Add an Empty Username!`
+      });
+      return;
+    }
+
+    targets.push(inputVal); // yeni hedefi diziye ekle
+
+    // yeni hedefi etiket olarak oluştur
+    const label = document.createElement("div");
+    const icon = document.createElement("i");
+    label.classList.add("ui", "image", "label");
+    icon.classList.add("delete", "icon");
+    icon.addEventListener("click", function () {
+      const index = targets.indexOf(inputVal);
+      if (index !== -1) targets.splice(index, 1); // hedefi diziden sil
+      const params = new URLSearchParams(window.location.search);
+      params.set('targets', targets);
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+      label.remove(); // etiketi sayfadan sil
+    });
+    label.textContent = inputVal;
+    label.appendChild(icon);
+    targetsDiv.appendChild(label);
+
+    // URL parametrelerini güncelle
+    const params = new URLSearchParams(window.location.search);
+    params.set('targets', targets);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, '', newUrl);
+  });
+}
+
+// call the function when page is loaded
+document.addEventListener("DOMContentLoaded", createLabels);
+
+// call the function when targets array is updated
+window.addEventListener("popstate", createLabels);
+
 
 let subjects = {
   0: "Others / Generic",
@@ -1074,6 +1177,21 @@ btn.addEventListener("click", function () {
                     message: 'the ' + data[1].nick + ' player was kicked',
                   });
                 });
+
+                let targets = [];
+                const targetParams = new URLSearchParams(window.location.search).get('targets');
+                if (targetParams) {
+                  targets = targetParams.split(',');
+                }
+
+                if (targets.includes(data[1].nick)) {
+                  for (const s of socketList) {
+                    console.log(data);
+                    if (s.playerCode !== data[1].id) {
+                      s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
+                    }
+                  }
+                }
 
                 if (data[1].nick.startsWith("REDbot") && data[1].avatar === 1) {
                   for (const s of socketList) {
