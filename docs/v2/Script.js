@@ -196,7 +196,7 @@ The room is full.</div>
 <div class="field">
 <label>Username Target:</label>
 <div class="ui target right labeled left icon input">
-  <i class="tags icon"></i>
+  <i class="user icon"></i>
   <input type="text" placeholder="Enter Username">
   <a class="ui tag label">
     Add User
