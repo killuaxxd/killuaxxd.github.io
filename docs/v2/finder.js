@@ -61,7 +61,7 @@ document.body.innerHTML += `<div class="ui inverted segment">
     <div class="field">
     <label>Username Search Type:</label>
     <div class="ui floating name dropdown labeled icon button">
-    <i class="world icon"></i>
+    <i class="filter icon"></i>
     <input type="hidden" name="country">
     <div class="text"></i>Unknown</div>
     <div class="menu">
@@ -76,7 +76,7 @@ document.body.innerHTML += `<div class="ui inverted segment">
     <label>Image:</label>
     <div class="ui floating search profil bot-image dropdown labeled icon button" tabindex="0">
     <input type="hidden" name="user">
-    <i class="world icon" tabindex="0"><div class="menu" tabindex="-1"></div></i>
+    <i class="filter icon" tabindex="0"><div class="menu" tabindex="-1"></div></i>
     <div class="text"><img class="ui avatar image">Unknown</div>
     <div class="menu transition hidden" tabindex="-1">
     <div data-value="unknown" class="item active selected">
