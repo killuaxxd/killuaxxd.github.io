@@ -1087,20 +1087,24 @@ btn.addEventListener("click", function () {
               socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${params.get('image')},"sala":"${params.get('code').slice(-4)}"}]`);
             }
           } else if (event.data === '42[6,4]') {
-            $('.tiny.connection.problem.modal')
-              .modal({
-                closable: false,
-              })
-              .modal('show');
+            if (5 < i) {
+              $('.tiny.connection.problem.modal')
+                .modal({
+                  closable: false,
+                })
+                .modal('show');
+            }
           } else if (event.data === '42[6,3]') {
-            $('.tiny.full.room.modal')
-              .modal({
-                closable: false,
-                onApprove: function () {
-                  window.open(scripturl).close();
-                }
-              })
-              .modal('show');
+            if (5 < i) {
+              $('.tiny.full.room.modal')
+                .modal({
+                  closable: false,
+                  onApprove: function () {
+                    window.open(scripturl).close();
+                  }
+                })
+                .modal('show');
+            }
           } else if (event.data === '41') {
             socket.close();
           }
