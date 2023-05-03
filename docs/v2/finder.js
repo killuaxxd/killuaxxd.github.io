@@ -130,9 +130,9 @@ document.body.innerHTML += `<div class="ui inverted segment">
     <input type="hidden" name="country">
     <div class="text"></i>Unknown</div>
     <div class="menu">
-    <div class="item" data-value="unknown">Unknown</div>
-    <div class="item" data-value="user">User</div>
-    <div class="item" data-value="bot">Bot</div>
+    <div class="item" data-value="unknown"><i class="th list icon"></i>Unknown</div>
+    <div class="item" data-value="user"><i class="user icon"></i>User</div>
+    <div class="item" data-value="bot"><i class="user secret icon"></i>Bot</div>
     </div>
     </div>
     </div>
