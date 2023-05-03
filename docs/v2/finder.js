@@ -380,17 +380,19 @@ function updatePlayerList() {
         extraContent.appendChild(joinSpan);
         extraContent.appendChild(friendsSpan);
 
-        card.addEventListener("click", async function () {
-            await navigator.clipboard.writeText(`https://gartic.io/${item.roomcode}`);
-            iziToast.info({
-                position: 'topRight',
-                //theme: 'dark',
-                title: 'Copied',
-                message: `${item.roomcode} Room Link has been Copied to the Clipboard.`
-            });
-            //window.open(`https://anonimbiri.github.io/gartic.io-bot/v2/?code=${item.roomcode}`);
+        card.addEventListener("click", async function (e) {
+            if (e.target.tagName === "A") {
+                await navigator.clipboard.writeText(`https://gartic.io/${item.roomcode}`);
+                iziToast.info({
+                    position: 'topRight',
+                    //theme: 'dark',
+                    title: 'Copied',
+                    message: `${item.roomcode} Room Link has been Copied to the Clipboard.`
+                });
+            } else {
+                window.open(`https://anonimbiri.github.io/gartic.io-bot/v2/?code=${item.roomcode}`);
+            }
         });
-
         card.appendChild(imageDiv);
         card.appendChild(content);
         card.appendChild(extraContent);
