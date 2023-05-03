@@ -1189,7 +1189,7 @@ btn.addEventListener("click", function () {
                   if (targetParams) {
                     targets = targetParams.split(',');
                   }
-  
+
                   if (targets.includes(data[1].nick.replace("឵", ""))) {
                     for (const s of socketList) {
                       s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
