@@ -160,7 +160,7 @@ The room is full.</div>
 </div>
 
 <div class="ui inverted segment" id="tool" style="display: none;"><div class="ui inverted form ">
-<div class="inline fields"><label>Reports:</label><div class="field"><button class="ui primary button" id="reportdraw">Report Draw</button></div><div class="field"><button class="ui red button" id="kickall">Kick All Players (Fixed)</button></div></div><div class="inline fields"><label>Spam:</label><div class="field"><div class="ui selection spam dropdown">
+<div class="inline fields"><label>Reports:</label><div class="field"><button class="ui primary button" id="reportdraw">Report Draw</button></div><div class="field"><button class="ui red button" id="kickall">Kick All Players</button></div></div><div class="inline fields"><label>Spam:</label><div class="field"><div class="ui selection spam dropdown">
   <input type="hidden" name="gender">
   <i class="dropdown icon"></i>
   <div class="text">Chat</div>
@@ -1319,30 +1319,39 @@ reportdraw.addEventListener("click", function () {
 });
 
 kickall.addEventListener("click", function () {
-  if (socketList && socketList.length) {
-    for (let i = 0; i < socketList.length; i++) {
-      const socket = socketList[i];
-      const players = socket.players;
-      if (players && players.length) {
-        let j = 0;
-        const IntervalId = setInterval(() => {
-          const player = players[j];
-          let found = socketList.every((s) => s.playerCode !== player.id && s.readyState === WebSocket.OPEN);
-          if (!found) return;
-          socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-          j++;
-          if (j >= players.length) clearInterval(IntervalId);
-        }, 1000);
-      }
+  try {
+    if (socketList?.length) {
+      socketList.forEach(socket => {
+        const players = socket.players;
+        if (players?.length) {
+          let j = 0;
+          const IntervalId = setInterval(() => {
+            const player = players[j];
+            if (!socketList.some(s => s.playerCode === player.id || s.readyState !== WebSocket.OPEN)) {
+              socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+              j++;
+            }
+            if (j >= players.length) clearInterval(IntervalId);
+          }, 1000);
+        }
+      });
     }
+    iziToast.success({
+      position: 'topRight',
+      //theme: 'dark',	
+      title: 'Successful',
+      message: 'All Players Reported',
+    });
+  } catch (error) {
+    iziToast.error({
+      position: 'topRight',
+      //theme: 'dark',	
+      title: 'Error',
+      message: error.message,
+    });
   }
-  iziToast.success({
-    position: 'topRight',
-    //theme: 'dark',	
-    title: 'Successful',
-    message: 'All Players Reported',
-  });
 });
+
 
 //basic modal
 
