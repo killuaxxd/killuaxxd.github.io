@@ -1348,7 +1348,7 @@ watchtheroom.addEventListener("click", function () {
   }
 });
 
-url.onchange = function () { url.value = url.value.replace("https://gartic.io/", "").replace("/viewer", ""); if (url.value) { $('.ui.search.dropdown').addClass('disabled'); } else { $('.ui.search.dropdown').removeClass('disabled'); } };
+url.onchange = function () { url.value = url.value.replace("https://gartic.io/", "").replace("/viewer", ""); if (url.value) { $('.ui.search.join.dropdown').addClass('disabled'); } else { $('.ui.search.join.dropdown').removeClass('disabled'); } };
 
 var profilepicture = params.get('image') || 0;
 var serverlang = params.get('lang') || 2;
