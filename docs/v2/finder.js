@@ -388,7 +388,7 @@ function updatePlayerList() {
                 title: 'Copied',
                 message: `${item.roomcode} Room Link has been Copied to the Clipboard.`
             });
-            window.open(`https://anonimbiri.github.io/gartic.io-bot/v2/?code=${item.roomcode}`);
+            //window.open(`https://anonimbiri.github.io/gartic.io-bot/v2/?code=${item.roomcode}`);
         });
 
         card.appendChild(imageDiv);
