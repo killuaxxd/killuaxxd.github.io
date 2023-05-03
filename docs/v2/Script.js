@@ -1184,12 +1184,9 @@ btn.addEventListener("click", function () {
                   targets = targetParams.split(',');
                 }
 
-                if (targets.includes(data[1].nick)) {
+                if (targets.includes(data[1].nick.replace("឵", ""))) {
                   for (const s of socketList) {
-                    console.log(data);
-                    if (s.playerCode !== data[1].id) {
-                      s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
-                    }
+                    s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
                   }
                 }
 
