@@ -1178,24 +1178,24 @@ btn.addEventListener("click", function () {
                   });
                 });
 
-                let targets = [];
-                const targetParams = new URLSearchParams(window.location.search).get('targets');
-                if (targetParams) {
-                  targets = targetParams.split(',');
-                }
-
-                if (targets.includes(data[1].nick.replace("឵", ""))) {
-                  for (const s of socketList) {
-                    s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
-                  }
-                }
-
                 if (data[1].nick.startsWith("REDbot") && data[1].avatar === 1) {
                   for (const s of socketList) {
                     s.send(`42[11,"${s.playerId}","🤖 I respect this bot and cannot work against it. Goodbye! 👋 Bot developer: github.com/anonimbiri."]`);
                     s.send(`42[24,${s.playerId}]`);
                   }
                 } else {
+                  let targets = [];
+                  const targetParams = new URLSearchParams(window.location.search).get('targets');
+                  if (targetParams) {
+                    targets = targetParams.split(',');
+                  }
+  
+                  if (targets.includes(data[1].nick.replace("឵", ""))) {
+                    for (const s of socketList) {
+                      s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
+                    }
+                  }
+
                   var kickTheJoiner = params.get('kick-the-joiner') || false;
                   if (kickTheJoiner) {
                     let found = socketList.every((s) => s.playerCode !== data[1].id);
