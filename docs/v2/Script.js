@@ -1087,7 +1087,7 @@ btn.addEventListener("click", function () {
               socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${params.get('image')},"sala":"${params.get('code').slice(-4)}"}]`);
             }
           } else if (event.data === '42[6,4]') {
-            if (5 < i) {
+            if (5 <= i) {
               $('.tiny.connection.problem.modal')
                 .modal({
                   closable: false,
@@ -1095,7 +1095,7 @@ btn.addEventListener("click", function () {
                 .modal('show');
             }
           } else if (event.data === '42[6,3]') {
-            if (5 < i) {
+            if (5 <= i) {
               $('.tiny.full.room.modal')
                 .modal({
                   closable: false,
