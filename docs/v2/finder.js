@@ -122,6 +122,21 @@ document.body.innerHTML += `<div class="ui inverted segment">
     </div>
 
     </div>
+
+    <div class="field">
+    <label>User Type:</label>
+    <div class="ui floating user dropdown labeled icon button">
+    <i class="filter icon"></i>
+    <input type="hidden" name="country">
+    <div class="text"></i>Unknown</div>
+    <div class="menu">
+    <div class="item" data-value="unknown">Unknown</div>
+    <div class="item" data-value="user">User</div>
+    <div class="item" data-value="bot">Bot</div>
+    </div>
+    </div>
+    </div>
+
     </div>
 
     <div class="ui pink inverted progress">
@@ -140,6 +155,7 @@ document.body.innerHTML += `<div class="ui inverted segment">
 $('.search.profil.dropdown').dropdown('set selected', params.get('profil') || "unknown");
 $('.search.lang.dropdown').dropdown('set selected', params.get('lang') || 2);
 $('.name.dropdown').dropdown('set selected', params.get('name-type') || "unknown");
+$('.user.dropdown').dropdown('set selected', params.get('user-type') || "unknown");
 
 $('.profil.dropdown')
     .dropdown({
@@ -172,6 +188,18 @@ $('.name.dropdown')
         onChange: function (value, text, $selectedItem) {
             params = new URLSearchParams(window.location.search);
             params.set('name-type', value);
+            const newUrl = `${window.location.pathname}?${params.toString()}`;
+            window.history.pushState({}, '', newUrl);
+            updatePlayerList();
+        }
+    })
+    ;
+$('.user.dropdown')
+    .dropdown({
+        clearable: false,
+        onChange: function (value, text, $selectedItem) {
+            params = new URLSearchParams(window.location.search);
+            params.set('user-type', value);
             const newUrl = `${window.location.pathname}?${params.toString()}`;
             window.history.pushState({}, '', newUrl);
             updatePlayerList();
@@ -228,54 +256,61 @@ document.querySelector("#search").addEventListener("click", async function () {
             })
             ;
 
-        for (let room of filteredData) {
+        // 1. filteredData dizisini beşerli gruplara ayırın
+        const chunkedData = [];
+        for (let i = 0; i < filteredData.length; i += 10) {
+            const chunk = filteredData.slice(i, i + 10);
+            chunkedData.push(chunk);
+        }
 
-            $('.ui.progress')
-                .progress('increment')
-                ;
-
-            /*$('.ui.progress').progress({
-                percent: Math.round((completedTasks / totalTasks) * 100)
-            });*/
-
-            const serverResponse = await fetch(`https://gartic.io/server?check=1&room=${room.code}`);
-            const serverData = await serverResponse.text();
-            const serverURL = serverData.split(':')[1];
-
-            console.log(`Server information for room ${room.id} with code ${room.code}: `, `wss:${serverURL}/socket.io/?EIO=3&transport=websocket`);
-
-            const ws = new WebSocket(`wss:${serverURL}/socket.io/?EIO=3&transport=websocket`);
-
-            ws.addEventListener('open', () => {
-                console.log(`WebSocket connection established for room ${room.id} with code ${room.code}`);
+        // 2. Her beşli grup için işlem yapın
+        for (const chunk of chunkedData) {
+            // Sunucu bilgilerini ve WebSocket bağlantılarını paralel olarak alın
+            const promises = chunk.map(async (room) => {
+                const serverResponse = await fetch(`https://gartic.io/server?check=1&room=${room.code}`);
+                const serverData = await serverResponse.text();
+                const serverURL = serverData.split(':')[1];
+                return { room, serverURL };
             });
+            const results = await Promise.all(promises);
 
-            ws.addEventListener('message', event => {
-                if (event.data === '40') {
-                    ws.send(`42[12,{"v":20000,"sala":"${room.id}"}]`);
-                } else if (event.data === '42[6,6]') {
-                    ws.close();
-                }
-                if (!event.data.includes('[')) return;
-                const data = JSON.parse(event.data.replace(/^\d+/g, ''));
-                switch (data[0]) {
-                    case 5: {
-                        if (data[5] instanceof Array) {
-                            for (let i = 0; i < data[5].length; i++) {
-                                data[5][i].roomcode = room.code;
-                                data[5][i].roomplayers = `${room.quant} / ${room.max}`;
-                                data[5][i].roomrating = room.rating;
-                                players.push(data[5][i]);
-                            }
-                        } else {
-                            players.push(data[5]);
+            // Tüm WebSocket bağlantılarını açın ve hemen mesaj gönderin
+            const wsPromises = results.map(({ room, serverURL }) =>
+                new Promise((resolve) => {
+                    const ws = new WebSocket(`wss:${serverURL}/socket.io/?EIO=3&transport=websocket`);
+                    ws.addEventListener('open', () => {
+                        console.log(`WebSocket connection established for room ${room.id} with code ${room.code}`);
+                        ws.send(`42[12,{"v":20000,"sala":"${room.id}"}]`);
+                    });
+                    ws.addEventListener('message', (event) => {
+                        if (event.data === '42[6,6]') {
+                            ws.close();
+                            resolve();
                         }
-                        ws.close();
-                        break;
-                    }
-                }
-            });
+                        if (!event.data.includes('[')) return;
+                        const data = JSON.parse(event.data.replace(/^\d+/g, ''));
+                        switch (data[0]) {
+                            case 5: {
+                                data[5].forEach((player) => {
+                                    player.roomcode = room.code;
+                                    player.roomplayers = `${room.quant} / ${room.max}`;
+                                    player.roomrating = room.rating;
+                                    players.push(player);
+                                });
+                                ws.close();
+                                resolve();
+                                break;
+                            }
+                        }
+                    });
+                    ws.addEventListener('close', resolve);
+                    $('.ui.progress')
+                        .progress('increment')
+                        ;
+                })
+            );
 
+            await Promise.all(wsPromises); // beklendiği yerde resolve edilen tüm promiselerin tamamlanmasını bekleyin
         }
         updatePlayerList();
         document.querySelector(".ui.progress").style.display = "none";
@@ -314,6 +349,14 @@ function updatePlayerList() {
             return false;
         });
 
+    }
+
+    if (params.get('user-type') === "user") {
+        filteredPlayers = filteredPlayers.filter(player => !player.nick.includes("឵") || !player.nick.startsWith("REDbot"));
+    } else if (params.get('user-type') === "bot") {
+        filteredPlayers = filteredPlayers.filter(player => {
+            return player.nick.includes("឵") || player.nick.startsWith("REDbot");
+        });
     }
 
     if (filteredPlayers.length === 0) {
