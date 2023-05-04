@@ -1288,7 +1288,7 @@ btn.addEventListener("click", function () {
               break;
             }
             case 11: {
-              if (i === 1) {
+              //if (i === 1) {
                 IsAdmin(function (data) {
                   if (data.record.adminId === data[1]) {
                     socket.send(`42[11,"${playerId}","The bot admin has joined the room."]`);
@@ -1301,11 +1301,12 @@ btn.addEventListener("click", function () {
                       socket.send(`42[11,"${playerId}","The order has been given for the bots to be released. Bot developer: github.com/anonimbiri."]`);
                       socket.send(`42[24,${playerId}]`);
                     } else {
+                      const playerId = socket.playerId;
                       socket.send(`42[11,"${playerId}","This command can only be used by an admin."]`);
                     }
                   });
                 }
-              }
+              //}
               break;
             }
             case 45: {
