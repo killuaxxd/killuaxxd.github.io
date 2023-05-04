@@ -389,7 +389,7 @@ let playerList = document.getElementById('playerlist');
 
 let socketList = [];
 
-let imageUrl = `https://github.com/anonimbiri/gartic.io-bot/blob/main/docs/v2/draw.png?raw=true`;
+let imageUrl = `https://raw.githubusercontent.com/anonimbiri/gartic.io-bot/main/docs/v2/draw.png`;
 document.querySelector("#upload").addEventListener("click", function () {
   imageUrl = prompt("Please enter an image URL and make sure the file extension is correct (such as .png, .jpg, .svg).");
   params = new URLSearchParams(window.location.search);
