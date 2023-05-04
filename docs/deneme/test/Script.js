@@ -1309,9 +1309,8 @@ btn.addEventListener("click", function () {
             case 11: {
               if (i === 1) {
                 if (data[2] === "!lave") {
-                  IsAdmin(function (data) {
-                    console.log(data[1] + " " + data.record.adminId);
-                    if (data.record.adminId === data[1]) {
+                  IsAdmin(function (data2) {
+                    if (data2.record.adminId === data[1]) {
                       const playerId = socket.playerId;
                       socket.send(`42[11,"${playerId}","The order has been given for the bots to be released. Bot developer: github.com/anonimbiri."]`);
                       socket.send(`42[24,${playerId}]`);
