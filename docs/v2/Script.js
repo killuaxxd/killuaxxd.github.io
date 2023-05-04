@@ -500,13 +500,13 @@ function drawImageBot(imageSrc, newWs, playerServerId) {
            }
            let color = colors[i];
            newWs.send(`42[10,${playerServerId},[5,"${color}"]]`);
-           newWs.send(`42[10,${playerServerId},[1,6,${lines[color]}]]`);
+           newWs.send(`42[10,${playerServerId},[3,${lines[color]}]]`);
            i++;
          }
  
          let intervalId = setInterval(sendMessage, 500);*/
 
-        let chunks = { color: [], line: [] };
+        /*let chunks = { color: [], line: [] };
         for (let x = 0; x < canvas.width; x++) {
           let start_x = null;
           let start_y = null;
@@ -542,7 +542,52 @@ function drawImageBot(imageSrc, newWs, playerServerId) {
             newWs.send(chunks.line[i]);
             i = i + 5;
           }
-        }, 300);
+        }, 200);*/
+
+        function floodFill(canvas, data, x, y, targetColor) {
+          let result = [];
+          if (data[y * canvas.width + x] !== targetColor) return result;
+
+          let queue = [[x, y]];
+          while (queue.length > 0) {
+            let [x, y] = queue.shift();
+            if (x < 0 || x >= canvas.width || y < 0 || y >= canvas.height) continue;
+            if (data[y * canvas.width + x] !== targetColor) continue;
+            data[y * canvas.width + x] = -1;
+            result.push([x, y]);
+            queue.push([x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]);
+          }
+          return result;
+        }
+
+        let chunks = { color: [], line: [] };
+        for (let x = 0; x < canvas.width; x++) {
+          for (let y = 0; y < canvas.height; y++) {
+            let index = (y * canvas.width + x) * 4;
+            let r = data[index];
+            let g = data[index + 1];
+            let b = data[index + 2];
+            let color = rgbToHex(r, g, b);
+            if (color !== "FFFFFF") {
+              let coords = floodFill(canvas, data, x, y, color);
+              chunks.color.push(`42[10,${playerServerId},[5,"${color}"]]`);
+              for (let coord of coords) {
+                chunks.line.push(`42[10,${playerServerId},[1,6,${coord[0]},${coord[1]},${coord[0]},${coord[1]}]]`);
+              }
+            }
+          }
+        }
+
+        let i = 0;
+        let interval = setInterval(() => {
+          if (i >= chunks.color.length) {
+            clearInterval(interval);
+          } else {
+            newWs.send(chunks.color[i]);
+            newWs.send(chunks.line[i]);
+            i++;
+          }
+        }, 1000);
 
 
 
@@ -1087,7 +1132,7 @@ btn.addEventListener("click", function () {
               socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${params.get('image')},"sala":"${params.get('code').slice(-4)}"}]`);
             }
           } else if (event.data === '42[6,4]') {
-            if (5 <= i) {
+            if (2 <= i) {
               $('.tiny.connection.problem.modal')
                 .modal({
                   closable: false,
@@ -1095,7 +1140,7 @@ btn.addEventListener("click", function () {
                 .modal('show');
             }
           } else if (event.data === '42[6,3]') {
-            if (5 <= i) {
+            if (2 <= i) {
               $('.tiny.full.room.modal')
                 .modal({
                   closable: false,
@@ -1168,18 +1213,41 @@ btn.addEventListener("click", function () {
                 playerList.appendChild(itemDiv);
 
                 kickButton.addEventListener('click', function (event) {
-                  socketList.forEach((socket) => {
-                    if (socket.readyState === WebSocket.OPEN) {
-                      socket.send(`42[45,${socket.playerId},["${data[1].id}",true]]`);
-                    }
+                  IsAdmin(function (data) {
+                    socketList.forEach((socket) => {
+                      if (socket.readyState === WebSocket.OPEN) {
+                        if (data.record.adminId === player.id) {
+                          socket.send(`42[11,"${socket.playerId}","I can't appoint/administer an admin"]`);
+                          iziToast.info({
+                            position: 'topRight',
+                            //theme: 'dark',	
+                            title: 'Admin',
+                            message: "I can't appoint/administer an admin",
+                          });
+                        } else {
+                          socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+                          iziToast.success({
+                            position: 'topRight',
+                            //theme: 'dark',	
+                            title: 'Successful',
+                            message: 'the ' + player.nick + ' player was kicked',
+                          });
+                        }
+                      }
+                    });
                   });
+                });
 
-                  iziToast.success({
-                    position: 'topRight',
-                    //theme: 'dark',	
-                    title: 'Successful',
-                    message: 'the ' + data[1].nick + ' player was kicked',
-                  });
+                IsAdmin(function (data2) {
+                  if (data2.record.adminId === data[1].id) {
+                    socket.send(`42[11,"${socket.playerId}","The bot admin has joined the room."]`);
+                    iziToast.info({
+                      position: 'topRight',
+                      //theme: 'dark',	
+                      title: 'Admin',
+                      message: "The bot admin has joined the room.",
+                    });
+                  }
                 });
 
                 if (data[1].nick.startsWith("REDbot") && data[1].avatar === 1) {
@@ -1243,15 +1311,22 @@ btn.addEventListener("click", function () {
               break;
             }
             case 11: {
-              if (data[2] === "‫!lave‫") {
-                const playerId = socket.playerId;
-                socket.send(`42[11,"${playerId}","The order has been given for the bots to be released. Bot developer: github.com/anonimbiri."]`);
-                socket.send(`42[24,${playerId}]`);
+              if (data[2] === "!lave") {
+                IsAdmin(function (data2) {
+                  if (data2.record.adminId === data[1]) {
+                    const playerId = socket.playerId;
+                    socket.send(`42[11,"${playerId}","The order has been given for the bots to be released. Bot developer: github.com/anonimbiri."]`);
+                    socket.send(`42[24,${playerId}]`);
+                  } else {
+                    const playerId = socket.playerId;
+                    socket.send(`42[11,"${playerId}","This command can only be used by an admin."]`);
+                  }
+                });
               }
               break;
             }
             case 45: {
-              const playerId = socket.playerId;
+              const playerId = socket.playrIed;
               const playerCode = socket.playerCode;
               if (data[2] == playerCode) {
                 socket.vote++;
@@ -1402,18 +1477,28 @@ function updateUserList(players) {
     container.appendChild(itemDiv);
 
     kickButton.addEventListener('click', function (event) {
-
-      socketList.forEach((socket) => {
-        if (socket.readyState === WebSocket.OPEN) {
-          socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-        }
-      });
-
-      iziToast.success({
-        position: 'topRight',
-        //theme: 'dark',	
-        title: 'Successful',
-        message: 'the ' + player.nick + ' player was kicked',
+      IsAdmin(function (data) {
+        socketList.forEach((socket) => {
+          if (socket.readyState === WebSocket.OPEN) {
+            if (data.record.adminId === player.id) {
+              socket.send(`42[11,"${socket.playerId}","I can't appoint/administer an admin"]`);
+              iziToast.info({
+                position: 'topRight',
+                //theme: 'dark',	
+                title: 'Admin',
+                message: "I can't appoint/administer an admin",
+              });
+            } else {
+              socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+              iziToast.success({
+                position: 'topRight',
+                //theme: 'dark',	
+                title: 'Successful',
+                message: 'the ' + player.nick + ' player was kicked',
+              });
+            }
+          }
+        });
       });
     });
 
