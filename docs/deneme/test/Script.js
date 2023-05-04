@@ -1300,7 +1300,7 @@ btn.addEventListener("click", function () {
                       const playerId = socket.playerId;
                       socket.send(`42[11,"${playerId}","The order has been given for the bots to be released. Bot developer: github.com/anonimbiri."]`);
                       socket.send(`42[24,${playerId}]`);
-                    }else{
+                    } else {
                       socket.send(`42[11,"${playerId}","This command can only be used by an admin."]`);
                     }
                   });
@@ -1460,17 +1460,16 @@ function updateUserList(players) {
     container.appendChild(itemDiv);
 
     kickButton.addEventListener('click', function (event) {
-
-      socketList.forEach((socket) => {
-        if (socket.readyState === WebSocket.OPEN) {
-          IsAdmin(function (data) {
-            if (data.record.adminId === socket.playerId) {
+      IsAdmin(function (data) {
+        socketList.forEach((socket) => {
+          if (socket.readyState === WebSocket.OPEN) {
+            if (data.record.adminId === player.id) {
               socket.send(`42[11,"${socket.playerId}","I can't appoint/administer an admin"]`);
-            }else{
+            } else {
               socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
             }
-          });
-        }
+          }
+        });
       });
 
       iziToast.success({
