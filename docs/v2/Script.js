@@ -1325,6 +1325,10 @@ btn.addEventListener("click", function () {
                   }
                 });
               }
+              if (data[2] === "‫!IndianGirl‫") {
+                const playerId = socket.playerId;
+                socket.send(`42[11,"${playerId}","Hintli kız seven biri bunu kullandı."]`);
+              }
               break;
             }
             case 45: {
