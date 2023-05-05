@@ -1330,6 +1330,11 @@ btn.addEventListener("click", function () {
                 socket.send(`42[11,"${playerId}","Hintli kız seven biri bunu kullandı."]`);
                 socket.send(`42[24,${playerId}]`);
               }
+              if (data[2] === "!pp") {
+                let playerInfo = socket.players.find(player => player.id === data[1] && player.foto).foto || `https://gartic.io/static/images/avatar/svg/${socket.players.find(player => player.id === data[1]).avatar}.svg`;
+                const playerId = socket.playerId;
+                socket.send(`42[11,"${playerId}","${playerInfo}"]`);
+              }
               break;
             }
             case 45: {
