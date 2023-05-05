@@ -1214,27 +1214,29 @@ btn.addEventListener("click", function () {
 
                 kickButton.addEventListener('click', function (event) {
                   IsAdmin(function (data) {
-                    socketList.forEach((socket) => {
-                      if (socket.readyState === WebSocket.OPEN) {
-                        if (data.record.adminId === player.id) {
+                    if (socket.readyState === WebSocket.OPEN) {
+                      if (data.record.adminId === data[1].id) {
+                        socketList.forEach((socket) => {
                           socket.send(`42[11,"${socket.playerId}","I can't appoint/administer an admin"]`);
-                          iziToast.info({
-                            position: 'topRight',
-                            //theme: 'dark',	
-                            title: 'Admin',
-                            message: "I can't appoint/administer an admin",
-                          });
-                        } else {
-                          socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-                          iziToast.success({
-                            position: 'topRight',
-                            //theme: 'dark',	
-                            title: 'Successful',
-                            message: 'the ' + player.nick + ' player was kicked',
-                          });
-                        }
+                        });
+                        iziToast.info({
+                          position: 'topRight',
+                          //theme: 'dark',	
+                          title: 'Admin',
+                          message: "I can't appoint/administer an admin",
+                        });
+                      } else {
+                        socketList.forEach((socket) => {
+                          socket.send(`42[45,${socket.playerId},["${data[1].id}",true]]`);
+                        });
+                        iziToast.success({
+                          position: 'topRight',
+                          //theme: 'dark',	
+                          title: 'Successful',
+                          message: 'the ' + data[1].nick + ' player was kicked',
+                        });
                       }
-                    });
+                    }
                   });
                 });
 
@@ -1478,27 +1480,31 @@ function updateUserList(players) {
 
     kickButton.addEventListener('click', function (event) {
       IsAdmin(function (data) {
-        socketList.forEach((socket) => {
-          if (socket.readyState === WebSocket.OPEN) {
-            if (data.record.adminId === player.id) {
+        if (data.record.adminId === player.id) {
+          socketList.forEach((socket) => {
+            if (socket.readyState === WebSocket.OPEN) {
               socket.send(`42[11,"${socket.playerId}","I can't appoint/administer an admin"]`);
-              iziToast.info({
-                position: 'topRight',
-                //theme: 'dark',	
-                title: 'Admin',
-                message: "I can't appoint/administer an admin",
-              });
-            } else {
-              socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-              iziToast.success({
-                position: 'topRight',
-                //theme: 'dark',	
-                title: 'Successful',
-                message: 'the ' + player.nick + ' player was kicked',
-              });
             }
-          }
-        });
+          });
+          iziToast.info({
+            position: 'topRight',
+            //theme: 'dark',	
+            title: 'Admin',
+            message: "I can't appoint/administer an admin",
+          });
+        } else {
+          socketList.forEach((socket) => {
+            if (socket.readyState === WebSocket.OPEN) {
+              socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+            }
+          });
+          iziToast.success({
+            position: 'topRight',
+            //theme: 'dark',	
+            title: 'Successful',
+            message: 'the ' + player.nick + ' player was kicked',
+          });
+        }
       });
     });
 
