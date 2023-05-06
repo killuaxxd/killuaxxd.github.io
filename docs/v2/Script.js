@@ -1514,23 +1514,18 @@ kickall.addEventListener("click", function () {
   try {
     if (socketList?.length) {
       socketList.forEach(socket => {
-        if (socket.players?.length) {
+        const players = socket.players;
+        if (players?.length) {
           let j = 0;
-          function sendPlayers() {
-            for (let i = j; i < Math.min(j + 2, socket.players.length); i++) {
-              let player = socket.players[i];
-              console.log(player);
-              const isOpen = (socket) => socket.readyState === WebSocket.OPEN; // Bağlantı açık mı?
+          const IntervalId = setInterval(() => {
+            const player = players[j];
+            const isOpen = (socket) => socket.readyState === WebSocket.OPEN; // Bağlantı açık mı?
               if (!socketList.find((s) => s.playerCode === player.id && isOpen(s))) {
                 socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
                 j++;
               }
-            }
-            if (j < socket.players.length) {
-              setTimeout(sendPlayers, 1000);
-            }
-          }
-          setTimeout(sendPlayers, 1000);
+            if (j >= players.length) clearInterval(IntervalId);
+          }, 1000);
         }
       });
       iziToast.success({
@@ -1556,7 +1551,6 @@ kickall.addEventListener("click", function () {
     });
   }
 });
-
 
 
 //basic modal
