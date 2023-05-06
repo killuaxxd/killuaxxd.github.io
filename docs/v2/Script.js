@@ -1179,8 +1179,8 @@ btn.addEventListener("click", function () {
 
               if (!existingItem) {
                 socketList.forEach(function (socket) {
-                  let player = socket.players;
-                  player.push(data[1]);
+                  let players = socket.players;
+                  players.push(data[1]);
                 });
                 let found = socketList.every((s) => s.playerCode !== data[1].id);
                 if (!found) return;
@@ -1280,10 +1280,10 @@ btn.addEventListener("click", function () {
               if (existingItem) {
                 existingItem.remove();
                 socketList.forEach(function (socket) {
-                  let player = socket.players;
-                  let index = player.findIndex(player => player.id === data[1]);
+                  let players = socket.players;
+                  let index = players.findIndex(player => player.id === data[1]);
                   if (index !== -1) {
-                    player.splice(index, 1);
+                    players.splice(index, 1);
                   }
                 });
               }
