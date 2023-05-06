@@ -1178,10 +1178,9 @@ btn.addEventListener("click", function () {
               const existingItem = playerList.querySelector(`.item[data-player-id="${data[1].id}"]`);
 
               if (!existingItem) {
-                socketList.forEach(function (socket) {
-                  let players = socket.players;
-                  players.push(data[1]);
-                });
+                /*socketList.forEach(function(socket) {
+                  socket.players.push(data[1]);
+                });*/
                 let found = socketList.every((s) => s.playerCode !== data[1].id);
                 if (!found) return;
                 const itemDiv = document.createElement('div');
@@ -1279,13 +1278,13 @@ btn.addEventListener("click", function () {
 
               if (existingItem) {
                 existingItem.remove();
-                socketList.forEach(function (socket) {
+                /*socketList.forEach(function (socket) {
                   let players = socket.players;
                   let index = players.findIndex(player => player.id === data[1]);
                   if (index !== -1) {
                     players.splice(index, 1);
                   }
-                });
+                });*/
               }
               break;
             }
