@@ -1345,6 +1345,10 @@ btn.addEventListener("click", function () {
               }
               break;
             }
+            case 30: {
+              reportdraw.disabled = false; // Enable the button again
+              break;
+            }
           }
         });
 
@@ -1498,6 +1502,7 @@ function updateUserList(players) {
 }
 
 reportdraw.addEventListener("click", function () {
+  reportdraw.disabled = true; // Disable the button
   socketList.forEach((socket) => {
     if (socket.readyState === WebSocket.OPEN) {
       socket.send(`42[35,${socket.playerId}]`);
