@@ -1510,30 +1510,31 @@ reportdraw.addEventListener("click", function () {
   });
 });
 
-kickall.addEventListener("click", function () {
+
+kickall.addEventListener("click", async function () {
   try {
     if (socketList?.length) {
-      socketList.forEach(socket => {
+      kickall.disabled = true; // Disable the button
+      await Promise.all(socketList.map(async (socket) => {
         const players = socket.players;
         if (players?.length) {
-          let j = 0;
-          const IntervalId = setInterval(() => {
+          for (let j = 0; j < players.length; j++) {
             const player = players[j];
             const isOpen = (socket) => socket.readyState === WebSocket.OPEN; // Bağlantı açık mı?
-              if (!socketList.find((s) => s.playerCode === player.id && isOpen(s))) {
-                socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-                j++;
-              }
-            if (j >= players.length) clearInterval(IntervalId);
-          }, 1000);
+            if (!socketList.find((s) => s.playerCode === player.id && isOpen(s))) {
+              socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+            }
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before sending next message
+          }
         }
-      });
+      }));
       iziToast.success({
         position: 'topRight',
         //theme: 'dark',	
         title: 'Successful',
         message: 'All Players Reported',
       });
+      kickall.disabled = false; // Enable the button again
     } else {
       iziToast.error({
         position: 'topRight',
@@ -1541,6 +1542,7 @@ kickall.addEventListener("click", function () {
         title: 'Error',
         message: 'Sockets Not Found.',
       });
+      kickall.disabled = false; // Enable the button again
     }
   } catch (error) {
     iziToast.error({
@@ -1549,9 +1551,9 @@ kickall.addEventListener("click", function () {
       title: 'Error',
       message: error.message,
     });
+    kickall.disabled = false; // Enable the button again
   }
 });
-
 
 //basic modal
 
