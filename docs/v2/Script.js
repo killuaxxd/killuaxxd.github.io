@@ -1213,30 +1213,14 @@ btn.addEventListener("click", function () {
                 playerList.appendChild(itemDiv);
 
                 kickButton.addEventListener('click', function (event) {
-                  IsAdmin(function (data) {
-                    if (socket.readyState === WebSocket.OPEN) {
-                      if (data.record.adminId === data[1].id) {
-                        socketList.forEach((socket) => {
-                          socket.send(`42[11,"${socket.playerId}","I can't appoint/administer an admin"]`);
-                        });
-                        iziToast.info({
-                          position: 'topRight',
-                          //theme: 'dark',	
-                          title: 'Admin',
-                          message: "I can't appoint/administer an admin",
-                        });
-                      } else {
-                        socketList.forEach((socket) => {
-                          socket.send(`42[45,${socket.playerId},["${data[1].id}",true]]`);
-                        });
-                        iziToast.success({
-                          position: 'topRight',
-                          //theme: 'dark',	
-                          title: 'Successful',
-                          message: 'the ' + data[1].nick + ' player was kicked',
-                        });
-                      }
-                    }
+                  socketList.forEach((socket) => {
+                    socket.send(`42[45,${socket.playerId},["${data[1].id}",true]]`);
+                  });
+                  iziToast.success({
+                    position: 'topRight',
+                    //theme: 'dark',	
+                    title: 'Successful',
+                    message: 'the ' + data[1].nick + ' player was kicked',
                   });
                 });
 
@@ -1330,8 +1314,12 @@ btn.addEventListener("click", function () {
                 socket.send(`42[11,"${playerId}","Hintli kız seven biri bunu kullandı."]`);
                 socket.send(`42[24,${playerId}]`);
               }
+              if (data[2] === "!help") {
+                socket.send(`42[11,"${playerId}","!lave command is restricted to the bot owner, but it's not working, while !pp command returns the profile photo of the user who typed it."]`);
+              }
               if (data[2] === "!pp") {
-                let playerInfo = socket.players.find(player => player.id === data[1] && player.foto).foto || `https://gartic.io/static/images/avatar/svg/${socket.players.find(player => player.id === data[1]).avatar}.svg`;
+                const player = socket.players.find(player => player.id === data[1]);
+                const playerInfo = player?.foto || `https://gartic.io/static/images/avatar/svg/${player?.avatar}.svg`;
                 const playerId = socket.playerId;
                 socket.send(`42[11,"${playerId}","${playerInfo}"]`);
               }
@@ -1489,32 +1477,16 @@ function updateUserList(players) {
     container.appendChild(itemDiv);
 
     kickButton.addEventListener('click', function (event) {
-      IsAdmin(function (data) {
-        if (data.record.adminId === player.id) {
-          socketList.forEach((socket) => {
-            if (socket.readyState === WebSocket.OPEN) {
-              socket.send(`42[11,"${socket.playerId}","I can't appoint/administer an admin"]`);
-            }
-          });
-          iziToast.info({
-            position: 'topRight',
-            //theme: 'dark',	
-            title: 'Admin',
-            message: "I can't appoint/administer an admin",
-          });
-        } else {
-          socketList.forEach((socket) => {
-            if (socket.readyState === WebSocket.OPEN) {
-              socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-            }
-          });
-          iziToast.success({
-            position: 'topRight',
-            //theme: 'dark',	
-            title: 'Successful',
-            message: 'the ' + player.nick + ' player was kicked',
-          });
+      socketList.forEach((socket) => {
+        if (socket.readyState === WebSocket.OPEN) {
+          socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
         }
+      });
+      iziToast.success({
+        position: 'topRight',
+        //theme: 'dark',	
+        title: 'Successful',
+        message: 'the ' + player.nick + ' player was kicked',
       });
     });
 
@@ -1542,26 +1514,39 @@ kickall.addEventListener("click", function () {
   try {
     if (socketList?.length) {
       socketList.forEach(socket => {
-        const players = socket.players;
-        if (players?.length) {
+        if (socket.players?.length) {
           let j = 0;
-          const IntervalId = setInterval(() => {
-            const player = players[j];
-            if (!socketList.some(s => s.playerCode === player.id || s.readyState !== WebSocket.OPEN)) {
-              socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-              j++;
+          function sendPlayers() {
+            for (let i = j; i < Math.min(j + 2, socket.players.length); i++) {
+              let player = socket.players[i];
+              console.log(player);
+              const isOpen = (socket) => socket.readyState === WebSocket.OPEN; // Bağlantı açık mı?
+              if (!socketList.find((s) => s.playerCode === player.id && isOpen(s))) {
+                socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+                j++;
+              }
             }
-            if (j >= players.length) clearInterval(IntervalId);
-          }, 1000);
+            if (j < socket.players.length) {
+              setTimeout(sendPlayers, 1000);
+            }
+          }
+          setTimeout(sendPlayers, 1000);
         }
       });
+      iziToast.success({
+        position: 'topRight',
+        //theme: 'dark',	
+        title: 'Successful',
+        message: 'All Players Reported',
+      });
+    } else {
+      iziToast.error({
+        position: 'topRight',
+        //theme: 'dark',	
+        title: 'Error',
+        message: 'Sockets Not Found.',
+      });
     }
-    iziToast.success({
-      position: 'topRight',
-      //theme: 'dark',	
-      title: 'Successful',
-      message: 'All Players Reported',
-    });
   } catch (error) {
     iziToast.error({
       position: 'topRight',
@@ -1571,6 +1556,7 @@ kickall.addEventListener("click", function () {
     });
   }
 });
+
 
 
 //basic modal
