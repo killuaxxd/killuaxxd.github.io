@@ -1333,6 +1333,9 @@ btn.addEventListener("click", function () {
                 if (socket.vote >= 3) {
                   socket.send(`42[24,${playerId}]`);
                 }
+                var audio = new Audio('warning.mp3');
+                audio.play();
+                audio = null;
                 iziToast.warning({
                   position: 'topRight',
                   //theme: 'dark',
