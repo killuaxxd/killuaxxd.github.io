@@ -1353,7 +1353,7 @@ btn.addEventListener("click", function () {
               reportdraw.disabled = true; // Disable the button
               break;
             }
-            case 30: {
+            case 34: {
               reportdraw.disabled = false; // Enable the button again
               break;
             }
