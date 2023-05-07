@@ -2,7 +2,8 @@
 [Bot Site](https://anonimbiri.github.io/gartic.io-bot/v2)
 
 
-https://user-images.githubusercontent.com/83531197/232592228-7d5a0ddc-4a94-4b25-9383-dc50f4f7d71c.mp4
+https://user-images.githubusercontent.com/83531197/236705132-e15cca36-d102-4efd-9b92-20275c1d3ec0.mp4
+
 
 > **Note** The following operations are only for 1v, they are not necessary for 2v.
 
@@ -28,7 +29,4 @@ https://user-images.githubusercontent.com/83531197/232592228-7d5a0ddc-4a94-4b25-
 -----------------------
 ## Disclaimer 
 This project is for Educational Use only. We do not condone this software being used to gain an advantage against other people.
-
-
-
 
