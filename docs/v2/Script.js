@@ -1074,6 +1074,7 @@ btn.addEventListener("click", function () {
 
   let proxylist = JSON.parse(localStorage.getItem("proxies"));
 
+  var warningMessage = true;
   fetch(url.value ? `https://gartic.io/server?check=1&room=${params.get('code')}` : `https://gartic.io/server?check=1&lang=${params.get('lang')}`)
     .then(x => x.text())
     .then(data => {
@@ -1132,7 +1133,8 @@ btn.addEventListener("click", function () {
               socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${params.get('image')},"sala":"${params.get('code').slice(-4)}"}]`);
             }
           } else if (event.data === '42[6,4]') {
-            if (2 <= i) {
+            if (warningMessage === true) {
+              warningMessage = false;
               $('.tiny.connection.problem.modal')
                 .modal({
                   closable: false,
@@ -1140,13 +1142,11 @@ btn.addEventListener("click", function () {
                 .modal('show');
             }
           } else if (event.data === '42[6,3]') {
-            if (2 <= i) {
+            if (warningMessage === true) {
+              warningMessage = false;
               $('.tiny.full.room.modal')
                 .modal({
                   closable: false,
-                  onApprove: function () {
-                    window.open(scripturl).close();
-                  }
                 })
                 .modal('show');
             }
