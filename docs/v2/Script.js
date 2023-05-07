@@ -1177,10 +1177,9 @@ btn.addEventListener("click", function () {
             case 23: {
               const existingItem = playerList.querySelector(`.item[data-player-id="${data[1].id}"]`);
 
+              socket.players.push(data[1]);
+
               if (!existingItem) {
-                /*socketList.forEach(function(socket) {
-                  socket.players.push(data[1]);
-                });*/
                 let found = socketList.every((s) => s.playerCode !== data[1].id);
                 if (!found) return;
                 const itemDiv = document.createElement('div');
@@ -1276,15 +1275,13 @@ btn.addEventListener("click", function () {
             case 24: {
               const existingItem = playerList.querySelector(`.item[data-player-id="${data[1]}"]`);
 
+              let index = socket.players.findIndex(player => player.id === data[1]);
+              if (index !== -1) {
+                socket.players.splice(index, 1);
+              }
+
               if (existingItem) {
                 existingItem.remove();
-                /*socketList.forEach(function (socket) {
-                  let players = socket.players;
-                  let index = players.findIndex(player => player.id === data[1]);
-                  if (index !== -1) {
-                    players.splice(index, 1);
-                  }
-                });*/
               }
               break;
             }
