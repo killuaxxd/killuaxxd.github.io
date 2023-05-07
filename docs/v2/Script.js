@@ -1177,7 +1177,7 @@ btn.addEventListener("click", function () {
             case 23: {
               const existingItem = playerList.querySelector(`.item[data-player-id="${data[1].id}"]`);
 
-              socket.players.push(data[1]);
+              socket.players.unshift(data[1]);
 
               if (!existingItem) {
                 let found = socketList.every((s) => s.playerCode !== data[1].id);
