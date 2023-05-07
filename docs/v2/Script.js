@@ -1530,10 +1530,9 @@ kickall.addEventListener("click", async function () {
     if (socketList?.length) {
       kickall.disabled = true; // Disable the button
       await Promise.all(socketList.map(async (socket) => {
-        const players = socket.players;
-        if (players?.length) {
-          for (let j = 0; j < players.length; j++) {
-            const player = players[j];
+        if (socket.players?.length) {
+          for (let j = 0; j < socket.players.length; j++) {
+            const player = socket.players[j];
             const isOpen = (socket) => socket.readyState === WebSocket.OPEN; // Bağlantı açık mı?
             if (!socketList.find((s) => s.playerCode === player.id && isOpen(s))) {
               socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
