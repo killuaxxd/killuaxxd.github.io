@@ -1362,7 +1362,7 @@ btn.addEventListener("click", async function () {
             socket.send(`42[24,${playerId}]`);
           }
           if (!messageSent) {
-            setTimeout(function() {
+            setTimeout(function () {
               messageSent = false;
             }, 1000);
             messageSent = true;
@@ -1396,7 +1396,8 @@ btn.addEventListener("click", async function () {
 
               socket.send(`42[11,"${playerId}","https://anonimbiri.github.io/gartic.io-bot/v2/"]`);
             }
-            if (data[2] === "!pp") {
+            if (data[2].startsWith("!pp")) {
+              const playerNick = data[2].toLowerCase().split(" ").slice(1).join(" ");
               const playerId = socket.playerId;
               const now = Date.now();
               const lastUsed = cooldowns[playerId] || 0;
@@ -1409,7 +1410,19 @@ btn.addEventListener("click", async function () {
 
               cooldowns[playerId] = now;
 
-              const player = socket.players.find(player => player.id === data[1]);
+              let player;
+              if (playerNick) {
+                player = socket.players.find(player => player.nick.toLowerCase().includes(playerNick));
+              } else {
+                player = socket.players.find(player => player.id === data[1]);
+              }
+
+              if(!player){
+                socket.send(`42[11,"${playerId}","The user cannot be found."]`);
+                return;
+              }
+              console.log(playerNick);
+              console.log(player);
               const playerInfo = player?.foto || `https://gartic.io/static/images/avatar/svg/${player?.avatar}.svg`;
               socket.send(`42[11,"${playerId}","${playerInfo}"]`);
             }
