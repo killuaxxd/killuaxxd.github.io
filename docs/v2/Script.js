@@ -1440,6 +1440,7 @@ btn2.addEventListener("click", function () {
   if (socketList) {
     socketList.forEach(function (socket) {
       if (socket.readyState === WebSocket.OPEN) {
+        if (params.get('private-mode') === "true") { socket.send(`42[11,"${socket.playerId}","Bot developer: github.com/anonimbiri"]`); }
         socket.close();
         socket.onerror = null;
         socket.onclose = null;
