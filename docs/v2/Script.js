@@ -1230,7 +1230,7 @@ btn.addEventListener("click", async function () {
           socket.players = data[5]; // players'i soket nesnesine kaydet
           socket.isRoom = true;
           socket.send(`42[46,${playerId}]`);
-          if (!params.get('private-mode') === "true") { socket.send(`42[11,"${playerId}","Bot developer: github.com/anonimbiri"]`); }
+          if (params.get('private-mode') !== "true") { socket.send(`42[11,"${playerId}","Bot developer: github.com/anonimbiri"]`); }
           updateUserList(data[5]);
           iziToast.info({
             position: 'topRight',
