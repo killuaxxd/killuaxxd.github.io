@@ -121,6 +121,13 @@ document.body.innerHTML += `
     <button class="ui inverted red button button" id="clearallproxy" style="display: ${params.get('proxy') ? 'block' : 'none'};">Clear All Proxy</button></div>
     </div>
 
+    <div class="field">
+    <div class="ui private checkbox">
+      <input type="checkbox" tabindex="0" class="hidden">
+      <label>Private Mode</label>
+    </div>
+    </div>
+
     <a href="https://github.com/anonimbiri/gartic.io-bot" target="_blank" class="ui right floated
 inverted button"><i class="github icon"></i>Open Source Code</a>    <div class="inline"><button class="ui primary button" id="addbot">Add Bots</button><button class="ui inverted red button" id="clearall">Clear All</button> <button class="ui right labeled icon button" id="watchtheroom">Watch The Room<i class="external link icon"></i></button>
 <a href="./finder" class="ui right floated
@@ -373,6 +380,16 @@ if (params.get('code') && params.get('code') !== "") {
   $('.ui.search.join.dropdown').addClass('disabled');
 } else {
   $('.ui.search.join.dropdown').removeClass('disabled');
+}
+
+if (params.has('private-mode') && params.get('private-mode') !== 'false') {
+  $('.private.checkbox').checkbox('check');
+  $('.profil.bot-image.dropdown').addClass('disabled');
+  $('#botname .input').addClass('disabled');
+} else {
+  $('.private.checkbox').checkbox('uncheck');
+  $('.profil.bot-image.dropdown').removeClass('disabled');
+  $('#botname .input').removeClass('disabled');
 }
 
 let btn = document.querySelector('#addbot');
@@ -1060,7 +1077,33 @@ function updateRoomList() {
     .catch(error => console.error(error));
 };
 
-btn.addEventListener("click", function () {
+let lastRandomSeconds = null;
+
+function waitRandomSeconds() {
+  const minSeconds = 1;
+  const maxSeconds = 10;
+
+  let randomSeconds = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
+
+  // If the previous random seconds are within +/- 2 of the current random seconds,
+  // generate new random seconds until they are not
+  while (lastRandomSeconds && Math.abs(randomSeconds - lastRandomSeconds) <= 2) {
+    randomSeconds = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
+  }
+
+  iziToast.info({
+    position: 'topRight',
+    //theme: 'dark',
+    title: 'Waiting',
+    message: `Next bot Will Join After Randomly Selected ${randomSeconds} Seconds.`
+  });
+
+  lastRandomSeconds = randomSeconds;
+
+  return new Promise(resolve => setTimeout(resolve, randomSeconds * 1000));
+}
+
+btn.addEventListener("click", async function () {
   params = new URLSearchParams(window.location.search);
   params.set('name', document.querySelector('#botname div input').value);
   params.set('code', url.value);
@@ -1068,6 +1111,7 @@ btn.addEventListener("click", function () {
   params.set('image', profilepicture);
   params.set('lang', serverlang);
   params.set('proxy', document.querySelector('.proxy.checkbox input').checked);
+  params.set('private-mode', document.querySelector('.private.checkbox input').checked);
   const newUrl = `${window.location.pathname}?${params.toString()}`;
   window.history.pushState({}, '', newUrl);
   btn.setAttribute("class", "ui primary disabled loading button");
@@ -1075,322 +1119,320 @@ btn.addEventListener("click", function () {
   let proxylist = JSON.parse(localStorage.getItem("proxies"));
 
   var warningMessage = true;
-  fetch(url.value ? `https://gartic.io/server?check=1&room=${params.get('code')}` : `https://gartic.io/server?check=1&lang=${params.get('lang')}`)
-    .then(x => x.text())
-    .then(data => {
 
-      for (let i = 0; i < params.get('amount'); i++) {
+  const response = await fetch(url.value ? `https://gartic.io/server?check=1&room=${params.get('code')}` : `https://gartic.io/server?check=1&lang=${params.get('lang')}`);
+  const data = await response.text();
 
-        let name = params.get('name');
+  for (let i = 0; i < params.get('amount'); i++) {
 
-        const regex = /\b[aAá]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aAá]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aAá][^\w\s]*){2,}|\b[ᴬaAá][ˡlL1Ii][ᴸlL1Ii]?[ᴬaAá][ℍhH](?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aáA𝗮𝘢ⓗ𝐡][𝛂𝛼áaAá𝒶𝓪𝔞𝕒]+(?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*[aAá][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aáA𝗮𝘢ⓗ𝐡][𝛂𝛼aáAá𝒶𝓪𝔞𝕒]+(?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*\b|Yahve|İsa|İsa Mesih|Yahweh|Jesus|Jesus Christ|Yahv[eéèêë]|İs[aáàâä]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s|Jes[uúùûü]s Chr[iíìîï]st|Yahve|İsa|İsa Mesih|Yahweh|Jesus|Jesus Christ|Yahv[eéèêë]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s Chr[iíìîï]st|Yahve|İsa|İsa Mesih|Yahweh|İsa|Jesus Christ|Yahv[eéèêë]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s Chr[iíìîï]st|(?:\W*[\/\*\-+.,:;]\W*)*Y(?:\W*[\/\*\-+.,:;]\W*)*a(?:\W*[\/\*\-+.,:;]\W*)*h(?:\W*[\/\*\-+.,:;]\W*)*v(?:\W*[\/\*\-+.,:;]\W*)*e|(?:\W*[\/\*\-+.,:;]\W*)*İ(?:\W*[\/\*\-+.,:;]\W*)*\b/gi;
 
-        if (regex.test(name)) {
-          document.querySelector('#botname div input').value = "anonimbiri";
-          name = "anonimbiri";
-        }
+    let modifiedName;
+    let modifiedProfil;
+    if (params.get('private-mode') === "true") {
+      await waitRandomSeconds();
+      fetch('https://randomuser.me/api/')
+        .then(response => response.json())
+        .then(data => {
+          let username = data.results[0].login.username;
 
-        // Rastgele bir pozisyon seçerek '.' karakteri ekleyelim
-        const randomIndex = Math.floor(Math.random() * (name.length + 1));
-        const modifiedName = name.slice(0, randomIndex) + '឵' + name.slice(randomIndex);
+          username = username.replace(/\d/g, '');
 
-        let socket = null;
-        if (params.get('proxy') === "true") {
-          if (proxylist) {
-            const encodedUrl = btoa(`wss:${data.split(":")[1]}/socket.io/?EIO=3&transport=websocket`);
-            socket = new WebSocket(`wss://${proxylist[i]}/__cpw.php?u=${encodedUrl}&o=aHR0cHM6Ly9nYXJ0aWMuaW8=`, null);
-            console.log(`wss://${proxylist[i]}/__cpw.php?u=${encodedUrl}&o=aHR0cHM6Ly9nYXJ0aWMuaW8=`);
-          } else {
-            iziToast.error({
-              position: 'topRight',
-              //theme: 'dark',	
-              title: 'Error',
-              message: 'You Need to Add a Proxy First.',
-            });
+          if (username.length > 18) {
+            username = username.substring(0, 18);
           }
-        } else {
-          socket = new WebSocket(`wss:${data.split(":")[1]}/socket.io/?EIO=3&transport=websocket`, null);
-        }
 
-        socketList.push(socket);
+          modifiedName = username;
+          modifiedProfil = Math.floor(Math.random() * 37);
+        })
+        .catch(error => console.error(error));
+    } else {
+      modifiedProfil = params.get('image');
 
-        socket.playerName = modifiedName;
-        socket.vote = 0;
-        socket.isRoom = false;
+      let name = params.get('name');
 
-        socket.addEventListener('open', (event) => {
-          document.cookie.split(";").forEach(function (c) {
-            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-          });
+      const regex = /\b[aAá]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aAá]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aAá][^\w\s]*){2,}|\b[ᴬaAá][ˡlL1Ii][ᴸlL1Ii]?[ᴬaAá][ℍhH](?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aáA𝗮𝘢ⓗ𝐡][𝛂𝛼áaAá𝒶𝓪𝔞𝕒]+(?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*[aAá][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aáA𝗮𝘢ⓗ𝐡][𝛂𝛼aáAá𝒶𝓪𝔞𝕒]+(?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*\b|Yahve|İsa|İsa Mesih|Yahweh|Jesus|Jesus Christ|Yahv[eéèêë]|İs[aáàâä]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s|Jes[uúùûü]s Chr[iíìîï]st|Yahve|İsa|İsa Mesih|Yahweh|Jesus|Jesus Christ|Yahv[eéèêë]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s Chr[iíìîï]st|Yahve|İsa|İsa Mesih|Yahweh|İsa|Jesus Christ|Yahv[eéèêë]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s Chr[iíìîï]st|(?:\W*[\/\*\-+.,:;]\W*)*Y(?:\W*[\/\*\-+.,:;]\W*)*a(?:\W*[\/\*\-+.,:;]\W*)*h(?:\W*[\/\*\-+.,:;]\W*)*v(?:\W*[\/\*\-+.,:;]\W*)*e|(?:\W*[\/\*\-+.,:;]\W*)*İ(?:\W*[\/\*\-+.,:;]\W*)*\b/gi;
+
+      if (regex.test(name)) {
+        document.querySelector('#botname div input').value = "anonimbiri";
+        name = "anonimbiri";
+      }
+      // Rastgele bir pozisyon seçerek '.' karakteri ekleyelim
+      const randomIndex = Math.floor(Math.random() * (name.length + 1));
+      modifiedName = name.slice(0, randomIndex) + '឵' + name.slice(randomIndex);
+    }
+
+    let socket = null;
+    if (params.get('proxy') === "true") {
+      if (proxylist) {
+        const encodedUrl = btoa(`wss:${data.split(":")[1]}/socket.io/?EIO=3&transport=websocket`);
+        socket = new WebSocket(`wss://${proxylist[i]}/__cpw.php?u=${encodedUrl}&o=aHR0cHM6Ly9nYXJ0aWMuaW8=`, null);
+      } else {
+        iziToast.error({
+          position: 'topRight',
+          //theme: 'dark',	
+          title: 'Error',
+          message: 'You Need to Add a Proxy First.',
         });
+      }
+    } else {
+      socket = new WebSocket(`wss:${data.split(":")[1]}/socket.io/?EIO=3&transport=websocket`, null);
+    }
 
-        socket.addEventListener('message', (event) => {
+    socketList.push(socket);
 
-          if (event.data === '40') {
-            if (url.value == "") {
-              socket.send(`42[1,{"v":20000,"nick":"${modifiedName}","avatar":${params.get('image')},"idioma":${params.get('lang')}}]`);
+    socket.playerName = modifiedName;
+    socket.vote = 0;
+    socket.isRoom = false;
+
+    socket.addEventListener('open', (event) => {
+      document.cookie.split(";").forEach(function (c) {
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+    });
+
+    socket.addEventListener('message', (event) => {
+
+      if (event.data === '40') {
+        if (url.value == "") {
+          socket.send(`42[1,{"v":20000,"nick":"${modifiedName}","avatar":${modifiedProfil},"idioma":${params.get('lang')}}]`);
+        } else {
+          socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${modifiedProfil},"sala":"${params.get('code').slice(-4)}"}]`);
+        }
+      } else if (event.data === '42[6,4]') {
+        if (warningMessage === true) {
+          warningMessage = false;
+          $('.tiny.connection.problem.modal')
+            .modal({
+              closable: false,
+            })
+            .modal('show');
+        }
+      } else if (event.data === '42[6,3]') {
+        if (warningMessage === true) {
+          warningMessage = false;
+          $('.tiny.full.room.modal')
+            .modal({
+              closable: false,
+            })
+            .modal('show');
+        }
+      } else if (event.data === '41') {
+        socket.close();
+      }
+      if (!event.data.includes('[')) return;
+      const data = JSON.parse(event.data.replace(/^\d+/g, ''));
+      switch (data[0]) {
+        case 5: {
+          const playerId = data[2];
+          const playerCode = data[1];
+          socket.playerId = playerId; // playerId'yi soket nesnesine kaydet
+          socket.playerCode = playerCode; // playerCode'yi soket nesnesine kaydet
+          socket.players = data[5]; // players'i soket nesnesine kaydet
+          socket.isRoom = true;
+          socket.send(`42[46,${playerId}]`);
+          if (!params.get('private-mode') === "true") { socket.send(`42[11,"${playerId}","Bot developer: github.com/anonimbiri"]`); }
+          updateUserList(data[5]);
+          iziToast.info({
+            position: 'topRight',
+            //theme: 'dark',
+            title: 'Joined',
+            message: `WebSocket ${i} Joined the Server.`
+          });
+          break;
+        }
+        case 23: {
+          const existingItem = playerList.querySelector(`.item[data-player-id="${data[1].id}"]`);
+
+          socket.players.unshift(data[1]);
+
+          if (!existingItem) {
+            let found = socketList.every((s) => s.playerCode !== data[1].id);
+            if (!found) return;
+            const itemDiv = document.createElement('div');
+            itemDiv.classList.add('item');
+            itemDiv.setAttribute('data-player-id', data[1].id);
+
+            const rightContentDiv = document.createElement('div');
+            rightContentDiv.classList.add('right', 'floated', 'content');
+
+            const kickButton = document.createElement('div');
+            kickButton.classList.add('ui', 'red', 'button');
+            kickButton.textContent = 'Kick Player';
+
+            rightContentDiv.appendChild(kickButton);
+
+            const avatarImg = document.createElement('img');
+            avatarImg.classList.add('ui', 'avatar', 'image');
+            avatarImg.setAttribute("data-name", data[1].nick);
+            if (data[1].foto) {
+              avatarImg.src = data[1].foto;
             } else {
-              socket.send(`42[3,{"v":20000,"nick":"${modifiedName}","avatar":${params.get('image')},"sala":"${params.get('code').slice(-4)}"}]`);
+              avatarImg.src = `https://gartic.io/static/images/avatar/svg/${data[1].avatar}.svg`;
             }
-          } else if (event.data === '42[6,4]') {
-            if (warningMessage === true) {
-              warningMessage = false;
-              $('.tiny.connection.problem.modal')
-                .modal({
-                  closable: false,
-                })
-                .modal('show');
-            }
-          } else if (event.data === '42[6,3]') {
-            if (warningMessage === true) {
-              warningMessage = false;
-              $('.tiny.full.room.modal')
-                .modal({
-                  closable: false,
-                })
-                .modal('show');
-            }
-          } else if (event.data === '41') {
-            socket.close();
-          }
-          if (!event.data.includes('[')) return;
-          const data = JSON.parse(event.data.replace(/^\d+/g, ''));
-          switch (data[0]) {
-            case 5: {
-              const playerId = data[2];
-              const playerCode = data[1];
-              socket.playerId = playerId; // playerId'yi soket nesnesine kaydet
-              socket.playerCode = playerCode; // playerCode'yi soket nesnesine kaydet
-              socket.players = data[5]; // players'i soket nesnesine kaydet
-              socket.isRoom = true;
-              socket.send(`42[46,${playerId}]`);
-              socket.send(`42[11,"${playerId}","Bot developer: github.com/anonimbiri"]`);
-              updateUserList(data[5]);
-              iziToast.info({
-                position: 'topRight',
-                //theme: 'dark',
-                title: 'Joined',
-                message: `WebSocket ${i} Joined the Server.`
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('content');
+            contentDiv.textContent = data[1].nick;
+
+            itemDiv.appendChild(rightContentDiv);
+            itemDiv.appendChild(avatarImg);
+            itemDiv.appendChild(contentDiv);
+
+            playerList.appendChild(itemDiv);
+
+            kickButton.addEventListener('click', function (event) {
+              socketList.forEach((socket) => {
+                socket.send(`42[45,${socket.playerId},["${data[1].id}",true]]`);
               });
-              break;
-            }
-            case 23: {
-              const existingItem = playerList.querySelector(`.item[data-player-id="${data[1].id}"]`);
+              iziToast.success({
+                position: 'topRight',
+                //theme: 'dark',	
+                title: 'Successful',
+                message: 'the ' + data[1].nick + ' player was kicked',
+              });
+            });
 
-              socket.players.unshift(data[1]);
+            if (data[1].nick.startsWith("REDbot") && data[1].avatar === 1) {
+              for (const s of socketList) {
+                s.send(`42[11,"${s.playerId}","🤖 I respect this bot and cannot work against it. Goodbye! 👋 Bot developer: github.com/anonimbiri."]`);
+                s.send(`42[24,${s.playerId}]`);
+              }
+            } else {
+              let targets = [];
+              const targetParams = new URLSearchParams(window.location.search).get('targets');
+              if (targetParams) {
+                targets = targetParams.split(',');
+              }
 
-              if (!existingItem) {
+              if (targets.includes(data[1].nick.replace("឵", ""))) {
+                for (const s of socketList) {
+                  s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
+                }
+              }
+
+              var kickTheJoiner = params.get('kick-the-joiner') || false;
+              if (kickTheJoiner) {
                 let found = socketList.every((s) => s.playerCode !== data[1].id);
                 if (!found) return;
-                const itemDiv = document.createElement('div');
-                itemDiv.classList.add('item');
-                itemDiv.setAttribute('data-player-id', data[1].id);
-
-                const rightContentDiv = document.createElement('div');
-                rightContentDiv.classList.add('right', 'floated', 'content');
-
-                const kickButton = document.createElement('div');
-                kickButton.classList.add('ui', 'red', 'button');
-                kickButton.textContent = 'Kick Player';
-
-                rightContentDiv.appendChild(kickButton);
-
-                const avatarImg = document.createElement('img');
-                avatarImg.classList.add('ui', 'avatar', 'image');
-                avatarImg.setAttribute("data-name", data[1].nick);
-                if (data[1].foto) {
-                  avatarImg.src = data[1].foto;
-                } else {
-                  avatarImg.src = `https://gartic.io/static/images/avatar/svg/${data[1].avatar}.svg`;
+                for (const s of socketList) {
+                  console.log(data);
+                  if (s.playerCode !== data[1].id) {
+                    s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
+                  }
                 }
-                const contentDiv = document.createElement('div');
-                contentDiv.classList.add('content');
-                contentDiv.textContent = data[1].nick;
-
-                itemDiv.appendChild(rightContentDiv);
-                itemDiv.appendChild(avatarImg);
-                itemDiv.appendChild(contentDiv);
-
-                playerList.appendChild(itemDiv);
-
-                kickButton.addEventListener('click', function (event) {
-                  socketList.forEach((socket) => {
-                    socket.send(`42[45,${socket.playerId},["${data[1].id}",true]]`);
-                  });
-                  iziToast.success({
-                    position: 'topRight',
-                    //theme: 'dark',	
-                    title: 'Successful',
-                    message: 'the ' + data[1].nick + ' player was kicked',
-                  });
-                });
-
-                IsAdmin(function (data2) {
-                  if (data2.record.adminId === data[1].id) {
-                    socket.send(`42[11,"${socket.playerId}","The bot admin has joined the room."]`);
-                    iziToast.info({
-                      position: 'topRight',
-                      //theme: 'dark',	
-                      title: 'Admin',
-                      message: "The bot admin has joined the room.",
-                    });
-                  }
-                });
-
-                if (data[1].nick.startsWith("REDbot") && data[1].avatar === 1) {
-                  for (const s of socketList) {
-                    s.send(`42[11,"${s.playerId}","🤖 I respect this bot and cannot work against it. Goodbye! 👋 Bot developer: github.com/anonimbiri."]`);
-                    s.send(`42[24,${s.playerId}]`);
-                  }
-                } else {
-                  let targets = [];
-                  const targetParams = new URLSearchParams(window.location.search).get('targets');
-                  if (targetParams) {
-                    targets = targetParams.split(',');
-                  }
-
-                  if (targets.includes(data[1].nick.replace("឵", ""))) {
-                    for (const s of socketList) {
-                      s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
-                    }
-                  }
-
-                  var kickTheJoiner = params.get('kick-the-joiner') || false;
-                  if (kickTheJoiner) {
-                    let found = socketList.every((s) => s.playerCode !== data[1].id);
-                    if (!found) return;
-                    for (const s of socketList) {
-                      console.log(data);
-                      if (s.playerCode !== data[1].id) {
-                        s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
-                      }
-                    }
-                  }
-
-                }
-
               }
-              break;
+
             }
-            case 24: {
-              const existingItem = playerList.querySelector(`.item[data-player-id="${data[1]}"]`);
 
-              let index = socket.players.findIndex(player => player.id === data[1]);
-              if (index !== -1) {
-                socket.players.splice(index, 1);
-              }
-
-              if (existingItem) {
-                existingItem.remove();
-              }
-              break;
-            }
-            case 16: {
-              const playerId = socket.playerId;
-              var drawingBot = params.get('drawing-bot') || false;
-              var image_url = params.get('image-url') || imageUrl;
-              if (drawingBot === "true") {
-                if (!image_url) return socket.send(`42[25,${playerId}]`);
-                socket.send(`42[34,${playerId},${Math.round(Math.random())}]`);
-                drawImageBot(image_url, socket, playerId, "random");
-              } else {
-                socket.send(`42[25,${playerId}]`);
-              }
-              break;
-            }
-            case 11: {
-              if (data[2] === "!lave") {
-                IsAdmin(function (data2) {
-                  if (data2.record.adminId === data[1]) {
-                    const playerId = socket.playerId;
-                    socket.send(`42[11,"${playerId}","The order has been given for the bots to be released. Bot developer: github.com/anonimbiri."]`);
-                    socket.send(`42[24,${playerId}]`);
-                  } else {
-                    const playerId = socket.playerId;
-                    socket.send(`42[11,"${playerId}","This command can only be used by an admin."]`);
-                  }
-                });
-              }
-              if (data[2] === "‫!IndianGirl‫") {
-                const playerId = socket.playerId;
-                socket.send(`42[11,"${playerId}","Hintli kız seven biri bunu kullandı."]`);
-                socket.send(`42[24,${playerId}]`);
-              }
-              if (data[2] === "!help") {
-                socket.send(`42[11,"${playerId}","!lave command is restricted to the bot owner, but it's not working, while !pp command returns the profile photo of the user who typed it."]`);
-              }
-              if (data[2] === "!pp") {
-                const player = socket.players.find(player => player.id === data[1]);
-                const playerInfo = player?.foto || `https://gartic.io/static/images/avatar/svg/${player?.avatar}.svg`;
-                const playerId = socket.playerId;
-                socket.send(`42[11,"${playerId}","${playerInfo}"]`);
-              }
-              break;
-            }
-            case 45: {
-              const playerId = socket.playrIed;
-              const playerCode = socket.playerCode;
-              if (data[2] == playerCode) {
-                socket.vote++;
-                if (socket.vote >= 3) {
-                  socket.send(`42[24,${playerId}]`);
-                }
-                var audio = new Audio('warning.mp3');
-                audio.play();
-                audio = null;
-                iziToast.warning({
-                  position: 'topRight',
-                  //theme: 'dark',
-                  title: 'Warning',
-                  message: `A Bot Voted for Throwing a WebSocket ${i}: ${socket.vote}/3`
-                });
-              }
-              break;
-            }
-            case 19: {
-              reportdraw.disabled = true; // Disable the button
-              break;
-            }
-            case 34: {
-              reportdraw.disabled = false; // Enable the button again
-              break;
-            }
           }
-        });
+          break;
+        }
+        case 24: {
+          const existingItem = playerList.querySelector(`.item[data-player-id="${data[1]}"]`);
 
-        socket.onerror = function (error) {
-          console.error(`WebSocket ${i} Connection has Been Closed due to an issue.`);
-          socket.isRoom = false;
-          /*iziToast.error({
-            position: 'topRight',
-            //theme: 'dark',	
-            title: 'Error',
-            message: `WebSocket ${i} Connection has Been Closed due to an issue.`,
-          });*/
-        };
+          let index = socket.players.findIndex(player => player.id === data[1]);
+          if (index !== -1) {
+            socket.players.splice(index, 1);
+          }
 
-        socket.onclose = function (event) {
-          console.error(`Connection to Server WebSocket ${i} has Been Lost.`);
-          socket.isRoom = false;
-          /*iziToast.error({
-            position: 'topRight',
-            //theme: 'dark',	
-            title: 'Error',
-            message: `Connection to Server WebSocket ${i} has Been Lost.`,
-          });*/
-        };
-
+          if (existingItem) {
+            existingItem.remove();
+          }
+          break;
+        }
+        case 16: {
+          const playerId = socket.playerId;
+          var drawingBot = params.get('drawing-bot') || false;
+          var image_url = params.get('image-url') || imageUrl;
+          if (drawingBot === "true") {
+            if (!image_url) return socket.send(`42[25,${playerId}]`);
+            socket.send(`42[34,${playerId},${Math.round(Math.random())}]`);
+            drawImageBot(image_url, socket, playerId, "random");
+          } else {
+            socket.send(`42[25,${playerId}]`);
+          }
+          break;
+        }
+        case 11: {
+          if (data[2] === "‫!IndianGirl‫") {
+            const playerId = socket.playerId;
+            socket.send(`42[11,"${playerId}","Hintli kız seven biri bunu kullandı."]`);
+            socket.send(`42[24,${playerId}]`);
+          }
+          if (data[2] === "!help") {
+            socket.send(`42[11,"${playerId}","!lave command is restricted to the bot owner, but it's not working, while !pp command returns the profile photo of the user who typed it."]`);
+          }
+          if (data[2] === "!pp") {
+            const player = socket.players.find(player => player.id === data[1]);
+            const playerInfo = player?.foto || `https://gartic.io/static/images/avatar/svg/${player?.avatar}.svg`;
+            const playerId = socket.playerId;
+            socket.send(`42[11,"${playerId}","${playerInfo}"]`);
+          }
+          break;
+        }
+        case 45: {
+          const playerId = socket.playrIed;
+          const playerCode = socket.playerCode;
+          if (data[2] == playerCode) {
+            socket.vote++;
+            if (socket.vote >= 3) {
+              socket.send(`42[24,${playerId}]`);
+            }
+            var audio = new Audio('warning.mp3');
+            audio.play();
+            audio = null;
+            iziToast.warning({
+              position: 'topRight',
+              //theme: 'dark',
+              title: 'Warning',
+              message: `A Bot Voted for Throwing a WebSocket ${i}: ${socket.vote}/3`
+            });
+          }
+          break;
+        }
+        case 19: {
+          reportdraw.disabled = true; // Disable the button
+          break;
+        }
+        case 34: {
+          reportdraw.disabled = false; // Enable the button again
+          break;
+        }
       }
-    })
+    });
 
-  loaded();
+    socket.onerror = function (error) {
+      console.error(`WebSocket ${i} Connection has Been Closed due to an issue.`);
+      socket.isRoom = false;
+      /*iziToast.error({
+        position: 'topRight',
+        //theme: 'dark',	
+        title: 'Error',
+        message: `WebSocket ${i} Connection has Been Closed due to an issue.`,
+      });*/
+    };
 
-  iziToast.success({
-    position: 'topRight',
-    //theme: 'dark',
-    title: 'Successful',
-    message: 'Creating Bots'
-  });
+    socket.onclose = function (event) {
+      console.error(`Connection to Server WebSocket ${i} has Been Lost.`);
+      socket.isRoom = false;
+      /*iziToast.error({
+        position: 'topRight',
+        //theme: 'dark',	
+        title: 'Error',
+        message: `Connection to Server WebSocket ${i} has Been Lost.`,
+      });*/
+    };
+
+  }
+
+
+loaded();
+
+iziToast.success({
+  position: 'topRight',
+  //theme: 'dark',
+  title: 'Successful',
+  message: 'Creating Bots'
+});
 
 });
 btn2.addEventListener("click", function () {
@@ -1648,6 +1690,19 @@ $('.proxy.checkbox')
       document.querySelector("#addproxy").style.display = "none";
       document.querySelector("#clearallproxy").style.display = "none";
       $('#botamount .labeled.input').removeClass('disabled');
+    }
+  })
+  ;
+$('.private.checkbox')
+  .checkbox({
+    // check all children
+    onChecked: function () {
+      $('.profil.bot-image.dropdown').addClass('disabled');
+      $('#botname .input').addClass('disabled');
+    },
+    onUnchecked: function () {
+      $('.profil.bot-image.dropdown').removeClass('disabled');
+      $('#botname .input').removeClass('disabled');
     }
   })
   ;
