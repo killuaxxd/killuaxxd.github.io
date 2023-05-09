@@ -1371,8 +1371,7 @@ btn.addEventListener("click", async function () {
               const now = Date.now();
               const lastUsed = cooldowns[playerId] || 0;
               const diff = now - lastUsed;
-
-              cooldowns[playerId] = now;
+              cooldowns[data[1]] = now;
 
               if (diff < 10000) { // 10 second cooldown
                 socket.send(`42[11,"${playerId}","Please wait a few seconds before using this command again."]`);
@@ -1387,7 +1386,7 @@ btn.addEventListener("click", async function () {
               const lastUsed = cooldowns[playerId] || 0;
               const diff = now - lastUsed;
 
-              cooldowns[playerId] = now;
+              cooldowns[data[1]] = now;
 
               if (diff < 10000) { // 10 second cooldown
                 socket.send(`42[11,"${playerId}","Please wait a few seconds before using this command again."]`);
@@ -1408,7 +1407,7 @@ btn.addEventListener("click", async function () {
                 return;
               }
 
-              cooldowns[playerId] = now;
+              cooldowns[data[1]] = now;
 
               let player;
               if (playerNick) {
@@ -1417,7 +1416,7 @@ btn.addEventListener("click", async function () {
                 player = socket.players.find(player => player.id === data[1]);
               }
 
-              if(!player){
+              if (!player) {
                 socket.send(`42[11,"${playerId}","The user cannot be found."]`);
                 return;
               }
