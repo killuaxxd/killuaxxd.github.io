@@ -1431,8 +1431,6 @@ btn.addEventListener("click", async function () {
                 socket.send(`42[11,"${playerId}","${message.slice(0, randomIndex) + '឵' + message.slice(randomIndex)}"]`);
                 return;
               }
-              console.log(playerNick);
-              console.log(player);
               const playerInfo = player?.foto || `https://gartic.io/static/images/avatar/svg/${player?.avatar}.svg`;
               socket.send(`42[11,"${playerId}","${playerInfo}"]`);
             }
