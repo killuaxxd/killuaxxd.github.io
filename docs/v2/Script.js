@@ -1377,7 +1377,7 @@ btn.addEventListener("click", async function () {
                 return;
               }
 
-              socket.send(`42[11,"${playerId}","but it's not working, while !pp command returns the profile photo of the user who typed it, !link command provides bot adding website link"]`);
+              socket.send(`42[11,"${playerId}","Here are the commands: !help, !link, !pp"]`);
             }
             if (data[2] === "!link") {
               const playerId = socket.playerId;
