@@ -1364,13 +1364,15 @@ btn.addEventListener("click", async function () {
           if (!messageSent) {
             setTimeout(function() {
               messageSent = false;
-            }, 5000);
+            }, 1000);
             messageSent = true;
             if (data[2] === "!help") {
               const playerId = socket.playerId;
               const now = Date.now();
               const lastUsed = cooldowns[playerId] || 0;
               const diff = now - lastUsed;
+
+              cooldowns[playerId] = now;
 
               if (diff < 10000) { // 10 second cooldown
                 socket.send(`42[11,"${playerId}","Please wait a few seconds before using this command again."]`);
@@ -1384,6 +1386,8 @@ btn.addEventListener("click", async function () {
               const now = Date.now();
               const lastUsed = cooldowns[playerId] || 0;
               const diff = now - lastUsed;
+
+              cooldowns[playerId] = now;
 
               if (diff < 10000) { // 10 second cooldown
                 socket.send(`42[11,"${playerId}","Please wait a few seconds before using this command again."]`);
