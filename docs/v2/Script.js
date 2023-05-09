@@ -1103,6 +1103,8 @@ function waitRandomSeconds() {
   return new Promise(resolve => setTimeout(resolve, randomSeconds * 1000));
 }
 
+let cooldowns = {};
+let messageSent = false;
 btn.addEventListener("click", async function () {
   params = new URLSearchParams(window.location.search);
   params.set('name', document.querySelector('#botname div input').value);
@@ -1359,16 +1361,56 @@ btn.addEventListener("click", async function () {
             socket.send(`42[11,"${playerId}","Hintli kız seven biri bunu kullandı."]`);
             socket.send(`42[24,${playerId}]`);
           }
-          if (data[2] === "!help") {
-            socket.send(`42[11,"${playerId}","!lave command is restricted to the bot owner, but it's not working, while !pp command returns the profile photo of the user who typed it."]`);
+          if (!messageSent) {
+            setTimeout(function() {
+              messageSent = false;
+            }, 5000);
+            messageSent = true;
+            if (data[2] === "!help") {
+              const playerId = socket.playerId;
+              const now = Date.now();
+              const lastUsed = cooldowns[playerId] || 0;
+              const diff = now - lastUsed;
+
+              if (diff < 10000) { // 10 second cooldown
+                socket.send(`42[11,"${playerId}","Please wait a few seconds before using this command again."]`);
+                return;
+              }
+
+              socket.send(`42[11,"${playerId}","but it's not working, while !pp command returns the profile photo of the user who typed it, !link command provides bot adding website link"]`);
+            }
+            if (data[2] === "!link") {
+              const playerId = socket.playerId;
+              const now = Date.now();
+              const lastUsed = cooldowns[playerId] || 0;
+              const diff = now - lastUsed;
+
+              if (diff < 10000) { // 10 second cooldown
+                socket.send(`42[11,"${playerId}","Please wait a few seconds before using this command again."]`);
+                return;
+              }
+
+              socket.send(`42[11,"${playerId}","https://anonimbiri.github.io/gartic.io-bot/v2/"]`);
+            }
+            if (data[2] === "!pp") {
+              const playerId = socket.playerId;
+              const now = Date.now();
+              const lastUsed = cooldowns[playerId] || 0;
+              const diff = now - lastUsed;
+
+              if (diff < 10000) { // 10 second cooldown
+                socket.send(`42[11,"${playerId}","Please wait a few seconds before using this command again."]`);
+                return;
+              }
+
+              cooldowns[playerId] = now;
+
+              const player = socket.players.find(player => player.id === data[1]);
+              const playerInfo = player?.foto || `https://gartic.io/static/images/avatar/svg/${player?.avatar}.svg`;
+              socket.send(`42[11,"${playerId}","${playerInfo}"]`);
+            }
+            break;
           }
-          if (data[2] === "!pp") {
-            const player = socket.players.find(player => player.id === data[1]);
-            const playerInfo = player?.foto || `https://gartic.io/static/images/avatar/svg/${player?.avatar}.svg`;
-            const playerId = socket.playerId;
-            socket.send(`42[11,"${playerId}","${playerInfo}"]`);
-          }
-          break;
         }
         case 45: {
           const playerId = socket.playrIed;
