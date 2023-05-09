@@ -1381,7 +1381,7 @@ btn.addEventListener("click", async function () {
                 return;
               }
 
-              const message = "Here are the commands: !help, !link, !pp";
+              const message = "Here are the commands: !help, !link, !pp <username> (optional)";
               socket.send(`42[11,"${playerId}","${message.slice(0, randomIndex) + '឵' + message.slice(randomIndex)}"]`);
             }
             if (data[2] === "!link") {
