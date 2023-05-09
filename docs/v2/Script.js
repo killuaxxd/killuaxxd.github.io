@@ -1130,21 +1130,22 @@ btn.addEventListener("click", async function () {
     let modifiedProfil;
     if (params.get('private-mode') === "true") {
       await waitRandomSeconds();
-      fetch('https://randomuser.me/api/')
-        .then(response => response.json())
-        .then(data => {
-          let username = data.results[0].login.username;
+      try {
+        const response = await fetch('https://randomuser.me/api/')
+        const data = await response.json();
+        let username = data.results[0].login.username;
 
-          username = username.replace(/\d/g, '');
+        username = username.replace(/\d/g, '');
 
-          if (username.length > 18) {
-            username = username.substring(0, 18);
-          }
+        if (username.length > 18) {
+          username = username.substring(0, 18);
+        }
 
-          modifiedName = username;
-          modifiedProfil = Math.floor(Math.random() * 37);
-        })
-        .catch(error => console.error(error));
+        modifiedName = username;
+        modifiedProfil = Math.floor(Math.random() * 37);
+      } catch (error) {
+        console.error(error);
+      }
     } else {
       modifiedProfil = params.get('image');
 
@@ -1425,14 +1426,14 @@ btn.addEventListener("click", async function () {
   }
 
 
-loaded();
+  loaded();
 
-iziToast.success({
-  position: 'topRight',
-  //theme: 'dark',
-  title: 'Successful',
-  message: 'Creating Bots'
-});
+  iziToast.success({
+    position: 'topRight',
+    //theme: 'dark',
+    title: 'Successful',
+    message: 'Creating Bots'
+  });
 
 });
 btn2.addEventListener("click", function () {
