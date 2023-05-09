@@ -1373,12 +1373,16 @@ btn.addEventListener("click", async function () {
               const diff = now - lastUsed;
               cooldowns[data[1]] = now;
 
+              const randomIndex = Math.floor(Math.random() * (name.length + 1));
+
               if (diff < 10000) { // 10 second cooldown
-                socket.send(`42[11,"${playerId}","Please wait a few seconds before using this command again."]`);
+                const message = "Please wait a few seconds before using this command again.";
+                socket.send(`42[11,"${playerId}","${message.slice(0, randomIndex) + '឵' + message.slice(randomIndex)}"]`);
                 return;
               }
 
-              socket.send(`42[11,"${playerId}","Here are the commands: !help, !link, !pp"]`);
+              const message = "Here are the commands: !help, !link, !pp";
+              socket.send(`42[11,"${playerId}","${message.slice(0, randomIndex) + '឵' + message.slice(randomIndex)}"]`);
             }
             if (data[2] === "!link") {
               const playerId = socket.playerId;
@@ -1388,8 +1392,11 @@ btn.addEventListener("click", async function () {
 
               cooldowns[data[1]] = now;
 
+              const randomIndex = Math.floor(Math.random() * (name.length + 1));
+
               if (diff < 10000) { // 10 second cooldown
-                socket.send(`42[11,"${playerId}","Please wait a few seconds before using this command again."]`);
+                const message = "Please wait a few seconds before using this command again.";
+                socket.send(`42[11,"${playerId}","${message.slice(0, randomIndex) + '឵' + message.slice(randomIndex)}"]`);
                 return;
               }
 
@@ -1402,8 +1409,11 @@ btn.addEventListener("click", async function () {
               const lastUsed = cooldowns[playerId] || 0;
               const diff = now - lastUsed;
 
+              const randomIndex = Math.floor(Math.random() * (name.length + 1));
+
               if (diff < 10000) { // 10 second cooldown
-                socket.send(`42[11,"${playerId}","Please wait a few seconds before using this command again."]`);
+                const message = "Please wait a few seconds before using this command again.";
+                socket.send(`42[11,"${playerId}","${message.slice(0, randomIndex) + '឵' + message.slice(randomIndex)}"]`);
                 return;
               }
 
@@ -1417,7 +1427,8 @@ btn.addEventListener("click", async function () {
               }
 
               if (!player) {
-                socket.send(`42[11,"${playerId}","The user cannot be found."]`);
+                const message = "The user cannot be found.";
+                socket.send(`42[11,"${playerId}","${message.slice(0, randomIndex) + '឵' + message.slice(randomIndex)}"]`);
                 return;
               }
               console.log(playerNick);
