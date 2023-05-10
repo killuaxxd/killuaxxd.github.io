@@ -1538,8 +1538,8 @@ btn.addEventListener("click", async function () {
 
   }
 
-
-  loaded();
+  document.querySelector("#tool").style.display = 'block';
+  btn.setAttribute("class", "ui primary button");
 
   iziToast.success({
     position: 'topRight',
@@ -1600,11 +1600,6 @@ var serverlang = params.get('lang') || 2;
 var roomlang = 2;
 var roomsubject = "";
 
-function loaded() {
-  document.querySelector("#tool").style.display = 'block';
-  btn.setAttribute("class", "ui primary button");
-}
-
 function updateUserList(players) {
 
   const container = document.getElementById('playerlist');
@@ -1614,52 +1609,53 @@ function updateUserList(players) {
   }
 
   players.forEach(player => {
+    if (!socketList.find((s) => s.playerCode === player.id && isOpen(s))) {
 
-    const itemDiv = document.createElement('div');
-    itemDiv.classList.add('item');
-    itemDiv.setAttribute('data-player-id', player.id);
+      const itemDiv = document.createElement('div');
+      itemDiv.classList.add('item');
+      itemDiv.setAttribute('data-player-id', player.id);
 
-    const rightContentDiv = document.createElement('div');
-    rightContentDiv.classList.add('right', 'floated', 'content');
+      const rightContentDiv = document.createElement('div');
+      rightContentDiv.classList.add('right', 'floated', 'content');
 
-    const kickButton = document.createElement('div');
-    kickButton.classList.add('ui', 'red', 'button');
-    kickButton.textContent = 'Kick Player';
+      const kickButton = document.createElement('div');
+      kickButton.classList.add('ui', 'red', 'button');
+      kickButton.textContent = 'Kick Player';
 
-    rightContentDiv.appendChild(kickButton);
+      rightContentDiv.appendChild(kickButton);
 
-    const avatarImg = document.createElement('img');
-    avatarImg.classList.add('ui', 'avatar', 'image');
-    avatarImg.setAttribute("data-name", player.nick);
-    if (player.foto) {
-      avatarImg.src = player.foto;
-    } else {
-      avatarImg.src = `https://gartic.io/static/images/avatar/svg/${player.avatar}.svg`;
+      const avatarImg = document.createElement('img');
+      avatarImg.classList.add('ui', 'avatar', 'image');
+      avatarImg.setAttribute("data-name", player.nick);
+      if (player.foto) {
+        avatarImg.src = player.foto;
+      } else {
+        avatarImg.src = `https://gartic.io/static/images/avatar/svg/${player.avatar}.svg`;
+      }
+      const contentDiv = document.createElement('div');
+      contentDiv.classList.add('content');
+      contentDiv.textContent = player.nick;
+
+      itemDiv.appendChild(rightContentDiv);
+      itemDiv.appendChild(avatarImg);
+      itemDiv.appendChild(contentDiv);
+
+      container.appendChild(itemDiv);
+
+      kickButton.addEventListener('click', function (event) {
+        socketList.forEach((socket) => {
+          if (socket.readyState === WebSocket.OPEN) {
+            socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
+          }
+        });
+        iziToast.success({
+          position: 'topRight',
+          //theme: 'dark',	
+          title: 'Successful',
+          message: 'the ' + player.nick + ' player was kicked',
+        });
+      });
     }
-    const contentDiv = document.createElement('div');
-    contentDiv.classList.add('content');
-    contentDiv.textContent = player.nick;
-
-    itemDiv.appendChild(rightContentDiv);
-    itemDiv.appendChild(avatarImg);
-    itemDiv.appendChild(contentDiv);
-
-    container.appendChild(itemDiv);
-
-    kickButton.addEventListener('click', function (event) {
-      socketList.forEach((socket) => {
-        if (socket.readyState === WebSocket.OPEN) {
-          socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
-        }
-      });
-      iziToast.success({
-        position: 'topRight',
-        //theme: 'dark',	
-        title: 'Successful',
-        message: 'the ' + player.nick + ' player was kicked',
-      });
-    });
-
   });
 
 }
