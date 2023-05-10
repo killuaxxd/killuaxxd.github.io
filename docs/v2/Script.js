@@ -367,9 +367,9 @@ Eleveda👋 - Goodbye👋</div>
 `;
 
 $('.ui.goodbye.modal')
-.modal('setting', 'closable', false)
-.modal('show')
-;
+  .modal('setting', 'closable', false)
+  .modal('show')
+  ;
 
 $('.profil.bot-image.dropdown').dropdown('set selected', params.get('image') || 0);
 $('.search.join.dropdown').dropdown('set selected', params.get('lang') || 2);
@@ -1154,18 +1154,43 @@ btn.addEventListener("click", async function () {
     if (params.get('private-mode') === "true") {
       await waitRandomSeconds();
       try {
-        const response = await fetch('https://randomuser.me/api/')
-        const data = await response.json();
-        let username = data.results[0].login.username;
+        const lang = navigator.language.slice(0, 2); // Kullanıcının tarayıcı ayarlarından dil kodunu al
+        let response = await fetch(`https://randomuser.me/api/?nat=${lang}`); // Rastgele bir kullanıcı seç
+        let data = await response.json();
 
-        username = username.replace(/\d/g, '');
+        let username;
+        let gender;
+        // Eğer seçilen ülkede "id" alanı boş olan bir kullanıcı varsa, bu kullanıcının "login.username" özelliğini al
+        if (data.results[0].id.value === null) {
+          username = data.results[0].name.first;
+          gender = data.results[0].gender;
+        } else {
+          // Eğer seçilen ülkede "id" alanı boş olan bir kullanıcı yoksa, başka bir ülke seç ve tekrar deneyin
+          let newLang = lang;
+          while (newLang === lang) {
+            // Farklı bir ülke seçmek için döngü kullanabilirsiniz
+            newLang = getRandomLanguage();
+          }
+          console.log(newLang);
+          response = await fetch(`https://randomuser.me/api/?nat=${newLang}`);
+          data = await response.json();
+          username = data.results[0].name.first;
+          gender = data.results[0].gender;
+        }
 
-        if (username.length > 18) {
-          username = username.substring(0, 18);
+        function getRandomLanguage() {
+          const languages = ["au", "br", "ca", "ch", "de", "dk", "es", "fi", "fr", "gb", "ie", "ir", "no", "nl", "nz", "tr", "us"];
+          return languages[Math.floor(Math.random() * languages.length)]; // Rastgele bir dil kodu seç
         }
 
         modifiedName = username;
-        modifiedProfil = Math.floor(Math.random() * 37);
+        if (gender === "male") {
+          modifiedProfil = Math.floor(Math.random() * 19);
+        } else if (gender === "female") {
+          modifiedProfil = Math.floor(Math.random() * 18) + 19;
+        } else {
+          modifiedProfil = Math.floor(Math.random() * 37);
+        }
       } catch (error) {
         console.error(error);
       }
