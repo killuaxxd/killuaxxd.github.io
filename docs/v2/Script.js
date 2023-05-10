@@ -166,6 +166,21 @@ The room is full.</div>
   </div>
 </div>
 
+<div class="ui tiny full goodbye modal">
+<div class="ui icon header">
+<i class="red exclamation triangle icon"></i>
+Eleveda👋 - Goodbye👋</div>
+  <div class="content">
+    <p>This project has been created for educational purposes only. The project will end soon. We do not accept encouraging people to take the wrong path. This project was only created to explain how it works.</p>
+  </div>
+  <div class="actions">
+    <div class="ui black cancel button">
+      OK
+    </div>
+  </div>
+  </div>
+</div>
+
 <div class="ui inverted segment" id="tool" style="display: none;"><div class="ui inverted form ">
 <div class="inline fields"><label>Reports:</label><div class="field"><button class="ui primary button" id="reportdraw">Report Draw</button></div><div class="field"><button class="ui red button" id="kickall">Kick All Players</button></div></div><div class="inline fields"><label>Spam:</label><div class="field"><div class="ui selection spam dropdown">
   <input type="hidden" name="gender">
@@ -350,6 +365,12 @@ The room is full.</div>
   </div>
 </div>
 `;
+
+$('.ui.goodbye.modal')
+.modal('setting', 'closable', false)
+.modal('show')
+;
+
 $('.profil.bot-image.dropdown').dropdown('set selected', params.get('image') || 0);
 $('.search.join.dropdown').dropdown('set selected', params.get('lang') || 2);
 $('.drawing-type.dropdown').dropdown('set selected', params.get('drawing-mode') || "horizontal");
