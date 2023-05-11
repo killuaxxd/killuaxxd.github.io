@@ -121,12 +121,16 @@ document.body.innerHTML += `
     <button class="ui inverted red button button" id="clearallproxy" style="display: ${params.get('proxy') ? 'block' : 'none'};">Clear All Proxy</button></div>
     </div>
 
+    <div class="inline fields">
     <div class="field">
     <div class="ui private checkbox">
       <input type="checkbox" tabindex="0" class="hidden">
       <label>Private Mode</label>
-    </div>
-    </div>
+    </div></div>
+    <div class="field">
+    <button class="ui primary button" style="display: ${params.get('private-mode') ? 'block' : 'none'};" id="LoadUsernameList">Load Username List</button></div>
+    <input style="display:none" type="file" id="file-input" accept="application/json">
+    </div></div>
 
     <a href="https://github.com/anonimbiri/gartic.io-bot" target="_blank" class="ui right floated
 inverted button"><i class="github icon"></i>Open Source Code</a>    <div class="inline"><button class="ui primary button" id="addbot">Add Bots</button><button class="ui inverted red button" id="clearall">Clear All</button> <button class="ui right labeled icon button" id="watchtheroom">Watch The Room<i class="external link icon"></i></button>
@@ -178,6 +182,21 @@ Eleveda👋 - Goodbye👋</div>
       OK
     </div>
   </div>
+  </div>
+</div>
+
+<div class="ui tutorial modal">
+  <div class="header">Important</div>
+  <div class="image content">
+    <img src="./tutorial.png" class="image">
+    <div class="description">
+      <p>Your JSON file must be like the one shown in the picture, otherwise you will get an error.</p>
+      <p>You don't have to import. If you don't import, it will fetch from the API.</p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui approve button">Add</div>
+    <div class="ui cancel button">Cancel</div>
   </div>
 </div>
 
@@ -419,6 +438,7 @@ let url = document.querySelector('#roomcode input');
 let amount = document.querySelector('#botamount input');
 let serverid = document.querySelector('#serverid input');
 let watchtheroom = document.querySelector('#watchtheroom');
+let fileInput = document.getElementById('file-input');
 
 let reportdraw = document.querySelector('#reportdraw');
 let kickall = document.querySelector('#kickall');
@@ -713,6 +733,38 @@ function rgbToHex(r, g, b) {
   const hexB = Math.round(b / step) * step;
   return `x${hexR.toString(16).padStart(2, '0').toUpperCase()}${hexG.toString(16).padStart(2, '0').toUpperCase()}${hexB.toString(16).padStart(2, '0').toUpperCase()}`;
 }
+
+let people;
+document.querySelector("#LoadUsernameList").addEventListener("click", function () {
+  updateRoomList();
+  $('.ui.tutorial.modal')
+    .modal('setting', 'closable', false)
+    .modal({
+      onApprove: function () {
+        fileInput.click();
+
+        fileInput.addEventListener('change', function () {
+          let file = fileInput.files[0];
+          if (file.type !== 'application/json') {
+            alert('Please select a JSON file.');
+            return;
+          }
+
+          const reader = new FileReader();
+
+          reader.onload = function (event) {
+            var data = JSON.parse(event.target.result);
+            people = data.people;
+            peopleSettings = data.settings;
+          };
+
+          reader.readAsText(file);
+        });
+      }
+    })
+    .modal('show')
+    ;
+});
 
 function createLabels() {
   let targets = [];
@@ -1100,9 +1152,10 @@ function updateRoomList() {
 
 let lastRandomSeconds = null;
 
+let peopleSettings;
 function waitRandomSeconds() {
-  const minSeconds = 1;
-  const maxSeconds = 10;
+  let minSeconds = (people && peopleSettings && peopleSettings && peopleSettings.minSeconds !== undefined) ? peopleSettings.minSeconds : 1;
+  let maxSeconds = (people && peopleSettings && peopleSettings && peopleSettings.maxSeconds !== undefined) ? peopleSettings.maxSeconds : 10;
 
   let randomSeconds = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
 
@@ -1126,6 +1179,7 @@ function waitRandomSeconds() {
 
 let cooldowns = {};
 let messageSent = false;
+let warningMessage = true;
 btn.addEventListener("click", async function () {
   params = new URLSearchParams(window.location.search);
   params.set('name', document.querySelector('#botname div input').value);
@@ -1141,7 +1195,7 @@ btn.addEventListener("click", async function () {
 
   let proxylist = JSON.parse(localStorage.getItem("proxies"));
 
-  let warningMessage = true;
+  warningMessage = true;
 
   const response = await fetch(url.value ? `https://gartic.io/server?check=1&room=${params.get('code')}` : `https://gartic.io/server?check=1&lang=${params.get('lang')}`);
   const data = await response.text();
@@ -1154,35 +1208,58 @@ btn.addEventListener("click", async function () {
     if (params.get('private-mode') === "true") {
       await waitRandomSeconds();
       try {
-        const lang = navigator.language.slice(0, 2); // Kullanıcının tarayıcı ayarlarından dil kodunu al
-        let response = await fetch(`https://randomuser.me/api/?nat=${lang}`); // Rastgele bir kullanıcı seç
-        let data = await response.json();
-
         let username;
         let gender;
-        // Eğer seçilen ülkede "id" alanı boş olan bir kullanıcı varsa, bu kullanıcının "login.username" özelliğini al
-        if (data.results[0].id.value === null) {
-          username = data.results[0].name.first;
-          gender = data.results[0].gender;
-        } else {
-          // Eğer seçilen ülkede "id" alanı boş olan bir kullanıcı yoksa, başka bir ülke seç ve tekrar deneyin
-          let newLang = lang;
-          while (newLang === lang) {
-            // Farklı bir ülke seçmek için döngü kullanabilirsiniz
-            newLang = getRandomLanguage();
+
+        if (people) {
+
+          if (people.length < 1){
+            warningMessage = false;
           }
-          console.log(newLang);
-          response = await fetch(`https://randomuser.me/api/?nat=${newLang}`);
-          data = await response.json();
-          username = data.results[0].name.first;
-          gender = data.results[0].gender;
+
+          username = people[Math.floor(Math.random() * people.length)].name;
+          gender = people[Math.floor(Math.random() * people.length)].gender;
+
+          people = people.filter(function(person) {
+            return person.name !== username;
+          });
+
+          const regex = /\b[aAá]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aAá]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aAá][^\w\s]*){2,}|\b[ᴬaAá][ˡlL1Ii][ᴸlL1Ii]?[ᴬaAá][ℍhH](?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aáA𝗮𝘢ⓗ𝐡][𝛂𝛼áaAá𝒶𝓪𝔞𝕒]+(?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*[aAá][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aáA𝗮𝘢ⓗ𝐡][𝛂𝛼aáAá𝒶𝓪𝔞𝕒]+(?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*\b|Yahve|İsa|İsa Mesih|Yahweh|Jesus|Jesus Christ|Yahv[eéèêë]|İs[aáàâä]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s|Jes[uúùûü]s Chr[iíìîï]st|Yahve|İsa|İsa Mesih|Yahweh|Jesus|Jesus Christ|Yahv[eéèêë]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s Chr[iíìîï]st|Yahve|İsa|İsa Mesih|Yahweh|İsa|Jesus Christ|Yahv[eéèêë]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s Chr[iíìîï]st|(?:\W*[\/\*\-+.,:;]\W*)*Y(?:\W*[\/\*\-+.,:;]\W*)*a(?:\W*[\/\*\-+.,:;]\W*)*h(?:\W*[\/\*\-+.,:;]\W*)*v(?:\W*[\/\*\-+.,:;]\W*)*e|(?:\W*[\/\*\-+.,:;]\W*)*İ(?:\W*[\/\*\-+.,:;]\W*)*\b/gi;
+
+          if (regex.test(username)) {
+            document.querySelector('#botname div input').value = "anonimbiri";
+            username = "anonimbiri";
+          }
         }
 
-        function getRandomLanguage() {
-          const languages = ["au", "br", "ca", "ch", "de", "dk", "es", "fi", "fr", "gb", "ie", "ir", "no", "nl", "nz", "tr", "us"];
-          return languages[Math.floor(Math.random() * languages.length)]; // Rastgele bir dil kodu seç
-        }
+        if (!username && !gender && !people) {
+          const lang = navigator.language.slice(0, 2); // Kullanıcının tarayıcı ayarlarından dil kodunu al
+          let response = await fetch(`https://randomuser.me/api/?nat=${lang}`); // Rastgele bir kullanıcı seç
+          let data = await response.json();
 
+          // Eğer seçilen ülkede "id" alanı boş olan bir kullanıcı varsa, bu kullanıcının "login.username" özelliğini al
+          if (data.results[0].id.value === null) {
+            username = data.results[0].name.first;
+            gender = data.results[0].gender;
+          } else {
+            // Eğer seçilen ülkede "id" alanı boş olan bir kullanıcı yoksa, başka bir ülke seç ve tekrar deneyin
+            let newLang = lang;
+            while (newLang === lang) {
+              // Farklı bir ülke seçmek için döngü kullanabilirsiniz
+              newLang = getRandomLanguage();
+            }
+            console.log(newLang);
+            response = await fetch(`https://randomuser.me/api/?nat=${newLang}`);
+            data = await response.json();
+            username = data.results[0].name.first;
+            gender = data.results[0].gender;
+          }
+
+          function getRandomLanguage() {
+            const languages = ["au", "br", "ca", "ch", "de", "dk", "es", "fi", "fr", "gb", "ie", "ir", "no", "nl", "nz", "tr", "us"];
+            return languages[Math.floor(Math.random() * languages.length)]; // Rastgele bir dil kodu seç
+          }
+        }
         modifiedName = username;
         if (gender === "male") {
           modifiedProfil = Math.floor(Math.random() * 19);
@@ -1555,6 +1632,7 @@ btn.addEventListener("click", async function () {
 });
 btn2.addEventListener("click", function () {
   if (socketList) {
+    warningMessage = false;
     socketList.forEach(function (socket) {
       if (socket.readyState === WebSocket.OPEN) {
         if (params.get('private-mode') === "true") { socket.send(`42[11,"${socket.playerId}","Bot developer: github.com/anonimbiri"]`); }
@@ -1613,7 +1691,7 @@ function updateUserList(players) {
   }
 
   players.forEach(player => {
-    if (!socketList.find((s) => s.playerCode === player.id && isOpen(s))) {
+    if (!socketList.find((s) => s.playerCode === player.id)) {
 
       const itemDiv = document.createElement('div');
       itemDiv.classList.add('item');
@@ -1814,10 +1892,12 @@ $('.private.checkbox')
     onChecked: function () {
       $('.profil.bot-image.dropdown').addClass('disabled');
       $('#botname .input').addClass('disabled');
+      document.querySelector("#LoadUsernameList").style.display = "block";
     },
     onUnchecked: function () {
       $('.profil.bot-image.dropdown').removeClass('disabled');
       $('#botname .input').removeClass('disabled');
+      document.querySelector("#LoadUsernameList").style.display = "none";
     }
   })
   ;

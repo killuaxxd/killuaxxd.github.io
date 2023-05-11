@@ -1,0 +1,12 @@
+{
+    "settings":{
+        "minSeconds": 1,
+        "maxSeconds": 10
+    },
+    "people": [
+        {"name": "Priya", "gender": "female"},
+        {"name": "Aarav", "gender": "male"},
+        {"name": "Neha", "gender": "female"},
+        {"name": "Rahul", "gender": "male"}
+    ]
+}
