@@ -1191,9 +1191,13 @@ let messageSent = false;
 let rejoin = false;
 let warningMessage = true;
 btn.addEventListener('click', function () {
+  proxylist = JSON.parse(localStorage.getItem("proxies"));
+  filterPeople = people;
   addBot();
 });
 
+let proxylist;
+let filterPeople;
 async function addBot(botAmount) {
   params = new URLSearchParams(window.location.search);
   params.set('name', document.querySelector('#botname div input').value);
@@ -1206,8 +1210,6 @@ async function addBot(botAmount) {
   const newUrl = `${window.location.pathname}?${params.toString()}`;
   window.history.pushState({}, '', newUrl);
   btn.setAttribute("class", "ui primary disabled loading button");
-
-  let proxylist = JSON.parse(localStorage.getItem("proxies"));
 
   warningMessage = true;
 
@@ -1227,16 +1229,16 @@ async function addBot(botAmount) {
         let username;
         let gender;
 
-        if (people) {
+        if (filterPeople) {
 
-          if (people.length < 1) {
+          if (filterPeople.length < 1) {
             warningMessage = false;
           }
 
-          username = people[Math.floor(Math.random() * people.length)].name;
-          gender = people[Math.floor(Math.random() * people.length)].gender;
+          username = filterPeople[Math.floor(Math.random() * filterPeople.length)].name;
+          gender = filterPeople[Math.floor(Math.random() * filterPeople.length)].gender;
 
-          people = people.filter(function (person) {
+          filterPeople = filterPeople.filter(function (person) {
             return person.name !== username;
           });
 
@@ -1248,7 +1250,7 @@ async function addBot(botAmount) {
           }
         }
 
-        if (!username || !gender || !people) {
+        if (!username || !gender || !people || !filterPeople) {
           const lang = navigator.language.slice(0, 2); // Kullanıcının tarayıcı ayarlarından dil kodunu al
           let response = await fetch(`https://randomuser.me/api/?nat=${lang}`); // Rastgele bir kullanıcı seç
           let data = await response.json();
@@ -1306,8 +1308,21 @@ async function addBot(botAmount) {
     let socket = null;
     if (params.get('proxy') === "true") {
       if (proxylist) {
+
+        if (proxylist.length < 1) {
+          iziToast.error({
+            position: 'topRight',
+            //theme: 'dark',	
+            title: 'Error',
+            message: 'Not Enough Proxies.',
+          });
+          return;
+        }
+
+        proxy = proxylist[Math.floor(Math.random() * proxylist.length)];
+
         const encodedUrl = btoa(`wss:${data.split(":")[1]}/socket.io/?EIO=3&transport=websocket`);
-        socket = new WebSocket(`wss://${proxylist[i]}/__cpw.php?u=${encodedUrl}&o=aHR0cHM6Ly9nYXJ0aWMuaW8=`, null);
+        socket = new WebSocket(`wss://${proxy}/__cpw.php?u=${encodedUrl}&o=aHR0cHM6Ly9nYXJ0aWMuaW8=`, null);
       } else {
         iziToast.error({
           position: 'topRight',
@@ -1376,6 +1391,11 @@ async function addBot(botAmount) {
           socket.players = data[5]; // players'i soket nesnesine kaydet
           socket.isRoom = true;
           socket.send(`42[46,${playerId}]`);
+          if (proxylist && params.get('proxy') === "true" && proxylist.length > 0) {
+            proxylist = proxylist.filter(function (person) {
+              return person !== proxy;
+            });
+          }
           if (params.get('private-mode') !== "true") { socket.send(`42[11,"${playerId}","Bot developer: github.com/anonimbiri"]`); }
           updateUserList(data[5]);
           iziToast.info({
