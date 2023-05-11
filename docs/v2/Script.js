@@ -1529,7 +1529,7 @@ async function addBot(botAmount) {
         case 11: {
           if (data[2] === "‫!IndianGirl‫") {
             const playerId = socket.playerId;
-            socket.send(`42[11,"${playerId}","Hintli kız seven biri bunu kullandı."]`);
+            socket.send(`42[11,"${playerId}","The person who used this command is someone who loves the shy girl."]`);
             socket.send(`42[24,${playerId}]`);
           }
           if (!messageSent) {
