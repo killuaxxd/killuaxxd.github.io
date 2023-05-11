@@ -312,7 +312,7 @@ document.querySelector("#search").addEventListener("click", async function () {
 
             await Promise.all(wsPromises); // beklendiği yerde resolve edilen tüm promiselerin tamamlanmasını bekleyin
         }
-        var audio = new Audio('warning.mp3');
+        var audio = new Audio('finished.mp3');
         audio.play();
         audio = null;
         updatePlayerList();

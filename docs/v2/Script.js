@@ -195,8 +195,8 @@ Eleveda👋 - Goodbye👋</div>
     </div>
   </div>
   <div class="actions">
-    <div class="ui approve button">Add</div>
-    <div class="ui cancel button">Cancel</div>
+    <div class="ui primary approve button">Add</div>
+    <div class="ui red cancel button">Cancel</div>
   </div>
 </div>
 
@@ -1192,6 +1192,7 @@ let cooldowns = {};
 let messageSent = false;
 let rejoin = false;
 let warningMessage = true;
+let warningSound = true;
 btn.addEventListener('click', function () {
   proxylist = JSON.parse(localStorage.getItem("proxies"));
   filterPeople = people;
@@ -1618,9 +1619,15 @@ async function addBot(botAmount) {
               socket.send(`42[24,${playerId}]`);
               addBot(2);
             }
-            var audio = new Audio('warning.mp3');
-            audio.play();
-            audio = null;
+            if (warningSound) {
+              setTimeout(function () {
+                warningSound = true;
+              }, 1000);
+              warningSound = false;
+              var audio = new Audio('warning.mp3');
+              audio.play();
+              audio = null;
+            }
             iziToast.warning({
               position: 'topRight',
               //theme: 'dark',
