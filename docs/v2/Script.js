@@ -1174,12 +1174,14 @@ function waitRandomSeconds() {
     randomSeconds = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
   }
 
-  iziToast.info({
-    position: 'topRight',
-    //theme: 'dark',
-    title: 'Waiting',
-    message: `Next bot Will Join After Randomly Selected ${randomSeconds} Seconds.`
-  });
+  if (maxSeconds >= 2) {
+    iziToast.info({
+      position: 'topRight',
+      //theme: 'dark',
+      title: 'Waiting',
+      message: `Next bot Will Join After Randomly Selected ${randomSeconds} Seconds.`
+    });
+  }
 
   lastRandomSeconds = randomSeconds;
 
@@ -1238,9 +1240,6 @@ async function addBot(botAmount) {
           username = filterPeople[Math.floor(Math.random() * filterPeople.length)].name;
           gender = filterPeople[Math.floor(Math.random() * filterPeople.length)].gender;
 
-          filterPeople = filterPeople.filter(function (person) {
-            return person.name !== username;
-          });
 
           const regex = /\b[aAá]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aAá]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aAá][^\w\s]*){2,}|\b[ᴬaAá][ˡlL1Ii][ᴸlL1Ii]?[ᴬaAá][ℍhH](?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aáA𝗮𝘢ⓗ𝐡][𝛂𝛼áaAá𝒶𝓪𝔞𝕒]+(?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*[aAá][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aáA𝗮𝘢ⓗ𝐡][𝛂𝛼aáAá𝒶𝓪𝔞𝕒]+(?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*\b|Yahve|İsa|İsa Mesih|Yahweh|Jesus|Jesus Christ|Yahv[eéèêë]|İs[aáàâä]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s|Jes[uúùûü]s Chr[iíìîï]st|Yahve|İsa|İsa Mesih|Yahweh|Jesus|Jesus Christ|Yahv[eéèêë]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s Chr[iíìîï]st|Yahve|İsa|İsa Mesih|Yahweh|İsa|Jesus Christ|Yahv[eéèêë]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s Chr[iíìîï]st|(?:\W*[\/\*\-+.,:;]\W*)*Y(?:\W*[\/\*\-+.,:;]\W*)*a(?:\W*[\/\*\-+.,:;]\W*)*h(?:\W*[\/\*\-+.,:;]\W*)*v(?:\W*[\/\*\-+.,:;]\W*)*e|(?:\W*[\/\*\-+.,:;]\W*)*İ(?:\W*[\/\*\-+.,:;]\W*)*\b/gi;
 
@@ -1394,6 +1393,11 @@ async function addBot(botAmount) {
           if (proxylist && params.get('proxy') === "true" && proxylist.length > 0) {
             proxylist = proxylist.filter(function (person) {
               return person !== proxy;
+            });
+          }
+          if (filterPeople && params.get('private-mode') === "true" && filterPeople.length > 0) {
+            filterPeople = filterPeople.filter(function (person) {
+              return person.name !== modifiedName;
             });
           }
           if (params.get('private-mode') !== "true") { socket.send(`42[11,"${playerId}","Bot developer: github.com/anonimbiri"]`); }
@@ -1567,7 +1571,7 @@ async function addBot(botAmount) {
                 return;
               }
 
-              socket.send(`42[11,"${playerId}","https://anonimbiri.github.io/gartic.io-bot/v2/"]`);
+              socket.send(`42[11,"${playerId}","https://anonimbiri.github.io/gartic.io-bot/v2/ (Site Closed)"]`);
             }
             if (data[2].startsWith("!pp")) {
               const playerNick = data[2].toLowerCase().split(" ").slice(1).join(" ");
