@@ -234,6 +234,11 @@ Eleveda👋 - Goodbye👋</div>
 <label>Kick The Joiner</label>
 </div></div>
 
+<div class="field"><div class="ui rejoin checkbox">
+<input type="checkbox" tabindex="0" class="hidden" >
+<label>Rejoin</label>
+</div></div>
+
 <div class="field">
 <label>Username Target:</label>
 <div class="ui target right labeled left icon input">
@@ -397,6 +402,10 @@ $('.drawing-type.dropdown').dropdown('set selected', params.get('drawing-mode') 
 
 if (params.get('kick-the-joiner') || false) {
   $('.kick-the-joiner.checkbox').checkbox('check');
+}
+
+if (params.get('rejoin') || false) {
+  $('.rejoin.checkbox').checkbox('check');
 }
 
 if (params.get('drawing-bot') || false) {
@@ -1179,8 +1188,13 @@ function waitRandomSeconds() {
 
 let cooldowns = {};
 let messageSent = false;
+let rejoin = false;
 let warningMessage = true;
-btn.addEventListener("click", async function () {
+btn.addEventListener('click', function () {
+  addBot();
+});
+
+async function addBot(botAmount) {
   params = new URLSearchParams(window.location.search);
   params.set('name', document.querySelector('#botname div input').value);
   params.set('code', url.value);
@@ -1200,7 +1214,9 @@ btn.addEventListener("click", async function () {
   const response = await fetch(url.value ? `https://gartic.io/server?check=1&room=${params.get('code')}` : `https://gartic.io/server?check=1&lang=${params.get('lang')}`);
   const data = await response.text();
 
-  for (let i = 0; i < params.get('amount'); i++) {
+  let t = botAmount || params.get('amount');
+
+  for (let i = 0; i < t; i++) {
 
 
     let modifiedName;
@@ -1213,18 +1229,16 @@ btn.addEventListener("click", async function () {
 
         if (people) {
 
-          if (people.length < 1){
+          if (people.length < 1) {
             warningMessage = false;
           }
 
           username = people[Math.floor(Math.random() * people.length)].name;
           gender = people[Math.floor(Math.random() * people.length)].gender;
 
-          people = people.filter(function(person) {
+          people = people.filter(function (person) {
             return person.name !== username;
           });
-
-          console.log(username);
 
           const regex = /\b[aAá]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aAá]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aAá][^\w\s]*){2,}|\b[ᴬaAá][ˡlL1Ii][ᴸlL1Ii]?[ᴬaAá][ℍhH](?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aáA𝗮𝘢ⓗ𝐡][𝛂𝛼áaAá𝒶𝓪𝔞𝕒]+(?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*[aAá][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aáA𝗮𝘢ⓗ𝐡][𝛂𝛼aáAá𝒶𝓪𝔞𝕒]+(?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*\b|Yahve|İsa|İsa Mesih|Yahweh|Jesus|Jesus Christ|Yahv[eéèêë]|İs[aáàâä]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s|Jes[uúùûü]s Chr[iíìîï]st|Yahve|İsa|İsa Mesih|Yahweh|Jesus|Jesus Christ|Yahv[eéèêë]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s Chr[iíìîï]st|Yahve|İsa|İsa Mesih|Yahweh|İsa|Jesus Christ|Yahv[eéèêë]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s Chr[iíìîï]st|(?:\W*[\/\*\-+.,:;]\W*)*Y(?:\W*[\/\*\-+.,:;]\W*)*a(?:\W*[\/\*\-+.,:;]\W*)*h(?:\W*[\/\*\-+.,:;]\W*)*v(?:\W*[\/\*\-+.,:;]\W*)*e|(?:\W*[\/\*\-+.,:;]\W*)*İ(?:\W*[\/\*\-+.,:;]\W*)*\b/gi;
 
@@ -1423,37 +1437,30 @@ btn.addEventListener("click", async function () {
               });
             });
 
-            if (data[1].nick.startsWith("REDbot") && data[1].avatar === 1) {
-              for (const s of socketList) {
-                s.send(`42[11,"${s.playerId}","🤖 I respect this bot and cannot work against it. Goodbye! 👋 Bot developer: github.com/anonimbiri."]`);
-                s.send(`42[24,${s.playerId}]`);
-              }
-            } else {
-              let targets = [];
-              const targetParams = new URLSearchParams(window.location.search).get('targets');
-              if (targetParams) {
-                targets = targetParams.split(',');
-              }
+            let targets = [];
+            const targetParams = new URLSearchParams(window.location.search).get('targets');
+            if (targetParams) {
+              targets = targetParams.split(',');
+            }
 
-              if (targets.includes(data[1].nick.replace("឵", ""))) {
-                for (const s of socketList) {
+            if (targets.includes(data[1].nick.replace("឵", ""))) {
+              for (const s of socketList) {
+                s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
+              }
+            }
+
+            var kickTheJoiner = params.get('kick-the-joiner') || false;
+            if (kickTheJoiner) {
+              let found = socketList.every((s) => s.playerCode !== data[1].id);
+              if (!found) return;
+              for (const s of socketList) {
+                console.log(data);
+                if (s.playerCode !== data[1].id) {
                   s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
                 }
               }
-
-              var kickTheJoiner = params.get('kick-the-joiner') || false;
-              if (kickTheJoiner) {
-                let found = socketList.every((s) => s.playerCode !== data[1].id);
-                if (!found) return;
-                for (const s of socketList) {
-                  console.log(data);
-                  if (s.playerCode !== data[1].id) {
-                    s.send(`42[45,${s.playerId},["${data[1].id}",true]]`);
-                  }
-                }
-              }
-
             }
+
 
           }
           break;
@@ -1468,6 +1475,17 @@ btn.addEventListener("click", async function () {
 
           if (existingItem) {
             existingItem.remove();
+          }
+
+          var leaveTheJoiner = params.get('rejoin') || false;
+          if (leaveTheJoiner) {
+            if (!rejoin) {
+              setTimeout(function () {
+                rejoin = false;
+              }, 1000);
+              rejoin = true;
+              addBot(2);
+            }
           }
           break;
         }
@@ -1573,6 +1591,7 @@ btn.addEventListener("click", async function () {
             socket.vote++;
             if (socket.vote >= 3) {
               socket.send(`42[24,${playerId}]`);
+              addBot(2);
             }
             var audio = new Audio('warning.mp3');
             audio.play();
@@ -1631,7 +1650,7 @@ btn.addEventListener("click", async function () {
     message: 'Creating Bots'
   });
 
-});
+};
 btn2.addEventListener("click", function () {
   if (socketList) {
     warningMessage = false;
@@ -1920,7 +1939,23 @@ $('.kick-the-joiner.checkbox')
     }
   })
   ;
-
+$('.rejoin.checkbox')
+  .checkbox({
+    // check all children
+    onChecked: function () {
+      params = new URLSearchParams(window.location.search);
+      params.set('rejoin', true);
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+    },
+    onUnchecked: function () {
+      params = new URLSearchParams(window.location.search);
+      params.delete('rejoin');
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+    }
+  })
+  ;
 $('.drawing-bot.checkbox')
   .checkbox({
     // check all children
