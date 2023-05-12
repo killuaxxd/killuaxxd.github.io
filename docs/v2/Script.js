@@ -1393,6 +1393,7 @@ async function addBot(botAmount) {
           socket.isRoom = true;
           socket.send(`42[46,${playerId}]`);
           if (proxylist && params.get('proxy') === "true" && proxylist.length > 0) {
+            socket.proxy = proxy;
             proxylist = proxylist.filter(function (person) {
               return person !== proxy;
             });
@@ -1617,6 +1618,7 @@ async function addBot(botAmount) {
             socket.vote++;
             if (socket.vote >= 3) {
               socket.send(`42[24,${playerId}]`);
+              if (proxylist && params.get('proxy') === "true" && proxylist.length > 0) { proxylist.push(socket.proxy); }
               addBot(2);
             }
             if (warningSound) {
