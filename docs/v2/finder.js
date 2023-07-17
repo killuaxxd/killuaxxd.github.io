@@ -55,7 +55,7 @@ document.body.innerHTML += `<div class="ui inverted segment">
 
     <div class="field" id="name">
       <label>Username:</label>
-      <div class="ui large labeled input"><input type="text" value="${params.get('keyword') || "anonimbiri"}" placeholder="Nickname" maxlength="17" spellcheck="false" data-ms-editor="true"></div>
+      <div class="ui large labeled input"><input type="text" value="${params.get('keyword') || "killua"}" placeholder="Nickname" maxlength="17" spellcheck="false" data-ms-editor="true"></div>
     </div>
 
     <div class="field">
@@ -337,10 +337,10 @@ function updatePlayerList() {
     }
 
     if (params.get('name-type') === "full") {
-        let keyword = params.get('keyword') || "anonimbiri";
+        let keyword = params.get('keyword') || "killua";
         filteredPlayers = filteredPlayers.filter(player => player.nick.toLowerCase().includes(keyword.toLowerCase()));
     } else if (params.get('name-type') === "partial") {
-        let keyword = params.get('keyword') || "anonimbiri";
+        let keyword = params.get('keyword') || "killua";
 
         filteredPlayers = players.filter(player => {
             if (player.nick) {
@@ -549,7 +549,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("saveImageButton").addEventListener("click", async function () {
         if (currentTagTarget.tagName === 'IMG') {
             try {
-                var filename = currentTagTarget.getAttribute('data-name') + '-anonimbiri.jpg';
+                var filename = currentTagTarget.getAttribute('data-name') + '-killua.jpg';
                 fetch(currentTagTarget.src)
                     .then(function (t) { return t.blob().then((b) => { var a = document.createElement("a"); a.href = URL.createObjectURL(b); a.setAttribute("download", filename); a.click(); }) });
             } catch (err) {
