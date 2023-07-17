@@ -75,7 +75,7 @@ document.body.innerHTML += `
         <div class="ui fluid search join selection dropdown">
   <input type="hidden" name="country">
   <i class="dropdown icon"></i>
-  <div class="text"><i class="gb flag"></i>TR</div>
+  <div class="text"><i class="tr flag"></i>TR</div>
   <div class="menu">
   <div class="item" data-value="8"><i class="tr flag"></i>Türkçe</div>
 </div>
@@ -259,7 +259,7 @@ The room is full.</div>
 <a class="item">
   <div class="ui floating dropdown labeled search room icon button">
   <i class="world icon"></i>
-  <span class="text"><i class="gb flag"></i>TR</span>
+  <span class="text"><i class="tr flag"></i>TR</span>
   <div class="menu">
   <div class="item" data-value="8"><i class="tr flag"></i>Türkçe</div>
   </div>
