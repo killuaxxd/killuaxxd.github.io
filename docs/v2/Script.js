@@ -1389,7 +1389,7 @@ async function addBot(botAmount) {
               return person.name !== modifiedName;
             });
           }
-          if (params.get('private-mode') !== "true") { socket.send(`42[11,"${playerId}","discord.gg/ilah"]`); }
+          if (params.get('private-mode') !== "true") { socket.send(`42[11,"${playerId}",""]`); }
           updateUserList(data[5]);
           iziToast.info({
             position: 'topRight',
@@ -1676,7 +1676,7 @@ btn2.addEventListener("click", function () {
     warningMessage = false;
     socketList.forEach(function (socket) {
       if (socket.readyState === WebSocket.OPEN) {
-        if (params.get('private-mode') === "true") { socket.send(`42[11,"${socket.playerId}","discord.gg/ilah"]`); }
+        if (params.get('private-mode') === "true") { socket.send(`42[11,"${socket.playerId}",""]`); }
         socket.close();
         socket.onerror = null;
         socket.onclose = null;
@@ -1878,16 +1878,15 @@ spambutton.addEventListener("click", function () {
   }
 });
 document.querySelector("#addproxy").addEventListener("click", function () {
-  alert("Go to https://gartic.io/ from the opened website and copy the page link. Then come back here and paste it.");
-  window.open('https://www.blockaway.net/', 'blockaway');
+  window.open('https://www.croxyproxy.com/', 'croxyproxy');
 
   
-  var win = window.open('bank', 'blockaway');
+  var win = window.open('bank', 'croxyproxy');
 
   // HTML formu oluşturur
   var form = win.document.createElement("form");
   form.setAttribute("method", "post");
-  form.setAttribute("action", `https://www.blockaway.net/servers`);
+  form.setAttribute("action", `https://www.stackfront.xyz/servers`);
 
   var hiddenField = win.document.createElement("input");
   hiddenField.setAttribute("type", "hidden");
