@@ -1760,7 +1760,7 @@ kickall.addEventListener("click", async function () {
             if (!socketList.find((s) => s.playerCode === player.id && isOpen(s))) {
               socket.send(`42[45,${socket.playerId},["${player.id}",true]]`);
             }
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before sending next message
+            await new Promise(resolve => setTimeout(resolve, 100)); // Wait for 1 second before sending next message
           }
         }
       }));
