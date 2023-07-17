@@ -715,8 +715,7 @@ document.querySelector("#LoadUsernameList").addEventListener("click", function (
         fileInput.addEventListener('change', function () {
           let file = fileInput.files[0];
           if (file.type !== 'application/json') {
-            alert('Please select a JSON file.');
-            return;
+		  return;
           }
 
           const reader = new FileReader();
