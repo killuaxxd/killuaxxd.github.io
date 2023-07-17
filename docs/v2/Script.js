@@ -170,20 +170,6 @@ The room is full.</div>
   </div>
 </div>
 
-<div class="ui tiny full goodbye modal">
-<div class="ui icon header">
-<i class="red exclamation triangle icon"></i>
-Eleveda👋 - Goodbye👋</div>
-  <div class="content">
-    <p>This project has been created for educational purposes only. The project will end soon. We do not accept encouraging people to take the wrong path. This project was only created to explain how it works.</p>
-  </div>
-  <div class="actions">
-    <div class="ui black cancel button">
-      OK
-    </div>
-  </div>
-  </div>
-</div>
 
 <div class="ui tutorial modal">
   <div class="header">Important</div>
