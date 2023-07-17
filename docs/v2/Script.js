@@ -75,35 +75,9 @@ document.body.innerHTML += `
         <div class="ui fluid search join selection dropdown">
   <input type="hidden" name="country">
   <i class="dropdown icon"></i>
-  <div class="text"><i class="gb flag"></i>English</div>
+  <div class="text"><i class="gb flag"></i>TR</div>
   <div class="menu">
-  <div class="item" data-value="23"><i class="az flag"></i>Azərbaycanca</div>
-  <div class="item" data-value="45"><i class="id flag"></i>Bahasa Indonesia</div>
-  <div class="item" data-value="11"><i class="cz flag"></i>Čeština</div>
-  <div class="item" data-value="14"><i class="de flag"></i>Deutsch</div>
-  <div class="item" data-value="2"><i class="gb flag"></i>English</div>
-  <div class="item" data-value="3"><i class="es flag"></i>Español</div>
-  <div class="item" data-value="4"><i class="fr flag"></i>Français</div>
-  <div class="item" data-value="6"><i class="it flag"></i>Italiano</div>
-  <div class="item" data-value="44"><i class="hu flag"></i>Magyar</div>
-  <div class="item" data-value="18"><i class="nl flag"></i>Nederlands</div>
-  <div class="item" data-value="10"><i class="pl flag"></i>Polski</div>
-  <div class="item" data-value="1"><i class="pt flag"></i>Português</div>
-  <div class="item" data-value="58"><i class="ro flag"></i>Română</div>
-  <div class="item" data-value="22"><i class="sk flag"></i>Slovenčina</div>
-  <div class="item" data-value="13"><i class="vn flag"></i>Tiếng Việt</div>
   <div class="item" data-value="8"><i class="tr flag"></i>Türkçe</div>
-  <div class="item" data-value="21"><i class="bg flag"></i>български език</div>
-  <div class="item" data-value="7"><i class="ru flag"></i>Русский</div>
-  <div class="item" data-value="40"><i class="il flag"></i>עברית</div>
-  <div class="item" data-value="19"><i class="sa flag"></i>العربية</div>
-  <div class="item" data-value="34"><i class="ir flag"></i>فارسی</div>
-  <div class="item" data-value="12"><i class="th flag"></i>ภาษาไทย</div>
-  <div class="item" data-value="16"><i class="cn flag"></i>中文 (简化字)</div>
-  <div class="item" data-value="9"><i class="tw flag"></i>中文 (臺灣)</div>
-  <div class="item" data-value="17"><i class="hk flag"></i>中文 (香港)</div>
-  <div class="item" data-value="20"><i class="kr flag"></i>한국어</div>
-  <div class="item" data-value="15"><i class="jp flag"></i>日本語</div>
 </div>
  </div>
       </div>
