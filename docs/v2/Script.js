@@ -114,35 +114,6 @@ inverted button"><i class="fire icon"></i>User Finder</a>
 inverted button"><i class="fire icon"></i>V1 (Old Version)</a></div> </div>
   </div>
 </div>
-<div class="ui tiny connection problem modal">
-<div class="ui icon header">
-<i class="yellow exclamation triangle icon"></i>
- Failed to Connect to Server</div>
-  <div class="content">
-    <p>Failed to connect to the server. You may have sent too many requests or attempted to add too many bots. Additionally, you may have disconnected from the room. You can try again by opening a VPN connection.</p>
-  </div>
-  <div class="actions">
-    <div class="ui black cancel button">
-      OK
-    </div>
-  </div>
-  </div>
-</div>
-
-<div class="ui tiny full room modal">
-<div class="ui icon header">
-<i class="yellow exclamation triangle icon"></i>
-The room is full.</div>
-  <div class="content">
-    <p>The room is full. Some bots could not enter.</p>
-  </div>
-  <div class="actions">
-    <div class="ui black cancel button">
-      OK
-    </div>
-  </div>
-  </div>
-</div>
 
 
 <div class="ui tutorial modal">
