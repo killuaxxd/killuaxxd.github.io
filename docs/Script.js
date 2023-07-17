@@ -8,7 +8,7 @@ document.body.innerHTML += `
     <div class="two fields">
 	<div class="field" id="botname">
         <label>Bot Name</label>
-        <div class="ui large labeled input"><input type="text" value="anonimbiri" placeholder="Nickname" maxlength="14" spellcheck="false" data-ms-editor="true"></div>
+        <div class="ui large labeled input"><input type="text" value="killua" placeholder="Nickname" maxlength="14" spellcheck="false" data-ms-editor="true"></div>
       </div>
       <div class="field">
         <label>Room Code</label>
@@ -82,8 +82,8 @@ document.body.innerHTML += `
 	
     <div class="inline"><button class="ui primary button" id="addbot">Add Bots</button><button class="ui inverted red button" id="clearall">Clear All</button> <button class="ui right labeled icon button" id="watchtheroom">Watch The Room<i class="external link icon"></i></button> <a href="https://www.youtube.com/channel/UCgs8Nz3Msrl4GqX3DeOZ6tQ" target="_blank" class="ui 
 right floated inverted button"><i class="youtube icon"></i>YouTube</a>
-<a href="https://github.com/anonimbiri/gartic.io-bot" target="_blank" class="ui right floated
-inverted button"><i class="github icon"></i>Open Source Code</a><a href="https://anonimbiri.github.io/gartic.io-bot/v2/" class="ui right floated
+<a href="https://github.com/killua/gartic.io-bot" target="_blank" class="ui right floated
+inverted button"><i class="github icon"></i>Open Source Code</a><a href="https://killua.github.io/gartic.io-bot/v2/" class="ui right floated
 inverted button"><i class="fire icon"></i>V2 (New Version)</a></div> </div>
   </div>
 </div>
@@ -113,7 +113,7 @@ inverted button"><i class="fire icon"></i>V2 (New Version)</a></div> </div>
     <div class="item active selected" data-value="1">Chat</div>
     <div class="item" data-value="0">Answer</div>
   </div></div>
-</div><div class="field"><div class="ui labeled input" id="spamtext"><input type="text" value="anonimbiri" placeholder="Spam text" maxlength="99" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i> Start Spam</button></div></div><div class="inline fields"><div class="field"><label>Kick:</label><div class="ui labeled input" id="kickplayernick"><input type="text" value="User" placeholder="Username" maxlength="18" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary button" id="kickpalyer">Kick Player</button></div></div></div></div>
+</div><div class="field"><div class="ui labeled input" id="spamtext"><input type="text" value="killua" placeholder="Spam text" maxlength="99" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary compact labeled icon button" id="startspam"><i class="play icon"></i> Start Spam</button></div></div><div class="inline fields"><div class="field"><label>Kick:</label><div class="ui labeled input" id="kickplayernick"><input type="text" value="User" placeholder="Username" maxlength="18" spellcheck="false" data-ms-editor="true"></div></div><div class="field"><button class="ui primary button" id="kickpalyer">Kick Player</button></div></div></div></div>
 
 <div class="ui basic modal">
   <div class="content">
@@ -141,7 +141,7 @@ let spamtext = document.querySelector('#spamtext input');
 let kicktext = document.querySelector('#kickplayernick input');
 let kickbutton = document.querySelector('#kickpalyer');
 
-let scripturl = "https://github.com/anonimbiri/gartic.io-bot/raw/main/script/Gartic%20bot%20control.user.js";
+let scripturl = "https://github.com/killua/gartic.io-bot/raw/main/script/Gartic%20bot%20control.user.js";
 
 download.addEventListener("click", function () {
 	window.open(scripturl).close();
@@ -246,8 +246,8 @@ function loaded() {
 	const regex = /\b[aA]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aA]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aA][^\w\s]*){2,}|\b[ᴬaA][ˡlL1Ii][ᴸlL1Ii]?[ᴬaA][ℍhH](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[aA][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*\b/gi;
   
         if (regex.test(name)) {
-            document.querySelector('#botname div input').value = "anonimbiri";
-            name = "anonimbiri";
+            document.querySelector('#botname div input').value = "killua";
+            name = "killua";
         }
 	if(proxymode == false){
 document.querySelectorAll('iframe').forEach( item =>
@@ -312,8 +312,8 @@ setInterval(function() {  if(spam == true){
 	const regex = /\b[aA]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aA]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aA][^\w\s]*){2,}|\b[ᴬaA][ˡlL1Ii][ᴸlL1Ii]?[ᴬaA][ℍhH](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/*\-+.,:;]\W*)*[^\W_]*[aA][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aA𝗮𝘢ⓗ𝐡][𝛂𝛼aA𝒶𝓪𝔞𝕒]+(?:\W*[\/*\-+.,:;]\W*)*[^\W_]*\b/gi;
 
         if (regex.test(spamtext.value)) {
-          spamtext.value = "anonimbiri";
-          spamtext = "anonimbiri";
+          spamtext.value = "killua";
+          spamtext = "killua";
         }
 	if(s_id == 1){document.querySelectorAll('iframe').forEach( item =>
   item.contentWindow.postMessage({'command': 'spam', 'spam': spam, 'spamid': spamid,  'text': spamtext.value}, '*')
@@ -325,7 +325,7 @@ setInterval(function() {  if(spam == true){
   item.contentWindow.postMessage({'command': 'spam', 'spam': spam, 'spamid': spamid,  'text': "឵" + spamtext.value}, '*')
 ); s_id = 4;}
 	else if(s_id == 4){document.querySelectorAll('iframe').forEach( item =>
-  item.contentWindow.postMessage({'command': 'spam', 'spam': spam, 'spamid': spamid,  'text': "github.com/anonimbiri"}, '*')
+  item.contentWindow.postMessage({'command': 'spam', 'spam': spam, 'spamid': spamid,  'text': "github.com/killua"}, '*')
 ); s_id = 1;} } 
 }, 3000);
 
@@ -382,7 +382,7 @@ iziToast.success({
     message: 'Script loaded',
 	buttons: [
         ['<button>Open Source Code</button>', function (instance, toast) {
-            window.open("https://github.com/anonimbiri/gartic.io-bot");
+            window.open("https://github.com/killua/gartic.io-bot");
         }, true],],
 });
 }else{
