@@ -371,7 +371,7 @@ async function playerSearchGO(languagecode) {
                           }
                             const data = JSON.parse(e.data.slice(2));
                             if (data[0] === 5) {
-                                const cardcolor = document.querySelector("#color-rooms")?.checked ? randomColor() : "rgb(255, 255, 255)";
+                                const cardcolor = document.querySelector("#color-rooms")?.checked ? randomColor() : "rgb(0,0,0)";
                                 const playerList = document.querySelector(".player-list");
                                 const playersLog = document.querySelector(".players-log");
                                 const roomsLog = document.querySelector(".rooms-log");
