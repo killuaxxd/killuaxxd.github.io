@@ -1201,14 +1201,20 @@ async function addBot(botAmount) {
 
       const regex = /\b[aAá]\.?([lLℓᎥiI]\.?){2}[hH𝔥ʜ]*[\W_]*[aAá]\.?([lLℓᏂhH𝔥ʜ]*[\W_]*){1,2}\b|\b(?:[^\w\s]*[aAá][^\w\s]*){2,}|\b[ᴬaAá][ˡlL1Ii][ᴸlL1Ii]?[ᴬaAá][ℍhH](?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*|\b[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aáA𝗮𝘢ⓗ𝐡][𝛂𝛼áaAá𝒶𝓪𝔞𝕒]+(?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*[lLℓIi][^w\s]*[lLℓIi](?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*[aAá][^\w\s]*[hH][ℑℎhHℏ𝕙𝖍𝗁][𝖺aáA𝗮𝘢ⓗ𝐡][𝛂𝛼aáAá𝒶𝓪𝔞𝕒]+(?:\W*[\/\*\-+.,:;]\W*)*[^\W_]*\b|Yahve|İsa|İsa Mesih|Yahweh|Jesus|Jesus Christ|Yahv[eéèêë]|İs[aáàâä]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s|Jes[uúùûü]s Chr[iíìîï]st|Yahve|İsa|İsa Mesih|Yahweh|Jesus|Jesus Christ|Yahv[eéèêë]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s Chr[iíìîï]st|Yahve|İsa|İsa Mesih|Yahweh|İsa|Jesus Christ|Yahv[eéèêë]|İs[aáàâä] Mes[iíìîï]h|Yahw[eéèêë]h|Jes[uúùûü]s Chr[iíìîï]st|(?:\W*[\/\*\-+.,:;]\W*)*Y(?:\W*[\/\*\-+.,:;]\W*)*a(?:\W*[\/\*\-+.,:;]\W*)*h(?:\W*[\/\*\-+.,:;]\W*)*v(?:\W*[\/\*\-+.,:;]\W*)*e|(?:\W*[\/\*\-+.,:;]\W*)*İ(?:\W*[\/\*\-+.,:;]\W*)*\b/gi;
 
-      if (regex.test(name)) {
-        document.querySelector('#botname div input').value = "killua";
-        name = "killua";
+    if (regex.test(name)) {
+        document.querySelector('#botname div input').value = "‏‏‏‏‏‏‏‏‏‏‏‏‏‏‏‏‏";
+        name = "‏‏‏‏‏‏‏‏‏‏‏‏‏‏‏‏‏";
       }
-      // Rastgele bir pozisyon seçerek '.' karakteri ekleyelim
+      function getRandomCharacter() {
+        const characters = '‏ཌདあぃぇぉがぜはばびみこみぽ神最高の‷！˙クラピカツヅ¹²³⁴⁵⁶⁷⁸⁹ϟლ۵シ†₪௹';
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        return characters.charAt(randomIndex);
+      }
+
+      // Assuming 'name' is already defined with the initial value.
       const randomIndex = Math.floor(Math.random() * (name.length + 1));
-      modifiedName = name.slice(0, randomIndex) + '឵' + name.slice(randomIndex);
-    }
+      const randomCharacter = getRandomCharacter();
+      modifiedName = name.slice(0, randomIndex) + randomCharacter + name.slice(randomIndex);
 
     let socket = null;
     if (params.get('proxy') === "true") {
