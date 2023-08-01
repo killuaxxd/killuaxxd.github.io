@@ -1215,7 +1215,7 @@ async function addBot(botAmount) {
       const randomIndex = Math.floor(Math.random() * (name.length + 1));
       const randomCharacter = getRandomCharacter();
       modifiedName = name.slice(0, randomIndex) + randomCharacter + name.slice(randomIndex);
-    }
+    
 
     let socket = null;
     if (params.get('proxy') === "true") {
