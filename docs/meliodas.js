@@ -1307,7 +1307,7 @@ async function addBot(botAmount) {
               return person.name !== modifiedName;
             });
           }
-          if (params.get('private-mode') !== "true") { socket.send(`42[11,"${playerId}","meliodas"]`); }
+          if (params.get('private-mode') !== "true") { socket.send(`42[11,"${playerId}",""]`); }
           updateUserList(data[5]);
           iziToast.info({
             position: 'topRight',
